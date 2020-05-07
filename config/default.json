@@ -1,0 +1,4 @@
+{
+  "mongoURI": "mongodb+srv://alikadhim:Aaa12345@devconnector-r4trv.mongodb.net/test?retryWrites=true&w=majority",
+  "jwtSecret": "myscrettoken"
+}
