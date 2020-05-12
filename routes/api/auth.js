@@ -59,10 +59,9 @@ router.post(
       };
       jwt.sign(payload, scret, { expiresIn: 36000 }, (error, token) => {
         if (error) throw error;
-        res.json(token);
+        res.json({ token });
       });
     } catch (error) {
-      console.error(error.message);
       res.status(500).send("Server error!");
     }
   }
