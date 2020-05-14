@@ -1,12 +1,12 @@
-import React, { useState, Fragment } from "react";
-import { connect } from "react-redux";
-import PropTypes from "prop-types";
-import { login } from "../../actions/auth";
-import { Link, Redirect } from "react-router-dom";
+import React, { useState, Fragment } from 'react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import { login } from '../../actions/auth';
+import { Link, Redirect } from 'react-router-dom';
 const Login = ({ login, isAuthenticated }) => {
   const [formData, setFormData] = useState({
-    email: "",
-    password: "",
+    email: '',
+    password: '',
   });
   const { email, password } = formData;
   const inputHandler = (e) =>

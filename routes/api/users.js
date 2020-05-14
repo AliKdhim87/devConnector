@@ -1,24 +1,24 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const { check, validationResult } = require("express-validator");
-const gravatar = require("gravatar");
-const normalize = require("normalize-url");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const User = require("../../models/User");
-const config = require("config");
-const scret = config.get("jwtSecret");
+const { check, validationResult } = require('express-validator');
+const gravatar = require('gravatar');
+const normalize = require('normalize-url');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const User = require('../../models/User');
+const config = require('config');
+const scret = config.get('jwtSecret');
 // @route   POST api/users
 // @desc    Register user
 // @access  Public
 router.post(
-  "/",
+  '/',
   [
-    check("name", "Name is required.").not().isEmpty(),
-    check("email", "Pleace include a valid email.").isEmail(),
+    check('name', 'Name is required.').not().isEmpty(),
+    check('email', 'Pleace include a valid email.').isEmail(),
     check(
-      "password",
-      "Pleace enter a password with 6 or more characters."
+      'password',
+      'Pleace enter a password with 6 or more characters.'
     ).isLength({ min: 6 }),
   ],
   async (req, res) => {
@@ -33,14 +33,14 @@ router.post(
       if (user) {
         return res
           .status(400)
-          .json({ errors: [{ msg: "User already exists!" }] });
+          .json({ errors: [{ msg: 'User already exists!' }] });
       }
 
       const avatar = normalize(
         gravatar.url(email, {
-          s: "200",
-          r: "pg",
-          d: "mm",
+          s: '200',
+          r: 'pg',
+          d: 'mm',
         }),
         { forceHttps: true }
       );
@@ -64,7 +64,7 @@ router.post(
       });
     } catch (error) {
       console.error(error.message);
-      res.status(500).send("Server error!");
+      res.status(500).send('Server error!');
     }
   }
 );

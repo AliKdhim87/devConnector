@@ -1,17 +1,17 @@
-import React, { Fragment, useState } from "react";
-import { withRouter, Link } from "react-router-dom";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import { addEducation } from "../../actions/profile";
+import React, { Fragment, useState } from 'react';
+import { withRouter, Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { addEducation } from '../../actions/profile';
 const AddEducation = ({ addEducation, history }) => {
   const [formData, setFormData] = useState({
-    school: "",
-    degree: "",
-    fieldofstudy: "",
-    from: "",
+    school: '',
+    degree: '',
+    fieldofstudy: '',
+    from: '',
     current: false,
-    to: "",
-    description: "",
+    to: '',
+    description: '',
   });
   const [toDateDisabled, setToggledDisabled] = useState(false);
   const {
@@ -88,7 +88,7 @@ const AddEducation = ({ addEducation, history }) => {
                 setToggledDisabled(!toDateDisabled);
               }}
               value={current}
-            />{" "}
+            />{' '}
             Current School or Bootcamp
           </p>
         </div>
@@ -99,7 +99,7 @@ const AddEducation = ({ addEducation, history }) => {
             name='to'
             onChange={onChangeInputHandler}
             value={to}
-            disabled={toDateDisabled ? "disabled" : ""}
+            disabled={toDateDisabled ? 'disabled' : ''}
           />
         </div>
         <div className='form-group'>

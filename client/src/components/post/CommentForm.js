@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import { addComment } from "../../actions/post";
+import React, { useState } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { addComment } from '../../actions/post';
 const CommentForm = ({ postId, addComment }) => {
-  const [text, setText] = useState("");
+  const [text, setText] = useState('');
   return (
     <div className='post-form'>
       <div className='bg-primary p'>
@@ -14,7 +14,7 @@ const CommentForm = ({ postId, addComment }) => {
         onSubmit={(e) => {
           e.preventDefault();
           addComment(postId, { text });
-          setText("");
+          setText('');
         }}
       >
         <textarea

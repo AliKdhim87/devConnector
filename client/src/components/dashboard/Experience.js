@@ -1,17 +1,17 @@
-import React, { Fragment } from "react";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import { deteleExperience } from "../../actions/profile";
-import Moment from "react-moment";
+import React, { Fragment } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { deteleExperience } from '../../actions/profile';
+import Moment from 'react-moment';
 const Experience = ({ experience, deteleExperience }) => {
   const experiences = experience.map((exp) => (
     <tr key={exp._id}>
       <td>{exp.company}</td>
       <td className='hide-sm'>{exp.title}</td>
       <td>
-        <Moment format='YYYY/MM/DD'>{exp.from}</Moment> -{" "}
+        <Moment format='YYYY/MM/DD'>{exp.from}</Moment> -{' '}
         {exp.to === null ? (
-          " Now"
+          ' Now'
         ) : (
           <Moment format='YYYY/MM/DD'>{exp.to}</Moment>
         )}

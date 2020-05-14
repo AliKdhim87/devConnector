@@ -1,9 +1,9 @@
-import React from "react";
-import PropTypes from "prop-types";
-import Moment from "react-moment";
-import { Link } from "react-router-dom";
-import { connect } from "react-redux";
-import { deleteComment } from "../../actions/post";
+import React from 'react';
+import PropTypes from 'prop-types';
+import Moment from 'react-moment';
+import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { deleteComment } from '../../actions/post';
 const CommentItem = ({
   postId,
   comment: { _id, text, name, avatar, user, date },

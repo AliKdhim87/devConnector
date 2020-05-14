@@ -1,14 +1,14 @@
-import React, { useEffect, Fragment, useState } from "react";
-import { Button, Header, Icon, Modal } from "semantic-ui-react";
+import React, { useEffect, Fragment, useState } from 'react';
+import { Button, Header, Icon, Modal } from 'semantic-ui-react';
 
-import PropTypes from "prop-types";
-import { Link } from "react-router-dom";
-import { getCurrentProfile, deleteAccount } from "../../actions/profile";
-import { connect } from "react-redux";
-import Spinner from "../layout/Spinner";
-import DashboardActios from "./DashboardActions";
-import Experience from "./Experience";
-import Education from "./Education";
+import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
+import { getCurrentProfile, deleteAccount } from '../../actions/profile';
+import { connect } from 'react-redux';
+import Spinner from '../layout/Spinner';
+import DashboardActios from './DashboardActions';
+import Experience from './Experience';
+import Education from './Education';
 const Dashboard = ({
   getCurrentProfile,
   deleteAccount,

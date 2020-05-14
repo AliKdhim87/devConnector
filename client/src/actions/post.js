@@ -1,5 +1,5 @@
-import axios from "axios";
-import { setAlert } from "./alert";
+import axios from 'axios';
+import { setAlert } from './alert';
 import {
   GET_POSTS,
   POST_ERROR,
@@ -9,11 +9,11 @@ import {
   GET_POST,
   ADD_COMMENT,
   REMOVE_COMMENT,
-} from "./types";
+} from './types';
 
 export const getPosts = () => async (dispatch) => {
   try {
-    const res = await axios.get("/api/posts");
+    const res = await axios.get('/api/posts');
     dispatch({
       type: GET_POSTS,
       payload: res.data,
@@ -75,7 +75,7 @@ export const deletePost = (id) => async (dispatch) => {
       type: DELETE_POST,
       payload: id,
     });
-    dispatch(setAlert("Post Removed", "success"));
+    dispatch(setAlert('Post Removed', 'success'));
   } catch (error) {
     dispatch({
       type: POST_ERROR,
@@ -91,21 +91,21 @@ export const deletePost = (id) => async (dispatch) => {
 export const addPost = (formData) => async (dispatch) => {
   const config = {
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
   };
   try {
-    const res = await axios.post("/api/posts", formData, config);
+    const res = await axios.post('/api/posts', formData, config);
     dispatch({
       type: ADD_POST,
       payload: res.data,
     });
-    dispatch(setAlert("Post Created", "success"));
+    dispatch(setAlert('Post Created', 'success'));
   } catch (error) {
     const errors = error.response.data.errors;
 
     if (errors) {
-      errors.forEach((error) => dispatch(setAlert(error.msg, "danger")));
+      errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
     }
     dispatch({
       type: POST_ERROR,
@@ -140,7 +140,7 @@ export const getPost = (id) => async (dispatch) => {
 export const addComment = (postId, formData) => async (dispatch) => {
   const config = {
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
   };
   try {
@@ -153,12 +153,12 @@ export const addComment = (postId, formData) => async (dispatch) => {
       type: ADD_COMMENT,
       payload: res.data,
     });
-    dispatch(setAlert("Comment Added", "success"));
+    dispatch(setAlert('Comment Added', 'success'));
   } catch (error) {
     const errors = error.response.data.errors;
 
     if (errors) {
-      errors.forEach((error) => dispatch(setAlert(error.msg, "danger")));
+      errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
     }
     dispatch({
       type: POST_ERROR,
@@ -173,12 +173,12 @@ export const deleteComment = (postId, commentId) => async (dispatch) => {
       type: REMOVE_COMMENT,
       payload: commentId,
     });
-    dispatch(setAlert("Comment Removed", "success"));
+    dispatch(setAlert('Comment Removed', 'success'));
   } catch (error) {
     const errors = error.response.data.errors;
 
     if (errors) {
-      errors.forEach((error) => dispatch(setAlert(error.msg, "danger")));
+      errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
     }
     dispatch({
       type: POST_ERROR,

@@ -1,4 +1,4 @@
-import { SET_ALERT, REMOVE_ALERT } from "../actions/types";
+import { SET_ALERT, REMOVE_ALERT } from '../actions/types';
 const initailState = [];
 export default (state = initailState, action) => {
   const { type, payload } = action;
