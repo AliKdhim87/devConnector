@@ -4,6 +4,7 @@ import { Button, Header, Icon, Modal } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { getCurrentProfile, deleteAccount } from '../../actions/profile';
+import { loadUser } from '../../actions/auth';
 import { connect } from 'react-redux';
 import Spinner from '../layout/Spinner';
 import DashboardActios from './DashboardActions';
@@ -12,13 +13,16 @@ import Education from './Education';
 const Dashboard = ({
   getCurrentProfile,
   deleteAccount,
+  loadUser,
   profile: { profile, loading },
   auth: { user },
 }) => {
   useEffect(() => {
     getCurrentProfile();
-  }, [getCurrentProfile]);
+    loadUser();
+  }, [getCurrentProfile, loadUser]);
   const [open, setOpen] = useState(false);
+
   return loading && profile === null ? (
     <Spinner />
   ) : (
@@ -78,6 +82,8 @@ const mapStateToProps = (state) => ({
   auth: state.auth,
   profile: state.profile,
 });
-export default connect(mapStateToProps, { getCurrentProfile, deleteAccount })(
-  Dashboard
-);
+export default connect(mapStateToProps, {
+  getCurrentProfile,
+  deleteAccount,
+  loadUser,
+})(Dashboard);

@@ -7,6 +7,7 @@ import Alert from '../layout/Alert';
 import Dashboard from '../dashboard/Dashboard';
 import CreateProfile from '../profile-forms/CreateProfile';
 import EditProfile from '../profile-forms/EditProfile';
+import EditUserInfo from '../profile-forms/EditUserInfo';
 import AddExperience from '../profile-forms/AddExperience';
 import AddEducation from '../profile-forms/AddEducation';
 import Profiles from '../profiles/Profiles';
@@ -27,6 +28,7 @@ const Routes = () => {
 
         <PraivateRoute exact path='/dashboard' component={Dashboard} />
         <PraivateRoute exact path='/create-profile' component={CreateProfile} />
+        <PraivateRoute exact path='/edit-userinfo' component={EditUserInfo} />
         <PraivateRoute exact path='/edit-profile' component={EditProfile} />
         <PraivateRoute exact path='/add-experience' component={AddExperience} />
         <PraivateRoute exact path='/add-education' component={AddEducation} />
