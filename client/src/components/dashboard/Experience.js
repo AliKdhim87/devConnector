@@ -4,28 +4,30 @@ import { connect } from 'react-redux';
 import { deteleExperience } from '../../actions/profile';
 import Moment from 'react-moment';
 const Experience = ({ experience, deteleExperience }) => {
-  const experiences = experience.map((exp) => (
-    <tr key={exp._id}>
-      <td>{exp.company}</td>
-      <td className='hide-sm'>{exp.title}</td>
-      <td>
-        <Moment format='YYYY/MM/DD'>{exp.from}</Moment> -{' '}
-        {exp.to === null ? (
-          ' Now'
-        ) : (
-          <Moment format='YYYY/MM/DD'>{exp.to}</Moment>
-        )}
-      </td>
-      <td>
-        <button
-          onClick={() => deteleExperience(exp._id)}
-          className='btn btn-danger'
-        >
-          Delete
-        </button>
-      </td>
-    </tr>
-  ));
+  const experiences =
+    experience &&
+    experience.map((exp) => (
+      <tr key={exp._id}>
+        <td>{exp.company}</td>
+        <td className='hide-sm'>{exp.title}</td>
+        <td>
+          <Moment format='YYYY/MM/DD'>{exp.from}</Moment> -{' '}
+          {exp.to === null ? (
+            ' Now'
+          ) : (
+            <Moment format='YYYY/MM/DD'>{exp.to}</Moment>
+          )}
+        </td>
+        <td>
+          <button
+            onClick={() => deteleExperience(exp._id)}
+            className='btn btn-danger'
+          >
+            Delete
+          </button>
+        </td>
+      </tr>
+    ));
   return (
     <Fragment>
       <h2 className='my-2'>Experience Credentials</h2>

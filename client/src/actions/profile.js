@@ -8,6 +8,7 @@ import {
   ACCOUNT_DELETED,
   GET_PROFILES,
   GET_REPOS,
+  USER_LOADED,
 } from '../actions/types';
 // Get cuurent users profile
 export const getCurrentProfile = () => async (dispatch) => {
@@ -86,9 +87,32 @@ export const getGithubRepos = (username) => async (dispatch) => {
     });
   }
 };
+// Update user info
+
+export const updateUser = (avatar, name) => async (dispatch) => {
+  const formData = new FormData();
+  formData.append('avatar', avatar);
+  formData.append('name', name);
+
+  try {
+    const res = await axios.patch('/api/users', formData);
+    dispatch({
+      type: USER_LOADED,
+      payload: res.data,
+    });
+    dispatch(setAlert('User Updated', 'success'));
+  } catch (error) {
+    dispatch({
+      type: PROFILE_ERROR,
+      payload: {
+        msg: error.response.msg,
+        status: error.response.status,
+      },
+    });
+  }
+};
 
 //Create or Update profile
-
 export const createProfile = (formData, history, edit = false) => async (
   dispatch
 ) => {
