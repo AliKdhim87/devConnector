@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 const GroupSchema = new Schema({
   creator: {
     type: Schema.Types.ObjectId,
-    ref: "users",
+    ref: "user",
   },
   name: {
     type: String,
@@ -20,7 +20,7 @@ const GroupSchema = new Schema({
       },
       creator: {
         type: Schema.Types.ObjectId,
-        ref: "users",
+        ref: "user",
       },
       text: {
         type: String,
@@ -34,7 +34,7 @@ const GroupSchema = new Schema({
         {
           creator: {
             type: Schema.Types.ObjectId,
-            ref: "users",
+            ref: "user",
           },
           text: {
             type: String,

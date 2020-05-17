@@ -58,7 +58,7 @@ router.get("/", auth, async (req, res) => {
 // @access  Public
 router.get("/:groupID", auth, async (req, res) => {
   try {
-    const group = await Group.findById(req.params.groupID);
+    const group = await Group.findById(req.params.groupID).populate('creator', ['name', 'avatar']);
     console.log(req.params.groupID);
     if (!group) {
       return res.status(404).json({ msg: "Group not found." });
@@ -211,7 +211,7 @@ router.put("/leave/:groupID", auth, async (req, res) => {
 // @access  Public
 router.get("/:groupID/posts", auth, async (req, res) => {
   try {
-    const group = await Group.findById(req.params.groupID);
+    const group = await Group.findById(req.params.groupID).populate('posts.creator posts.comments.creator', 'name avatar');
     if (!group) {
       return res.status(404).json({ msg: "Group not found." });
     }
