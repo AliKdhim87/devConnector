@@ -66,7 +66,7 @@ router.get('/:id', auth, async (req, res) => {
   }
 });
 
-// @route   DELET api/post/:id
+// @route   DELETE api/post/:id
 // @desc    delete a post
 // @access  Private
 router.delete('/:id', auth, async (req, res) => {
@@ -180,7 +180,7 @@ router.post(
   }
 );
 
-// @route   DELET api/post/comment/:id/:comment_id
+// @route   DELETE api/post/comment/:id/:comment_id
 // @desc    Delete a comment from a post
 // @access  Private
 
