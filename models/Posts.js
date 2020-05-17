@@ -27,6 +27,24 @@ const PostSchema = new Schema({
       },
     },
   ],
+  emojis: [
+    {
+      user: {
+        type: Schema.Types.ObjectId,
+        ref: 'users',
+      },
+      emoji: {
+        colons: { type: String },
+        emoticons: [String],
+        id: { type: String },
+        name: { type: String },
+        native: { type: String },
+        short_names: [String],
+        skin: { type: Number },
+        unified: { type: String },
+      },
+    },
+  ],
   comments: [
     {
       user: {
