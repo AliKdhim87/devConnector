@@ -47,7 +47,7 @@ router.get('/', auth, async (req, res) => {
     res.status(500).send('Server error');
   }
 });
-// @route   GET api/post/:id
+// @route   GET api/posts/:id
 // @desc    Get post bu id
 // @access  Private
 router.get('/:id', auth, async (req, res) => {
@@ -66,7 +66,7 @@ router.get('/:id', auth, async (req, res) => {
   }
 });
 
-// @route   DELETE api/post/:id
+// @route   DELETE api/posts/:id
 // @desc    delete a post
 // @access  Private
 router.delete('/:id', auth, async (req, res) => {
@@ -92,7 +92,7 @@ router.delete('/:id', auth, async (req, res) => {
   }
 });
 
-// @route   PUT api/post/like/:id
+// @route   PUT api/posts/like/:id
 // @desc    Like a post
 // @access  Private
 router.put('/like/:id', auth, async (req, res) => {
@@ -114,7 +114,7 @@ router.put('/like/:id', auth, async (req, res) => {
   }
 });
 
-// @route   PUT api/post/add_emoji/:id
+// @route   PUT api/posts/add_emoji/:id
 // @desc    add emoji to a post
 // @access  Private
 
@@ -168,7 +168,7 @@ router.put('/add_emoji/:id', auth, async (req, res) => {
   }
 });
 
-// @route   DELETE api/post/unlike/:id
+// @route   DELETE api/posts/unlike/:id
 // @desc    Unlike a post
 // @access  Private
 router.put('/unlike/:id', auth, async (req, res) => {
@@ -227,7 +227,7 @@ router.delete('/remove_emoji/:id/:emoji_id', auth, async (req, res) => {
   }
 });
 
-// @route   POST api/post/comment/:id
+// @route   POST api/posts/comment/:id
 // @desc    Comment on a post
 // @access  Private
 router.post(
@@ -266,7 +266,7 @@ router.post(
   },
 );
 
-// @route   DELETE api/post/comment/:id/:comment_id
+// @route   DELETE api/posts/comment/:id/:comment_id
 // @desc    Delete a comment from a post
 // @access  Private
 
@@ -302,7 +302,7 @@ router.delete('/comment/:id/:comment_id', auth, async (req, res) => {
   }
 });
 
-// @route   PUT api/post/comment/add_emoji/:comment_id
+// @route   PUT api/posts/comment/add_emoji/:comment_id
 // @desc    add emoji to a comment
 // @access  Private
 
