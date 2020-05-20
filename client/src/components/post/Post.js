@@ -7,7 +7,10 @@ import PostItem from '../posts/PostItem';
 import { Link } from 'react-router-dom';
 import CommentForm from './CommentForm';
 import CommentItem from './CommentItem';
-const Post = ({ getPost, post: { post, loading }, match }) => {
+import Emoji from './Emoji';
+import { addEmoji } from '../../actions/post';
+
+const Post = ({ getPost, post: { post, loading }, match, addEmoji }) => {
   useEffect(() => {
     getPost(match.params.id);
   }, [getPost, match]);
@@ -26,6 +29,7 @@ const Post = ({ getPost, post: { post, loading }, match }) => {
           <CommentItem key={comment._id} comment={comment} postId={post._id} />
         ))}
       </div>
+      <Emoji addEmoji={addEmoji} postId={post._id}></Emoji>
     </Fragment>
   );
 };
@@ -33,9 +37,10 @@ const Post = ({ getPost, post: { post, loading }, match }) => {
 Post.propTypes = {
   getPost: PropTypes.func.isRequired,
   post: PropTypes.object.isRequired,
+  addEmoji: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   post: state.post,
 });
-export default connect(mapStateToProps, { getPost })(Post);
+export default connect(mapStateToProps, { getPost, addEmoji })(Post);
