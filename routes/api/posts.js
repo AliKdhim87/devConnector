@@ -5,7 +5,7 @@ const auth = require('../../middleware/auth');
 const User = require('../../models/User');
 const Post = require('../../models/Posts');
 const Profile = require('../../models/Profile');
-// @route   POST api/post
+// @route   POST api/posts
 // @desc    Create a post
 // @access  Private
 router.post(
@@ -16,7 +16,7 @@ router.post(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    console.log(req.body);
+
     try {
       const user = await User.findById(req.user.id).select('-password');
 
@@ -35,7 +35,7 @@ router.post(
   },
 );
 
-// @route   GET api/post
+// @route   GET api/posts
 // @desc    Get all posts
 // @access  Private
 router.get('/', auth, async (req, res) => {
@@ -66,7 +66,7 @@ router.get('/:id', auth, async (req, res) => {
   }
 });
 
-// @route   DELET api/post/:id
+// @route   DELETE api/post/:id
 // @desc    delete a post
 // @access  Private
 router.delete('/:id', auth, async (req, res) => {
@@ -144,24 +144,20 @@ router.put('/add_emoji/:id', auth, async (req, res) => {
 
     const post = await Post.findById(req.params.id);
     // Check if the emoji has already been chosen
-
+    const { emojis } = post;
     const isEmojiAddedByUser =
-      post.emojis
+      emojis
         .map((emoji) => emoji.emoji.unified)
         .find((item) => item === unified) &&
-      post.emojis.filter((emoji) => emoji.user.toString() === req.user.id)
-        .length > 0;
+      emojis.filter((emoji) => emoji.user.toString() === req.user.id).length >
+        0;
 
-    console.log(isEmojiAddedByUser);
     if (isEmojiAddedByUser) {
-      post.emojis.map((e) => console.log(e.id));
-      console.log(req.user.id);
-
       return res
         .status(400)
         .json({ msg: 'You already chose it. Please add another one...' });
     }
-    post.emojis.unshift({ user: req.user.id, emoji });
+    emojis.unshift({ user: req.user.id, emoji });
 
     await post.save();
 
@@ -199,18 +195,23 @@ router.put('/unlike/:id', auth, async (req, res) => {
   }
 });
 
-// @route   DELETE api/post/remove_emoji/:id
+// @route   DELETE api/posts/remove_emoji/:id/emoji_id
 // @desc    Remove emoji from a post
 // @access  Private
-router.put('/remove_emoji/:id', auth, async (req, res) => {
+router.delete('/remove_emoji/:id/:emoji_id', auth, async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
-    // Check if the post has already been chosen
-    if (
-      post.emojis.filter((emoji) => emoji.user.toString() === req.user.id)
-        .length === 0
-    ) {
-      return res.status(400).json({ msg: 'No emoji has been chosen yet' });
+    const emojiId = req.params.emoji_id;
+
+    // Check if the emoji has already been chosen
+    const emojiAddedByUser = post.emojis.find(
+      (emoji) =>
+        emoji.id.toString() === emojiId &&
+        emoji.user.toString() === req.user.id,
+    );
+
+    if (!emojiAddedByUser) {
+      return res.status(400).json({ msg: 'No emoji to be removed' });
     }
     // Get remove index
     const removeIndex = post.emojis
@@ -265,7 +266,7 @@ router.post(
   },
 );
 
-// @route   DELET api/post/comment/:id/:comment_id
+// @route   DELETE api/post/comment/:id/:comment_id
 // @desc    Delete a comment from a post
 // @access  Private
 
@@ -300,4 +301,106 @@ router.delete('/comment/:id/:comment_id', auth, async (req, res) => {
     res.status(500).send('Server error');
   }
 });
+
+// @route   PUT api/post/comment/add_emoji/:comment_id
+// @desc    add emoji to a comment
+// @access  Private
+
+router.put('/comment/add_emoji/:id/:comment_id', auth, async (req, res) => {
+  try {
+    const {
+      colons,
+      emoticons,
+      id,
+      name,
+      native,
+      skin,
+      short_names,
+      unified,
+    } = req.body;
+
+    const emoji = {
+      colons,
+      emoticons,
+      id,
+      name,
+      native,
+      skin,
+      short_names,
+      unified,
+    };
+
+    const post = await Post.findById(req.params.id);
+    // Check if the emoji has already been chosen
+    const { emojis } = post.comments.find(
+      (comment) => comment.id === req.params.comment_id,
+    );
+    const isEmojiAddedByUser = emojis.find(
+      (emoji) =>
+        emoji.user.toString() === req.user.id &&
+        emoji.emoji.unified === unified,
+    );
+
+    if (isEmojiAddedByUser) {
+      return res
+        .status(400)
+        .json({ msg: 'You already chose it. Please add another one...' });
+    }
+    emojis.unshift({ user: req.user.id, emoji });
+
+    await post.save();
+
+    res.json(
+      post.comments.find((comment) => comment.id === req.params.comment_id)
+        .emojis,
+    );
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send('Server error');
+  }
+});
+
+// @route   DELETE api/posts/remove_emoji/comment/:id/:comment_id
+// @desc    Remove an emoji from comment
+// @access  Private
+
+router.delete(
+  '/remove_emoji/comment/:id/:comment_id/:emoji_id',
+  auth,
+  async (req, res) => {
+    try {
+      const post = await Post.findById(req.params.id);
+      const emojiId = req.params.emoji_id;
+      const comment = post.comments.find(
+        (comment) => comment.id === req.params.comment_id,
+      );
+      const emoji = comment.emojis.find(
+        (emoji) =>
+          emoji.id === emojiId && emoji.user.toString() === req.user.id,
+      );
+
+      // Check if the emoji exists
+      if (!emoji) {
+        return res.status(404).json({ msg: 'No emoji to be removed' });
+      }
+
+      // Get remove index
+      const removeIndex = comment.emojis
+        .map((emoji) => emoji.id)
+        .indexOf(emojiId);
+
+      comment.emojis.splice(removeIndex, 1);
+
+      await post.save();
+      res.json(comment.emojis);
+    } catch (error) {
+      console.error(error.message);
+      if (error.message.includes('Cast to ObjectId failed')) {
+        return res.status(400).json({ msg: 'Post not found.' });
+      }
+      res.status(500).send('Server error');
+    }
+  },
+);
+
 module.exports = router;
