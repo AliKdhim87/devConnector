@@ -7,8 +7,8 @@ import PostItem from '../posts/PostItem';
 import { Link } from 'react-router-dom';
 import CommentForm from './CommentForm';
 import CommentItem from './CommentItem';
-import Emoji from './Emoji';
-import { addEmoji } from '../../actions/post';
+import Emoji from './EmojiPicker';
+import { addEmoji, removeEmoji } from '../../actions/post';
 
 const Post = ({ getPost, post: { post, loading }, match, addEmoji }) => {
   useEffect(() => {
@@ -29,7 +29,6 @@ const Post = ({ getPost, post: { post, loading }, match, addEmoji }) => {
           <CommentItem key={comment._id} comment={comment} postId={post._id} />
         ))}
       </div>
-      <Emoji addEmoji={addEmoji} postId={post._id}></Emoji>
     </Fragment>
   );
 };

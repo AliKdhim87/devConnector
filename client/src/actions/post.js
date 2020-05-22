@@ -10,6 +10,7 @@ import {
   ADD_COMMENT,
   REMOVE_COMMENT,
   ADD_EMOJI,
+  REMOVE_EMOJI,
 } from './types';
 
 export const getPosts = () => async (dispatch) => {
@@ -203,9 +204,35 @@ export const addEmoji = (postId, emoji) => async (dispatch) => {
     );
     dispatch({
       type: ADD_EMOJI,
+      postId: postId,
       payload: res.data,
     });
     dispatch(setAlert('Emoji Added', 'success'));
+    return res;
+  } catch (error) {
+    const errors = error.response.data.errors;
+
+    if (errors) {
+      errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
+    }
+    dispatch({
+      type: POST_ERROR,
+    });
+  }
+};
+
+// Remove emoji to post
+export const removeEmoji = (postId, emojiId) => async (dispatch) => {
+  try {
+    const res = await axios.delete(
+      `/api/posts/add_emoji/${postId}/${emojiId}`,
+      dispatch({
+        type: REMOVE_EMOJI,
+        payload: emojiId,
+      }),
+    );
+
+    dispatch(setAlert('Emoji Removed', 'success'));
   } catch (error) {
     const errors = error.response.data.errors;
 

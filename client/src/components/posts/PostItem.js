@@ -1,17 +1,31 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import Moment from 'react-moment';
 import { connect } from 'react-redux';
-import { addLike, removeLike, deletePost } from '../../actions/post';
+import EmojiPicker from '../post/EmojiPicker';
+import {
+  addLike,
+  removeLike,
+  deletePost,
+  addEmoji,
+  removeEmoji,
+} from '../../actions/post';
 const PostItem = ({
   addLike,
   removeLike,
   deletePost,
   auth,
-  post: { _id, text, name, avatar, user, likes, comments, date },
+  post: { _id, text, name, avatar, user, likes, comments, date, emojis },
   showActions,
+  addEmoji,
 }) => {
+  const [hideEmojiPicker, setHideEmojiPicker] = useState(false);
+
+  const handleEmojiPicker = async (e) => {
+    const res = await addEmoji(_id, e);
+  };
+
   return (
     <div className='post bg-white p-1 my-1'>
       <div>
@@ -25,7 +39,6 @@ const PostItem = ({
         <p className='post-date'>
           Posted on <Moment format='YYYY/MM/DD'>{date}</Moment>
         </p>
-
         {showActions && (
           <Fragment>
             <button
@@ -59,11 +72,26 @@ const PostItem = ({
               </button>
             )}
           </Fragment>
+        )}{' '}
+        {hideEmojiPicker ? (
+          <i onClick={handleEmojiPicker}>Pick an emoji</i>
+        ) : (
+          <EmojiPicker onPick={handleEmojiPicker} />
+        )}
+        {emojis.length > 0 && (
+          <ul style={{ display: 'flex' }}>
+            {emojis.map((emo, index) => (
+              <li key={index}>
+                <span>{emo.emoji.native}</span>
+              </li>
+            ))}
+          </ul>
         )}
       </div>
     </div>
   );
 };
+
 PostItem.defaultProps = {
   showActions: true,
 };
@@ -74,10 +102,16 @@ PostItem.propTypes = {
   addLike: PropTypes.func.isRequired,
   removeLike: PropTypes.func.isRequired,
   deletePost: PropTypes.func.isRequired,
+  addEmoji: PropTypes.func.isRequired,
+  removeEmoji: PropTypes.func.isRequired,
 };
 const mapStateToProps = (state) => ({
   auth: state.auth,
 });
-export default connect(mapStateToProps, { addLike, removeLike, deletePost })(
-  PostItem
-);
+export default connect(mapStateToProps, {
+  addLike,
+  removeLike,
+  deletePost,
+  addEmoji,
+  removeEmoji,
+})(PostItem);

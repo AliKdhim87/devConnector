@@ -8,6 +8,7 @@ import {
   ADD_COMMENT,
   REMOVE_COMMENT,
   ADD_EMOJI,
+  REMOVE_EMOJI,
 } from '../actions/types';
 const initailState = {
   posts: [],
@@ -16,7 +17,7 @@ const initailState = {
   error: {},
 };
 export default function (state = initailState, action) {
-  const { type, payload } = action;
+  const { type, payload, postId } = action;
   switch (type) {
     case GET_POSTS:
       return {
@@ -61,10 +62,16 @@ export default function (state = initailState, action) {
         loading: false,
       };
     }
-    case ADD_COMMENT: {
+    case ADD_EMOJI: {
       return {
         ...state,
-        post: { ...state.post, comments: payload },
+        posts: state.posts.map((post, index) =>
+          post._id !== postId ? post : { ...post, emojis: payload },
+        ),
+        post:
+          state.post && state.post.id === postId
+            ? { ...state.post, emojis: payload }
+            : state.post,
         loading: false,
       };
     }
@@ -83,7 +90,31 @@ export default function (state = initailState, action) {
     case ADD_EMOJI: {
       return {
         ...state,
-        post: { ...state.post, emojis: payload },
+        posts: state.posts.map((post, index) =>
+          post._id !== postId ? post : { ...post, emojis: payload },
+        ),
+        post:
+          state.post && state.post.id === postId
+            ? { ...state.post, emojis: payload }
+            : state.post,
+        loading: false,
+      };
+    }
+    case REMOVE_EMOJI: {
+      return {
+        ...state,
+        posts: state.posts.map((post, index) =>
+          post._id === postId
+            ? {
+                ...post,
+                emojis: post.emojis.filter((emoji) => emoji._id !== payload),
+              }
+            : post,
+        ),
+        post: {
+          ...state.post,
+          emojis: state.post.emojis.filter((emoji) => emoji._id !== payload),
+        },
         loading: false,
       };
     }
