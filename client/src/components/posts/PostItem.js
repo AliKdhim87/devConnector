@@ -19,11 +19,12 @@ const PostItem = ({
   post: { _id, text, name, avatar, user, likes, comments, date, emojis },
   showActions,
   addEmoji,
+  removeEmoji,
 }) => {
   const [hideEmojiPicker, setHideEmojiPicker] = useState(false);
 
-  const handleEmojiPicker = async (e) => {
-    const res = await addEmoji(_id, e);
+  const handleEmojiPicker = (e) => {
+    addEmoji(_id, e);
   };
 
   return (
@@ -82,7 +83,9 @@ const PostItem = ({
           <ul style={{ display: 'flex' }}>
             {emojis.map((emo, index) => (
               <li key={index}>
-                <span>{emo.emoji.native}</span>
+                <span onClick={() => removeEmoji(_id, emo._id)}>
+                  {emo.emoji.native}
+                </span>
               </li>
             ))}
           </ul>

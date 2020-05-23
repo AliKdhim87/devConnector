@@ -62,16 +62,10 @@ export default function (state = initailState, action) {
         loading: false,
       };
     }
-    case ADD_EMOJI: {
+    case ADD_COMMENT: {
       return {
         ...state,
-        posts: state.posts.map((post, index) =>
-          post._id !== postId ? post : { ...post, emojis: payload },
-        ),
-        post:
-          state.post && state.post.id === postId
-            ? { ...state.post, emojis: payload }
-            : state.post,
+        post: { ...state.post, comments: payload },
         loading: false,
       };
     }
@@ -93,10 +87,6 @@ export default function (state = initailState, action) {
         posts: state.posts.map((post, index) =>
           post._id !== postId ? post : { ...post, emojis: payload },
         ),
-        post:
-          state.post && state.post.id === postId
-            ? { ...state.post, emojis: payload }
-            : state.post,
         loading: false,
       };
     }

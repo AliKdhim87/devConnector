@@ -114,11 +114,11 @@ router.put('/like/:id', auth, async (req, res) => {
   }
 });
 
-// @route   PUT api/posts/add_emoji/:id
+// @route   PUT api/posts/emoji/:id
 // @desc    add emoji to a post
 // @access  Private
 
-router.put('/add_emoji/:id', auth, async (req, res) => {
+router.put('/emoji/:id', auth, async (req, res) => {
   try {
     const {
       colons,
@@ -195,10 +195,10 @@ router.put('/unlike/:id', auth, async (req, res) => {
   }
 });
 
-// @route   DELETE api/posts/remove_emoji/:id/emoji_id
+// @route   DELETE api/posts/emoji/:id/emoji_id
 // @desc    Remove emoji from a post
 // @access  Private
-router.delete('/remove_emoji/:id/:emoji_id', auth, async (req, res) => {
+router.delete('/emoji/:id/:emoji_id', auth, async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
     const emojiId = req.params.emoji_id;
@@ -302,11 +302,11 @@ router.delete('/comment/:id/:comment_id', auth, async (req, res) => {
   }
 });
 
-// @route   PUT api/posts/comment/add_emoji/:comment_id
+// @route   PUT api/posts/comment/emoji/:comment_id
 // @desc    add emoji to a comment
 // @access  Private
 
-router.put('/comment/add_emoji/:id/:comment_id', auth, async (req, res) => {
+router.put('/comment/emoji/:id/:comment_id', auth, async (req, res) => {
   try {
     const {
       colons,
@@ -360,12 +360,12 @@ router.put('/comment/add_emoji/:id/:comment_id', auth, async (req, res) => {
   }
 });
 
-// @route   DELETE api/posts/remove_emoji/comment/:id/:comment_id
+// @route   DELETE api/posts/emoji/comment/:id/:comment_id
 // @desc    Remove an emoji from comment
 // @access  Private
 
 router.delete(
-  '/remove_emoji/comment/:id/:comment_id/:emoji_id',
+  '/emoji/comment/:id/:comment_id/:emoji_id',
   auth,
   async (req, res) => {
     try {
