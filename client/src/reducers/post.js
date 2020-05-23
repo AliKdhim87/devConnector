@@ -88,6 +88,10 @@ export default function (state = initailState, action) {
           post._id !== postId ? post : { ...post, emojis: payload },
         ),
         loading: false,
+        post:
+          state.post && state.post._id === postId
+            ? { ...state.post, emojis: payload }
+            : state.post,
       };
     }
     case REMOVE_EMOJI: {
@@ -101,10 +105,15 @@ export default function (state = initailState, action) {
               }
             : post,
         ),
-        post: {
-          ...state.post,
-          emojis: state.post.emojis.filter((emoji) => emoji._id !== payload),
-        },
+        post:
+          state.post && state.post._id === postId
+            ? {
+                ...state.post,
+                emojis: state.post.emojis.filter(
+                  (emoji) => emoji._id !== payload,
+                ),
+              }
+            : state.post,
         loading: false,
       };
     }
