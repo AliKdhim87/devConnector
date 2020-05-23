@@ -13,7 +13,13 @@ const Group = require("../../models/Groups");
 // @access  Private
 router.post(
   "/",
-  [auth, [check("name", "Name is required.").not().isEmpty()]],
+  [
+    auth,
+    [
+      check("name", "Name is required.").not().isEmpty(),
+      check("description", "Description is required").not().isEmpty(),
+    ],
+  ],
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -21,10 +27,17 @@ router.post(
     }
     console.log(req.body);
     try {
-      const currentUser = await User.findById(req.user.id).select("-password");
+      const loggedInUser = await User.findById(req.user.id);
+      const currentUser = {
+        dateJoined: Date.now(),
+        user: req.user.id,
+        name: loggedInUser.name,
+        avatar: loggedInUser.avatar
+      }
 
       const newGroup = new Group({
         name: req.body.name,
+        description: req.body.description,
         creator: req.user.id,
         posts: [],
         members: [currentUser],
@@ -53,12 +66,13 @@ router.get("/", auth, async (req, res) => {
   }
 });
 
+
 // @route   GET api/groups/:groupID
 // @desc    Get the groups by id
 // @access  Public
 router.get("/:groupID", auth, async (req, res) => {
   try {
-    const group = await Group.findById(req.params.groupID).populate('creator', ['name', 'avatar']);
+    const group = await Group.findById(req.params.groupID).populate("creator", "name avatar");
     console.log(req.params.groupID);
     if (!group) {
       return res.status(404).json({ msg: "Group not found." });
@@ -105,7 +119,13 @@ router.delete("/:groupID", auth, async (req, res) => {
 // @access  Private
 router.put(
   "/:groupID",
-  [auth, [check("name", "Name is required").not().isEmpty()]],
+  [
+    auth,
+    [
+      check("name", "Name is required").not().isEmpty(),
+      check("description", "Description is required").not().isEmpty(),
+    ],
+  ],
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -121,10 +141,10 @@ router.put(
         return res.status(401).json({ msg: "User not authorized" });
       } else {
         group.name = req.body.name;
+        group.description = req.body.description;
         group.isPublic = req.body.isPublic;
         await group.save();
       }
-
       res.json({ msg: "Group info updated" });
     } catch (error) {
       console.error(error.message);
@@ -147,18 +167,22 @@ router.put("/join/:groupID", auth, async (req, res) => {
     }
     // Check if user is already a member
     if (
-      group.members.filter((member) => member._id.toString() === req.user.id)
+      group.members.filter((member) => member.user.toString() === req.user.id)
         .length > 0
     ) {
       return res.status(400).json({ msg: "Already a member!" });
     } else {
+      const currentUser = await User.findById(req.user.id)
+      console.log(currentUser)
       const newMember = {
         dateJoined: Date.now(),
-        _id: req.user.id,
+        user: req.user.id,
+        name: currentUser.name,
+        avatar: currentUser.avatar
       };
       group.members.push(newMember);
       await group.save();
-      res.send(group);
+      res.send(group.members);
     }
   } catch (error) {
     console.error(error.message);
@@ -180,17 +204,17 @@ router.put("/leave/:groupID", auth, async (req, res) => {
     }
     // Check user
     if (
-      group.members.filter((member) => member._id.toString() === req.user.id)
+      group.members.filter((member) => member.user.toString() === req.user.id)
         .length <= 0
     ) {
       return res.status(401).json({ msg: "Not a member!" });
     } else {
       group.members = group.members.filter(
-        (member) => member._id.toString() !== req.user.id
+        (member) => member.user.toString() !== req.user.id
       );
     }
     await group.save();
-    res.send(group);
+    res.send(group.members);
   } catch (error) {
     console.error(error.message);
     if (error.message.includes("Cast to ObjectId failed")) {
@@ -202,20 +226,25 @@ router.put("/leave/:groupID", auth, async (req, res) => {
 
 /***************************************************************************************************/
 
-
 /*GET - DELETE - ADD - EDIT POSTS IN THE GROUPS*/
 /***************************************************************************************************/
 
 // @route   GET api/groups/:groupID/posts
 // @desc    Get all the posts(with comments) in the particular group
 // @access  Public
-router.get("/:groupID/posts", auth, async (req, res) => {
+router.get("/:groupID/posts/:postID", async (req, res) => {
   try {
-    const group = await Group.findById(req.params.groupID).populate('posts.creator posts.comments.creator', 'name avatar');
+    const group = await Group.findById(req.params.groupID).populate(
+      "posts.creator posts.comments.creator",
+      "name avatar"
+    );
     if (!group) {
       return res.status(404).json({ msg: "Group not found." });
     }
-    res.json(group.posts);
+    const groupPost = group.posts.filter(post=>{
+      return post._id.toString() === req.params.postID
+    })
+    res.json(groupPost[0]);
   } catch (error) {
     console.error(error.message);
     if (error.message.includes("Cast to ObjectId failed")) {
@@ -244,7 +273,7 @@ router.post(
       const user = await User.findById(req.user.id);
       // Check if the user is a member
       if (
-        group.members.filter((member) => member._id.toString() === req.user.id)
+        group.members.filter((member) => member.user.toString() === req.user.id)
           .length <= 0
       ) {
         return res.status(401).json({ msg: "User not Authorized" });
@@ -334,7 +363,6 @@ router.delete("/:groupID/posts/:postID", auth, async (req, res) => {
 });
 
 // /***************************************************************************************************/
-
 
 // /*ADDING COMMENTS TO THE POSTS*/
 // /***************************************************************************************************/

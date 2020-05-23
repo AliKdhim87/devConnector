@@ -16,6 +16,10 @@ import Posts from '../posts/Posts';
 import Post from '../post/Post';
 import NotFound from '../layout/NotFound';
 import PraivateRoute from '../routing/PraivateRoute';
+import GroupPosts from '../groups/GroupPosts';
+import GroupDetails from '../groups/GroupDetails';
+import GroupsForm from '../groups/GroupsForm';
+import Groups from '../groups/Groups';
 const Routes = () => {
   return (
     <section className='container'>
@@ -25,6 +29,14 @@ const Routes = () => {
         <Route exact path='/login' component={Login} />
         <Route exact path='/profiles' component={Profiles} />
         <Route exact path='/profile/:id' component={Profile} />
+        <Route exact path='/groups' component={Groups} />
+        <Route exact path='/groups/details' component={GroupDetails} />
+        <Route exact path='/groups/posts' component={GroupPosts} />
+
+
+        <PraivateRoute exact path='/creategroup' component={GroupsForm} />
+        <PraivateRoute exact path='/groups/:groupID' component={GroupDetails} />
+        <PraivateRoute exact path='/groups/:groupID/posts/:postID' component={GroupPosts} />
 
         <PraivateRoute exact path='/dashboard' component={Dashboard} />
         <PraivateRoute exact path='/create-profile' component={CreateProfile} />

@@ -1,5 +1,5 @@
 {
-  "mongoURI": "",
-  "jwtSecret": "",
-  "githubToken": ""
+  "mongoURI": "mongodb+srv://sila:53YTjFjF4kYOw98D@cluster0-8m0ks.mongodb.net/newDB?retryWrites=true&w=majority",
+  "jwtSecret": "sila_secret",
+  "githubToken": "aaf2a3e68af333feec2ca43a5df6bdbf17c46fbb"
 }

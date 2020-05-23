@@ -7,6 +7,10 @@ const GroupSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "user",
   },
+  description:{
+    type:String,
+    required:true
+  },
   name: {
     type: String,
     required: true,
@@ -61,12 +65,18 @@ const GroupSchema = new Schema({
     {
       user: {
         type: Schema.Types.ObjectId,
-        ref: "users",
+        ref: "user",
       },
       dateJoined: {
         type: Date,
         default: Date.now,
       },
+      name:{
+        type:String
+      },
+      avatar:{
+        type:String
+      }
     },
   ],
 });
