@@ -12,14 +12,14 @@ import {
   LEAVE_GROUP,
   ADD_POSTCOMMENT,
   DELETE_POSTCOMMENT,
-  POST_ERROR,
-} from "../actions/types";
+  POST_ERROR
+} from '../actions/types';
 const initailState = {
   groups: [],
   group: null,
   post: {},
   loading: true,
-  error: {},
+  error: {}
 };
 export default function (state = initailState, action) {
   const { type, payload } = action;
@@ -28,105 +28,86 @@ export default function (state = initailState, action) {
       return {
         ...state,
         groups: payload,
-        loading: false,
+        loading: false
       };
     case GET_GROUP: {
       return {
         ...state,
         group: payload,
-        loading: false,
+        loading: false
       };
     }
     case DELETE_GROUP: {
       return {
         ...state,
         groups: state.groups.filter((group) => group._id !== payload),
-        loading: false,
+        loading: false
       };
     }
     case ADD_GROUP:
       return {
         ...state,
         groups: [payload, ...state.groups],
-        loading: false,
+        loading: false
       };
     case JOIN_GROUP:
       return {
         ...state,
         group: { ...state.group, members: payload },
-        loading: false,
+        loading: false
       };
     case LEAVE_GROUP:
       return {
         ...state,
         group: { ...state.group, members: payload },
-        loading: false,
+        loading: false
       };
     case ADD_GROUPPOST:
       return {
         ...state,
         group: { ...state.group, posts: payload },
-        loading: false,
+        loading: false
       };
     case GET_GROUPPOST:
       return {
         ...state,
         post: payload,
-        loading: false,
+        loading: false
       };
     case DELETE_GROUPPOST:
       return {
         ...state,
         group: { ...state.group, posts: payload },
-        loading: false,
+        loading: false
       };
-
+    case UPDATE_GROUPPOST:
+      return {
+        ...state,
+        post: { ...state.post, text: payload.text, title: payload.title },
+        loading: false
+      };
     case POST_ERROR:
       return {
         ...state,
         error: payload,
-        loading: false,
+        loading: false
       };
     case ADD_POSTCOMMENT:
       return {
         ...state,
-        group: { ...state.group, comments: payload },
-        loading: false,
+        post: { ...state.post, comments: payload },
+        loading: false
       };
-      case DELETE_POSTCOMMENT:
+    case DELETE_POSTCOMMENT:
       return {
         ...state,
-        group: { ...state.group, comments: payload },
-        loading: false,
+        post: {
+          ...state.post,
+          comments: payload
+        },
+        loading: false
       };
-    //   case UPDATE_LIKES: {
-    //     return {
-    //       ...state,
-    //       posts: state.posts.map((post) =>
-    //         post._id === payload.postId ? { ...post, likes: payload.likes } : post
-    //       ),
-    //       loading: false,
-    //     };
-    //   }
-    //   case ADD_COMMENT: {
-    //     return {
-    //       ...state,
-    //       post: { ...state.post, comments: payload },
-    //       loading: false,
-    //     };
-    //   }
-    //   case REMOVE_COMMENT: {
-    //     return {
-    //       ...state,
-    //       post: {
-    //         ...state.post,
-    //         comments: state.post.comments.filter(
-    //           (comment) => comment._id !== payload
-    //         ),
-    //       },
-    //       loading: false,
-    //     };
-    //   }
+
     default:
       return state;
   }

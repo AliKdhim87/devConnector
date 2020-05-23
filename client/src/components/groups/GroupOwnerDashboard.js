@@ -1,16 +1,16 @@
-import React, { Fragment, useState } from "react";
-import { withRouter, Link, useHistory, useParams } from "react-router-dom";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import { updateGroup, deleteGroup } from "../../actions/group";
+import React, { Fragment, useState } from 'react';
+import { withRouter, Link, useHistory, useParams } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { updateGroup, deleteGroup } from '../../actions/group';
 
 const GroupOwnerDashboard = ({ updateGroup, deleteGroup, isPublic }) => {
   const history = useHistory();
   const { groupID } = useParams();
   const [formData, setFormData] = useState({
-    name: "",
-    description: "",
-    isPublic: isPublic,
+    name: '',
+    description: '',
+    isPublic: isPublic
   });
   const { name, description } = formData;
   const onChangeInputHandler = (e) =>
@@ -59,13 +59,13 @@ const GroupOwnerDashboard = ({ updateGroup, deleteGroup, isPublic }) => {
           <button className="btn btn-primary">UPDATE</button>
         </div>
       </form>
-      <div className="flex-c" style={{ margin: "1rem 0" }}>
+      <div className="flex-c" style={{ margin: '1rem 0' }}>
         <small className="form-text">
           Are you sure you want to delete the group with all the posts?
         </small>
         <button
           className="btn btn-danger center"
-          style={{ width: "20%" }}
+          style={{ width: '20%' }}
           onClick={() => {
             setModalOpen(true);
           }}
@@ -101,7 +101,7 @@ GroupOwnerDashboard.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  group: state.group,
+  group: state.group
 });
 
 export default connect(mapStateToProps, { updateGroup, deleteGroup })(

@@ -22,30 +22,33 @@ import GroupsForm from '../groups/GroupsForm';
 import Groups from '../groups/Groups';
 const Routes = () => {
   return (
-    <section className='container'>
+    <section className="container">
       <Alert />
       <Switch>
-        <Route exact path='/register' component={Register} />
-        <Route exact path='/login' component={Login} />
-        <Route exact path='/profiles' component={Profiles} />
-        <Route exact path='/profile/:id' component={Profile} />
-        <Route exact path='/groups' component={Groups} />
-        <Route exact path='/groups/details' component={GroupDetails} />
-        <Route exact path='/groups/posts' component={GroupPosts} />
+        <Route exact path="/register" component={Register} />
+        <Route exact path="/login" component={Login} />
+        <Route exact path="/profiles" component={Profiles} />
+        <Route exact path="/profile/:id" component={Profile} />
+        <Route exact path="/groups" component={Groups} />
+        <Route exact path="/groups/details" component={GroupDetails} />
+        <Route exact path="/groups/posts" component={GroupPosts} />
 
+        <PraivateRoute exact path="/creategroup" component={GroupsForm} />
+        <PraivateRoute exact path="/groups/:groupID" component={GroupDetails} />
+        <PraivateRoute
+          exact
+          path="/groups/:groupID/posts/:postID"
+          component={GroupPosts}
+        />
 
-        <PraivateRoute exact path='/creategroup' component={GroupsForm} />
-        <PraivateRoute exact path='/groups/:groupID' component={GroupDetails} />
-        <PraivateRoute exact path='/groups/:groupID/posts/:postID' component={GroupPosts} />
-
-        <PraivateRoute exact path='/dashboard' component={Dashboard} />
-        <PraivateRoute exact path='/create-profile' component={CreateProfile} />
-        <PraivateRoute exact path='/edit-userinfo' component={EditUserInfo} />
-        <PraivateRoute exact path='/edit-profile' component={EditProfile} />
-        <PraivateRoute exact path='/add-experience' component={AddExperience} />
-        <PraivateRoute exact path='/add-education' component={AddEducation} />
-        <PraivateRoute exact path='/posts' component={Posts} />
-        <PraivateRoute exact path='/posts/:id' component={Post} />
+        <PraivateRoute exact path="/dashboard" component={Dashboard} />
+        <PraivateRoute exact path="/create-profile" component={CreateProfile} />
+        <PraivateRoute exact path="/edit-userinfo" component={EditUserInfo} />
+        <PraivateRoute exact path="/edit-profile" component={EditProfile} />
+        <PraivateRoute exact path="/add-experience" component={AddExperience} />
+        <PraivateRoute exact path="/add-education" component={AddEducation} />
+        <PraivateRoute exact path="/posts" component={Posts} />
+        <PraivateRoute exact path="/posts/:id" component={Post} />
         <Route component={NotFound} />
       </Switch>
     </section>

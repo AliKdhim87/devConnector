@@ -1,84 +1,99 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
 
 const GroupSchema = new Schema({
   creator: {
     type: Schema.Types.ObjectId,
-    ref: "user",
+    ref: 'user'
   },
-  description:{
-    type:String,
-    required:true
+  description: {
+    type: String,
+    required: true
   },
   name: {
     type: String,
     required: true,
-    trim: true,
+    trim: true
   },
   posts: [
     {
       title: {
         type: String,
-        required: true,
+        required: true
       },
       creator: {
         type: Schema.Types.ObjectId,
-        ref: "user",
+        ref: 'user'
       },
       text: {
         type: String,
-        required: true,
+        required: true
       },
       date: {
         type: Date,
-        default: Date.now,
+        default: Date.now
+      },
+      name: {
+        type: String
+      },
+      avatar: {
+        type: String
       },
       comments: [
         {
           creator: {
             type: Schema.Types.ObjectId,
-            ref: "user",
+            ref: 'user'
           },
           text: {
             type: String,
             required: true,
-            trim: true,
+            trim: true
           },
           date: {
             type: Date,
-            default: Date.now,
+            default: Date.now
           },
-        },
-      ],
-    },
+          avatar: {
+            type: String
+          },
+          name: {
+            type: String
+          },
+          userId: {
+            type: String
+          }
+        }
+      ]
+    }
   ],
   createdAt: {
     type: Date,
-    default: Date.now,
+    default: Date.now
   },
   isPublic: {
     type: Boolean,
-    default: true,
+    default: true
   },
   members: [
     {
       user: {
         type: Schema.Types.ObjectId,
-        ref: "user",
+        ref: 'user'
       },
       dateJoined: {
         type: Date,
-        default: Date.now,
+        default: Date.now
       },
-      name:{
-        type:String
+      name: {
+        type: String
       },
-      avatar:{
-        type:String
+      avatar: {
+        type: String
       }
-    },
-  ],
+    }
+  ]
 });
 
-module.exports = Group = mongoose.model("group", GroupSchema);
+module.exports = Group = mongoose.model('group', GroupSchema);

@@ -13,6 +13,9 @@ const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
         <NavLink to='/posts'>Posts</NavLink>
       </li>
       <li>
+        <NavLink to='/groups'>Groups</NavLink>
+      </li>
+      <li>
         {' '}
         <NavLink to='/dashboard'>
           <i className='fas fa-user'></i>{' '}

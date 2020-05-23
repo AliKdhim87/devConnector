@@ -1,18 +1,19 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React from 'react';
+import { Link } from 'react-router-dom';
 
+// each group item in all groups page
 const GroupItem = ({ groups }) => {
   return (
     <section className="container">
       {groups.map((group) => {
         return (
           <div className="all-groups flex-c text-center">
-            <Link to = {`/groups/${group._id}` } className="group-link">
+            <Link to={`/groups/${group._id}`} className="group-link">
               <div className="group-item flex-c bg-primary">
                 <h2 className="text">{group.name}</h2>
                 <p>{group.description}</p>
                 <p className="group-access">
-                  {group.isPublic ? "Public" : "Private"}
+                  {group.isPublic ? 'Public' : 'Private'}
                 </p>
               </div>
             </Link>
