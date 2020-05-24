@@ -16,7 +16,6 @@ router.post(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    console.log(req.body);
     try {
       const user = await User.findById(req.user.id).select('-password');
 
@@ -66,7 +65,7 @@ router.get('/:id', auth, async (req, res) => {
   }
 });
 
-// @route   DELET api/post/:id
+// @route   DELETE api/post/:id
 // @desc    delete a post
 // @access  Private
 router.delete('/:id', auth, async (req, res) => {
@@ -180,7 +179,7 @@ router.post(
   }
 );
 
-// @route   DELET api/post/comment/:id/:comment_id
+// @route   DELETE api/post/comment/:id/:comment_id
 // @desc    Delete a comment from a post
 // @access  Private
 

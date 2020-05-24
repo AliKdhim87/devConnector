@@ -23,3 +23,19 @@ export const DELETE_POST = 'DELETE_POST';
 export const ADD_POST = 'ADD_POST';
 export const ADD_COMMENT = 'ADD_COMMENT';
 export const REMOVE_COMMENT = 'REMOVE_COMMENT';
+//Group feature action types
+export const GET_GROUPS = 'GET_GROUPS';
+export const ADD_GROUP = 'ADD_GROUP'
+export const GET_GROUP = 'GET_GROUP';
+export const UPDATE_GROUP = 'UPDATE_GROUP';
+export const DELETE_GROUP = 'DELETE_GROUP';
+export const GET_GROUPPOST = 'GET_GROUPPOST';
+export const ADD_GROUPPOST = 'ADD_GROUPPOST';
+export const UPDATE_GROUPPOST = 'UPDATE_GROUPPOST';
+export const DELETE_GROUPPOST = 'DELETE_GROUPPOST';
+export const ADD_POSTCOMMENT = 'ADD_POSTCOMMENT';
+export const DELETE_POSTCOMMENT = 'DELETE_POSTCOMMENT';
+export const JOIN_GROUP = 'JOIN_GROUP';
+export const LEAVE_GROUP = 'LEAVE_GROUP';
+
+

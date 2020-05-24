@@ -14,7 +14,7 @@
 }
 
 body {
-  font-family: "Raleway", sans-serif;
+  font-family: 'Raleway', sans-serif;
   font-size: 1rem;
   line-height: 1.6;
   background-color: #fff;
@@ -245,10 +245,10 @@ img {
   color: #888;
 }
 
-.form input[type="text"],
-.form input[type="email"],
-.form input[type="password"],
-.form input[type="date"],
+.form input[type='text'],
+.form input[type='email'],
+.form input[type='password'],
+.form input[type='date'],
 .form select,
 .form textarea {
   display: block;
@@ -258,7 +258,7 @@ img {
   border: 1px solid #ccc;
 }
 
-.form input[type="submit"],
+.form input[type='submit'],
 button {
   font: inherit;
 }
@@ -333,7 +333,7 @@ button {
 /* Landing Page */
 .landing {
   position: relative;
-  background: url("./img/showcase.jpg") no-repeat center center/cover;
+  background: url('./img/showcase.jpg') no-repeat center center/cover;
   height: 100vh;
 }
 
@@ -364,10 +364,10 @@ button {
 .profile-grid {
   display: grid;
   grid-template-areas:
-    "top top"
-    "about about"
-    "exp edu"
-    "github github";
+    'top top'
+    'about about'
+    'exp edu'
+    'github github';
   grid-gap: 1rem;
 }
 
@@ -487,7 +487,147 @@ button {
   font-size: 0.8rem;
   margin-bottom: 0.5rem;
 }
+.flex-c {
+  display: flex;
+  flex-direction: column;
+}
+.flex-r {
+  display: flex;
+  flex-direction: row;
+}
+.flex-center {
+  align-items: center;
+  justify-content: center;
+}
+.group-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  text-align: left !important;
+  width: 50%;
+}
+.group-members {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  width: 30%;
+}
+.group-buttons {
+  width: 20%;
+}
+.group-item {
+  width: 60%;
+  margin: 1rem auto;
+  padding: 1rem;
+}
+.group-access {
+  border: var(--dark-color);
+  padding: 0.5rem;
+  background-color: var(--danger-color);
+  margin: 1rem auto;
+  transform: rotate(-1deg);
+  color: white;
+}
+.group-link:hover {
+  opacity: 0.75;
+}
+.shown {
+  display: block;
+}
 
+.hidden {
+  display: none;
+}
+.group-create {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.search-results {
+  width: 25%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid var(--primary-color);
+  margin: 1rem;
+  padding: 1rem;
+  background-color: var(--primary-color);
+  color: white;
+}
+.search-results-container {
+  width: 100%;
+  display: flex;
+}
+
+.search-result-label {
+  background: white;
+  padding: 0.3rem;
+  margin: 0.5rem 0;
+  color: #dc3545;
+}
+.search-result-label:hover {
+  cursor: pointer;
+  background: #dc3545;
+  color: white;
+}
+
+/*custom select*/
+.select select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -ms-appearance: none;
+  appearance: none;
+  outline: 0;
+  box-shadow: none;
+  border: 0 !important;
+  background: #5c6664;
+  background-image: none;
+  flex: 1;
+  padding: 0 0.5em;
+  color: #fff;
+  cursor: pointer;
+  font-size: 1em;
+  font-family: 'Open Sans', sans-serif;
+}
+.select select::-ms-expand {
+  display: none;
+}
+.select {
+  position: relative;
+  display: flex;
+  width: 20em;
+  height: 3em;
+  line-height: 3;
+  margin: 1rem;
+  background: #5c6664;
+  overflow: hidden;
+  border-radius: 0.25em;
+}
+
+.select::after {
+  content: '\f002';
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0 1em;
+  background: #2b2e2e;
+  font-family: 'Font Awesome 5 Free';
+  font-weight: 900;
+  cursor: pointer;
+  pointer-events: none;
+  transition: 0.25s all ease;
+}
+.select:hover::after {
+  color: #23b499;
+}
+.searchbar {
+  display: flex;
+  flex-direction: row;
+}
 /* Mobile Styles */
 @media (max-width: 700px) {
   .container {
@@ -550,11 +690,11 @@ button {
 
   .profile-grid {
     grid-template-areas:
-      "top"
-      "about"
-      "exp"
-      "edu"
-      "github";
+      'top'
+      'about'
+      'exp'
+      'edu'
+      'github';
   }
 
   .profile-about .skills {
@@ -573,5 +713,38 @@ button {
   .post a,
   .post button {
     padding: 0.3rem 0.4rem;
+  }
+  .group-info,
+  .group-members,
+  .group-buttons {
+    width: 100%;
+  }
+  .group-info-container {
+    flex-direction: column;
+  }
+  .group-item {
+    width: 85%;
+  }
+  .search-results {
+    width: 50%;
+  }
+  .searchbar {
+    display: flex;
+    flex-direction: column;
+  }
+  .search-results {
+    width: 90%;
+  }
+  .search-results-container {
+    flex-direction: column;
+  }
+  .mobile-button-m0 {
+    margin: 0 !important;
+  }
+  .group-post-owner-buttons {
+    margin: auto;
+  }
+  .group-post-text-and-date {
+    text-align: center;
   }
 }
