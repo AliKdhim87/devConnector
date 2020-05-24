@@ -27,7 +27,6 @@ const GroupPosts = ({
   const { postID, groupID } = useParams();
   useEffect(() => {
     getGroupPost(groupID, postID);
-    console.log(post.title, post.text);
   }, [getGroupPost, postID, groupID]);
   const [formData, setFormData] = useState({
     text: ''

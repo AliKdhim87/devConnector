@@ -187,7 +187,6 @@ export const addGroupPost = (groupID, formData) => async (dispatch) => {
     }
   };
   try {
-    console.log(groupID);
     const res = await axios.post(
       `/api/groups/${groupID}/posts`,
       formData,

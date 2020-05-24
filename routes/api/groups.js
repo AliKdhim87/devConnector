@@ -25,7 +25,6 @@ router.post(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    console.log(req.body);
     try {
       const loggedInUser = await User.findById(req.user.id);
       const currentUser = {
@@ -77,7 +76,6 @@ router.get('/:groupID', auth, async (req, res) => {
       'creator',
       'name avatar'
     );
-    console.log(req.params.groupID);
     if (!group) {
       return res.status(404).json({ msg: 'Group not found.' });
     }
@@ -97,7 +95,10 @@ router.get('/:groupID', auth, async (req, res) => {
 router.delete('/:groupID', auth, async (req, res) => {
   try {
     const group = await Group.findById(req.params.groupID);
-    console.log(group);
+    const usersWithGroup = await User.find({
+      myGroups: { _id: group._id.toString() },
+      
+    });
     if (!group) {
       return res.status(404).json({ msg: 'Group not found.' });
     }
@@ -107,6 +108,12 @@ router.delete('/:groupID', auth, async (req, res) => {
     } else {
       await group.remove();
     }
+    userWithGroup = usersWithGroup.map((user) => {
+      user.myGroups = user.myGroups.filter(
+        (myGroup) => myGroup._id.toString() !== group._id.toString()
+      );
+      user.save();
+    });
 
     res.json({ msg: 'Group removed' });
   } catch (error) {
@@ -177,7 +184,6 @@ router.put('/join/:groupID', auth, async (req, res) => {
       return res.status(400).json({ msg: 'Already a member!' });
     } else {
       const currentUser = await User.findById(req.user.id);
-      console.log(currentUser);
       const newMember = {
         dateJoined: Date.now(),
         user: req.user.id,
