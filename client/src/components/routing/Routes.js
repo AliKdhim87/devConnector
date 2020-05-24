@@ -30,10 +30,10 @@ const Routes = () => {
         <Route exact path="/login" component={Login} />
         <Route exact path="/profiles" component={Profiles} />
         <Route exact path="/profile/:id" component={Profile} />
-        <Route exact path="/groups" component={Groups} />
-        <Route exact path="/groups/details" component={GroupDetails} />
-        <Route exact path="/groups/posts" component={GroupPosts} />
-        <Route exact path="/search" component={SearchBar} />
+        <PraivateRoute exact path="/groups" component={Groups} />
+        <PraivateRoute exact path="/groups/details" component={GroupDetails} />
+        <PraivateRoute exact path="/groups/posts" component={GroupPosts} />
+        <PraivateRoute exact path="/search" component={SearchBar} />
 
         <PraivateRoute exact path="/creategroup" component={GroupsForm} />
         <PraivateRoute exact path="/groups/:groupID" component={GroupDetails} />

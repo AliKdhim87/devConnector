@@ -46,11 +46,6 @@ const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
       <li>
         <NavLink to="/login">Login</NavLink>
       </li>
-      <li>
-        <NavLink to="/search">
-          <i class="fas fa-search"></i>
-        </NavLink>
-      </li>
     </ul>
   );
 
