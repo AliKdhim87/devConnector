@@ -16,11 +16,13 @@ import Posts from '../posts/Posts';
 import Post from '../post/Post';
 import NotFound from '../layout/NotFound';
 import PraivateRoute from '../routing/PraivateRoute';
+
 import GroupPosts from '../groups/GroupPosts';
 import GroupDetails from '../groups/GroupDetails';
 import GroupsForm from '../groups/GroupsForm';
 import Groups from '../groups/Groups';
 import SearchBar from '../layout/SearchBar';
+
 const Routes = () => {
   return (
     <section className="container">
