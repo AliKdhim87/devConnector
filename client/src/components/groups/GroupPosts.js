@@ -79,10 +79,14 @@ const GroupPosts = ({
             )}
           </div>
           <div>
-            <p>{!loading && post && post.text}</p>
-            <p className="post-date">{post && post.date}</p>
+            <p className="group-post-text-and-date">
+              {!loading && post && post.text}
+            </p>
+            <p className="post-date group-post-text-and-date">
+              {post && <Moment format="YYYY/MM/DD">{post.date}</Moment>}
+            </p>
           </div>
-          <div className="flex-r">
+          <div className="flex-r group-post-owner-buttons">
             {!loading && !auth.loading && auth.user._id === post.creator._id && (
               <button
                 type="button"
@@ -208,7 +212,10 @@ const GroupPosts = ({
                 </div>
                 <div>
                   <p className="my-1">{comment.text}</p>
-                  <p className="post-date">Posted on {comment.date}</p>
+                  <p className="post-date">
+                    Posted on{' '}
+                    <Moment format="YYYY/MM/DD">{comment.date}</Moment>
+                  </p>
                   {comment && comment.userId === auth.user._id && (
                     <button
                       type="button"

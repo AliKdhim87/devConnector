@@ -10,6 +10,7 @@ import {
   addGroupPost
 } from '../../actions/group';
 import GroupOwnerDashboard from './GroupOwnerDashboard';
+import Spinner from '../layout/Spinner';
 
 // detailed view of single group
 
@@ -57,7 +58,7 @@ const GroupDetails = ({
       return true;
     } else return false;
   };
-
+  if (loading) return <Spinner />;
   return (
     <section className="container">
       {/* Container including group info */}
@@ -68,7 +69,8 @@ const GroupDetails = ({
             <strong>Description:</strong> {group && group.description}
           </span>
           <span>
-            <strong>Active since:</strong> {group && group.createdAt}
+            <strong>Active since:</strong>{' '}
+            {group && <Moment format="YYYY/MM/DD">{group.createdAt}</Moment>}
           </span>
         </div>
         <div className="flex-c group-members">
@@ -91,14 +93,14 @@ const GroupDetails = ({
         <div className="group-buttons">
           {group && group.members && isMember(group) ? (
             <button
-              className="btn btn-primary m-1"
+              className="btn btn-primary m-1 mobile-button-m0"
               onClick={() => removeMember(groupID)}
             >
               LEAVE
             </button>
           ) : (
             <button
-              className="btn btn-primary m-1"
+              className="btn btn-primary m-1 mobile-button-m0"
               onClick={() => addMember(groupID)}
             >
               JOIN
@@ -120,7 +122,7 @@ const GroupDetails = ({
         {group && <GroupOwnerDashboard isPublic={group.isPublic} />}
       </div>
       <p className="lead">
-        <i className="fas fa-user"></i> Welcome to JS Developers
+        <i className="fas fa-user"></i> Welcome to {group && group.name}
       </p>
       {group && !group.isPublic && !isMember(group) && (
         <div className="bg-white">
@@ -183,7 +185,10 @@ const GroupDetails = ({
                         key={post._id}
                       >
                         <h3>{post.title}</h3>
-                        <p className="post-date">Posted on {post.date}</p>
+                        <p className="post-date">
+                          Posted on{' '}
+                          <Moment format="YYYY/MM/DD">{post.date}</Moment>
+                        </p>
                         <span className="btn btn-primary">
                           Discussion{' '}
                           <span className="comment-count">

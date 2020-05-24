@@ -20,6 +20,7 @@ import GroupPosts from '../groups/GroupPosts';
 import GroupDetails from '../groups/GroupDetails';
 import GroupsForm from '../groups/GroupsForm';
 import Groups from '../groups/Groups';
+import SearchBar from '../layout/SearchBar';
 const Routes = () => {
   return (
     <section className="container">
@@ -32,6 +33,7 @@ const Routes = () => {
         <Route exact path="/groups" component={Groups} />
         <Route exact path="/groups/details" component={GroupDetails} />
         <Route exact path="/groups/posts" component={GroupPosts} />
+        <Route exact path="/search" component={SearchBar} />
 
         <PraivateRoute exact path="/creategroup" component={GroupsForm} />
         <PraivateRoute exact path="/groups/:groupID" component={GroupDetails} />
