@@ -6,12 +6,14 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import GroupItem from './GroupItem';
 import GroupsForm from './GroupsForm';
+import Spinner from '../layout/Spinner';
 
 const Groups = ({ getGroups, group: { groups, loading } }) => {
   useEffect(() => {
     getGroups();
   }, [getGroups]);
   const [createGroupOpen, setCreateGroupOpen] = useState(false);
+  if (loading) return <Spinner />;
   return (
     <Fragment>
       <div className="text-center">
@@ -37,7 +39,12 @@ const Groups = ({ getGroups, group: { groups, loading } }) => {
           </div>
         )}
       </div>
-      <GroupItem groups={groups} />
+
+      {groups.length === 0 ? (
+        <h3 className="text-dark text-center">NO GROUPS</h3>
+      ) : (
+        <GroupItem groups={groups} />
+      )}
     </Fragment>
   );
 };
