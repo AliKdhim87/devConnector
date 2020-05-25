@@ -91,7 +91,11 @@ const GroupDetails = ({
           </span>
         </div>
         <div className="group-buttons">
-          {group && group.members && isMember(group) ? (
+          {group &&
+          auth &&
+          !auth.loading &&
+          group.members &&
+          isMember(group) ? (
             <button
               className="btn btn-primary m-1 mobile-button-m0"
               onClick={() => removeMember(groupID)}
@@ -107,14 +111,17 @@ const GroupDetails = ({
             </button>
           )}
           {/* Button that toggle between settings for the creator of the group */}
-          {group && auth.user._id === group.creator._id && (
-            <button
-              className="btn btn-success m-1"
-              onClick={() => toggleSettings()}
-            >
-              {settingsOpen ? 'CLOSE' : 'SETTINGS'}
-            </button>
-          )}
+          {group &&
+            auth &&
+            !auth.loading &&
+            auth.user._id === group.creator._id && (
+              <button
+                className="btn btn-success m-1"
+                onClick={() => toggleSettings()}
+              >
+                {settingsOpen ? 'CLOSE' : 'SETTINGS'}
+              </button>
+            )}
         </div>
       </div>
       {/* Settings component for authorized user(toggle) */}
