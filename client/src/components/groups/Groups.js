@@ -39,7 +39,7 @@ const Groups = ({ getGroups, group: { groups, loading } }) => {
         )}
       </div>
 
-      {groups.length === 0 ? (
+      {groups.length === 0 && !loading? (
         <h3 className="text-dark text-center">NO GROUPS</h3>
       ) : (
         <GroupItem groups={groups} />
