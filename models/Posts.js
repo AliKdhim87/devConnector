@@ -29,10 +29,12 @@ const PostSchema = new Schema({
   ],
   emojis: [
     {
-      user: {
-        type: Schema.Types.ObjectId,
-        ref: 'users',
-      },
+      users: [
+        {
+          type: Schema.Types.ObjectId,
+          ref: 'users',
+        },
+      ],
       emoji: {
         colons: { type: String },
         emoticons: [String],

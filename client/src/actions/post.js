@@ -203,6 +203,7 @@ export const addEmoji = (postId, emoji) => async (dispatch) => {
       postId: postId,
       payload: res.data,
     });
+    console.log(emoji);
     dispatch(setAlert('Emoji Added', 'success'));
     // return res;
   } catch (error) {

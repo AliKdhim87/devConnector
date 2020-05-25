@@ -5,6 +5,8 @@ const auth = require('../../middleware/auth');
 const User = require('../../models/User');
 const Post = require('../../models/Posts');
 const Profile = require('../../models/Profile');
+const mongoose = require('mongoose');
+
 // @route   POST api/posts
 // @desc    Create a post
 // @access  Private
@@ -145,25 +147,36 @@ router.put('/emoji/:id', auth, async (req, res) => {
     const post = await Post.findById(req.params.id);
     // Check if the emoji has already been chosen
     const { emojis } = post;
+    const existingEmoji = emojis.find(
+      (emoji) => emoji.emoji.unified === unified,
+    );
+
+    console.log(existingEmoji);
     const isEmojiAddedByUser =
-      emojis
-        .map((emoji) => emoji.emoji.unified)
-        .find((item) => item === unified) &&
-      emojis.filter((emoji) => emoji.user.toString() === req.user.id).length >
-        0;
+      !!existingEmoji &&
+      emojis.find((emoji) => emoji.users.includes(req.user.id));
 
     if (isEmojiAddedByUser) {
       return res
         .status(400)
         .json({ msg: 'You already chose it. Please add another one...' });
     }
-    emojis.unshift({ user: req.user.id, emoji });
 
-    await post.save();
+    const users = emojis.filter((emo) => emo.user !== req.user.id);
 
-    res.json(post.emojis);
+    if (existingEmoji) {
+      existingEmoji.users.unshift(req.user.id);
+    } else {
+      emojis.unshift({ users: [req.user.id], emoji });
+    }
+
+    const savedPost = await post.save();
+    const newEmoji = savedPost.emojis.find(
+      (emoji) => emoji.emoji.unified === unified,
+    );
+    res.json({ emojis: post.emojis, amount: newEmoji.users.length });
   } catch (error) {
-    console.error(error.message);
+    console.error(error);
     res.status(500).send('Server error');
   }
 });
@@ -206,21 +219,30 @@ router.delete('/emoji/:id/:emoji_id', auth, async (req, res) => {
     // Check if the emoji has already been chosen
     const emojiAddedByUser = post.emojis.find(
       (emoji) =>
-        emoji.id.toString() === emojiId &&
-        emoji.user.toString() === req.user.id,
+        emoji.id.toString() === emojiId && emoji.users.includes(req.user.id),
     );
 
     if (!emojiAddedByUser) {
       return res.status(400).json({ msg: 'No emoji to be removed' });
     }
     // Get remove index
-    const removeIndex = post.emojis
-      .map((emoji) => emoji.user.toString())
-      .indexOf(req.user.id);
-    post.emojis.splice(removeIndex, 1);
+
+    const updatedEmojiUsers = emojiAddedByUser.users.filter(
+      (user) => user.toString() !== req.user.id,
+    );
+
+    emojiAddedByUser.users = updatedEmojiUsers;
+
+    if (emojiAddedByUser.users.length === 0) {
+      const updatedEmojiArray = post.emojis.filter(
+        (emoji) => emoji.id.toString() !== emojiId,
+      );
+
+      post.emojis = updatedEmojiArray;
+    }
 
     await post.save();
-    res.json(post.emojis);
+    res.json({ emojis: post.emojis, amount: updatedEmojiUsers.length });
   } catch (error) {
     console.error(error.message);
     res.status(500).send('Server error');
