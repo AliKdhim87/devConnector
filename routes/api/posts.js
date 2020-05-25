@@ -23,7 +23,7 @@ router.post(
         text: req.body.text,
         name: user.name,
         avatar: user.avatar,
-        user: req.user.id,
+        user: req.user.id
       });
       const post = await newPost.save();
       res.json(post);
@@ -39,7 +39,9 @@ router.post(
 // @access  Private
 router.get('/', auth, async (req, res) => {
   try {
-    const posts = await Post.find().sort({ date: -1 });
+    const posts = await Post.find()
+      .populate('user', 'name avatar')
+      .sort({ date: -1 });
     res.json(posts);
   } catch (error) {
     console.error(error.message);
@@ -77,7 +79,6 @@ router.get('/', auth, async (req, res) => {
     res.status(500).send('Server error');
   }
 });
-
 
 // @route   DELETE api/post/:id
 // @desc    delete a post
@@ -176,7 +177,7 @@ router.post(
         text: req.body.text,
         name: user.name,
         avatar: user.avatar,
-        user: req.user.id,
+        user: req.user.id
       };
 
       post.comments.unshift(newComment);

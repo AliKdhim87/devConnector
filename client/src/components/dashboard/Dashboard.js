@@ -101,7 +101,7 @@ const Dashboard = ({
               <Card fluid>
                 <div className="flex-c">
                   <img src={user.avatar} />
-                  <span className="text-primary large p-1">{user.name}</span>
+                  <span className="text-primary p-1" style={{fontSize:"1.5rem"}}>{user.name}</span>
                   <span className="text-dark">
                     Member since: <Moment format="YY/MM/DD">{user.date}</Moment>
                   </span>
