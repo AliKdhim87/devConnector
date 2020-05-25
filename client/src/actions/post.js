@@ -204,7 +204,7 @@ export const addEmoji = (postId, emoji) => async (dispatch) => {
       payload: res.data,
     });
     dispatch(setAlert('Emoji Added', 'success'));
-    return res;
+    // return res;
   } catch (error) {
     const errors = error.response.data.errors;
 
