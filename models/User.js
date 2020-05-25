@@ -32,9 +32,12 @@ const userSchema = new mongoose.Schema({
   },
   myGroups: [
     {
-      groups: {
-        type: Schema.Types.ObjectId,
+      _id: {
+        type: mongoose.Types.ObjectId,
         ref: 'group'
+      },
+      name:{
+        type:String
       }
     }
   ]

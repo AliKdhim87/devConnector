@@ -21,6 +21,7 @@ import GroupDetails from '../groups/GroupDetails';
 import GroupsForm from '../groups/GroupsForm';
 import Groups from '../groups/Groups';
 import SearchBar from '../layout/SearchBar';
+import Settings from '../dashboard/Settings';
 const Routes = () => {
   return (
     <section className="container">
@@ -34,6 +35,7 @@ const Routes = () => {
         <PraivateRoute exact path="/groups/details" component={GroupDetails} />
         <PraivateRoute exact path="/groups/posts" component={GroupPosts} />
         <PraivateRoute exact path="/search" component={SearchBar} />
+        <PraivateRoute exact path="/settings" component={Settings}/>
 
         <PraivateRoute exact path="/creategroup" component={GroupsForm} />
         <PraivateRoute exact path="/groups/:groupID" component={GroupDetails} />

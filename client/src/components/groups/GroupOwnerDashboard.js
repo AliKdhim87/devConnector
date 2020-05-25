@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { updateGroup, deleteGroup } from '../../actions/group';
 
-const GroupOwnerDashboard = ({ updateGroup, deleteGroup, isPublic }) => {
+const GroupOwnerDashboard = ({ updateGroup, deleteGroup, isPublic, match }) => {
   const history = useHistory();
   const { groupID } = useParams();
   const [formData, setFormData] = useState({
@@ -26,7 +26,7 @@ const GroupOwnerDashboard = ({ updateGroup, deleteGroup, isPublic }) => {
       <h1 className="large text-primary">Update Settings</h1>
 
       <small>* = required field</small>
-      <form className="form" onSubmit={onSubmitHandler}>
+      <form className="form">
         <div className="form-group">
           <select name="isPublic" onChange={onChangeInputHandler}>
             <option value={true}>Public(everyone)</option>
@@ -56,7 +56,14 @@ const GroupOwnerDashboard = ({ updateGroup, deleteGroup, isPublic }) => {
           <small className="form-text">Description</small>
         </div>
         <div>
-          <button className="btn btn-primary">UPDATE</button>
+          <button
+            className="btn btn-primary"
+            onClick={() => {
+              updateGroup(match.params.groupID, formData);
+            }}
+          >
+            UPDATE
+          </button>
         </div>
       </form>
       <div className="flex-c" style={{ margin: '1rem 0' }}>

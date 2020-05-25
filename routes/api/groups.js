@@ -59,7 +59,7 @@ router.post(
 // @access  Public
 router.get('/', auth, async (req, res) => {
   try {
-    const groups = await Group.find().sort({ date: -1 });
+    const groups = await Group.find().populate("creator", "name").sort({ date: -1 });
     res.json(groups);
   } catch (error) {
     console.error(error.message);
@@ -190,7 +190,11 @@ router.put('/join/:groupID', auth, async (req, res) => {
         name: currentUser.name,
         avatar: currentUser.avatar
       };
-      currentUser.myGroups.push(group);
+      const newGroup = {
+        _id: group._id,
+        name: group.name
+      }
+      currentUser.myGroups.push(newGroup);
       await currentUser.save();
       group.members.push(newMember);
       await group.save();
