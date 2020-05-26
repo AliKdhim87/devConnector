@@ -51,6 +51,9 @@ const PostSchema = new Schema({
     type: Date,
     default: Date.now,
   },
+  link:{
+    type: String,
+  }
 });
 
 module.exports = Post = mongoose.model('post', PostSchema);
