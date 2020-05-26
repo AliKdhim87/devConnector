@@ -151,7 +151,6 @@ router.put('/emoji/:id', auth, async (req, res) => {
       (emoji) => emoji.emoji.unified === unified,
     );
 
-    console.log(existingEmoji);
     const isEmojiAddedByUser =
       !!existingEmoji &&
       emojis.find((emoji) => emoji.users.includes(req.user.id));
@@ -161,8 +160,6 @@ router.put('/emoji/:id', auth, async (req, res) => {
         .status(400)
         .json({ msg: 'You already chose it. Please add another one...' });
     }
-
-    const users = emojis.filter((emo) => emo.user !== req.user.id);
 
     if (existingEmoji) {
       existingEmoji.users.unshift(req.user.id);
