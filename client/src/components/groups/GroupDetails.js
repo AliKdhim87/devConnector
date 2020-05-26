@@ -51,7 +51,7 @@ const GroupDetails = ({
     });
   };
   const isMember = (group, userID) => {
-    if (group.members.filter((member) => member.user._id === userID).length !== 0) {
+    if (group.members.filter((member) => member.user=== userID).length !== 0) {
       return true;
     } else return false;
   };
@@ -82,7 +82,7 @@ const GroupDetails = ({
             {group &&
               group.members.map((member) => (
                 <Link to={`/profile/${member.user._id}`} key={member.user._id}>
-                  {member.user.name}{' '}
+                  {member.name}{' '}
                 </Link>
               ))}
           </span>
