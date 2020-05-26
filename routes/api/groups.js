@@ -59,7 +59,9 @@ router.post(
 // @access  Public
 router.get('/', auth, async (req, res) => {
   try {
-    const groups = await Group.find().populate("creator", "name").sort({ date: -1 });
+    const groups = await Group.find()
+      .populate('creator', 'name')
+      .sort({ date: -1 });
     res.json(groups);
   } catch (error) {
     console.error(error.message);
@@ -72,10 +74,9 @@ router.get('/', auth, async (req, res) => {
 // @access  Public
 router.get('/:groupID', auth, async (req, res) => {
   try {
-    const group = await Group.findById(req.params.groupID).populate(
-      'creator',
-      'name avatar'
-    );
+    const group = await Group.findById(req.params.groupID)
+      .populate('creator', 'name avatar')
+      .populate('members.user', 'name');
     if (!group) {
       return res.status(404).json({ msg: 'Group not found.' });
     }
@@ -96,8 +97,7 @@ router.delete('/:groupID', auth, async (req, res) => {
   try {
     const group = await Group.findById(req.params.groupID);
     const usersWithGroup = await User.find({
-      myGroups: { _id: group._id.toString() },
-      
+      myGroups: { _id: group._id.toString() }
     });
     if (!group) {
       return res.status(404).json({ msg: 'Group not found.' });
@@ -193,7 +193,7 @@ router.put('/join/:groupID', auth, async (req, res) => {
       const newGroup = {
         _id: group._id,
         name: group.name
-      }
+      };
       currentUser.myGroups.push(newGroup);
       await currentUser.save();
       group.members.push(newMember);

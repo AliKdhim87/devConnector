@@ -1,6 +1,7 @@
 import React from 'react';
 import { Card, Feed } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
+import Moment from 'react-moment';
 
 const GroupsFeed = ({ filteredGroups, myGroupPosts }) => (
   <Card fluid>
@@ -16,7 +17,7 @@ const GroupsFeed = ({ filteredGroups, myGroupPosts }) => (
             return (
               <Feed.Event>
                 <Feed.Content>
-                  <Feed.Date content="1 day ago" />
+                  <Feed.Date content={<Moment fromNow>{group.createdAt}</Moment>} />
                   <Feed.Summary>
                     A new group named{' '}
                     <Link to={`/groups/${group._id}`}>{group.name}</Link> is
@@ -34,7 +35,7 @@ const GroupsFeed = ({ filteredGroups, myGroupPosts }) => (
             return (
               <Feed.Event>
                 <Feed.Content>
-                  <Feed.Date content="1 day ago" />
+                <Feed.Date content={<Moment fromNow>{group.date}</Moment>} />
                   <Feed.Summary>
                     There is a new{' '}
                     <Link to={`/groups/${group.groupId}/posts/${group._id}`}>

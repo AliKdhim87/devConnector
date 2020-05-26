@@ -51,7 +51,7 @@ const GroupDetails = ({
     });
   };
   const isMember = (group, userID) => {
-    if (group.members.filter((member) => member.user === userID).length !== 0) {
+    if (group.members.filter((member) => member.user._id === userID).length !== 0) {
       return true;
     } else return false;
   };
@@ -81,8 +81,8 @@ const GroupDetails = ({
             <strong>Members:</strong>{' '}
             {group &&
               group.members.map((member) => (
-                <Link to={`/profile/${member.user}`} key={member.user}>
-                  {member.name}{' '}
+                <Link to={`/profile/${member.user._id}`} key={member.user._id}>
+                  {member.user.name}{' '}
                 </Link>
               ))}
           </span>
@@ -125,7 +125,7 @@ const GroupDetails = ({
       <div className={settingsOpen ? `shown` : `hidden`}>
         {group && <GroupOwnerDashboard isPublic={group.isPublic} />}
       </div>
-      <p className="lead">
+      <p className="lead text-center">
         <i className="fas fa-user"></i> Welcome to {group && group.name}
       </p>
       {group &&
@@ -146,7 +146,7 @@ const GroupDetails = ({
         !auth.loading &&
         (group.isPublic || isMember(group, auth.user._id)) && (
           <Fragment>
-            <h2 className="text-primary text-center m-2">Posts</h2>
+            <h2 className="text-primary text-center m-2">Group Discussions</h2>
             <div className="post-form">
               <div className="bg-primary p">
                 <h3>Start a discussion</h3>
@@ -188,25 +188,28 @@ const GroupDetails = ({
                     <h3 className="text-dark">NO POSTS SHARED</h3>
                   </div>
                 ) : (
-                  <div>
+                  <div
+                  >
                     {group &&
                       group.posts.map((post) => (
-                        <Link
-                          to={`/groups/${groupID}/posts/${post._id}`}
-                          key={post._id}
-                        >
-                          <h3>{post.title}</h3>
-                          <p className="post-date">
+                        <div className="discussion-item">
+                          <h3 className="m-0">{post.title}</h3>
+                          <p className="post-date" style={{margin:"0"}}>
                             Posted on{' '}
                             <Moment format="YYYY/MM/DD">{post.date}</Moment>
                           </p>
-                          <span className="btn btn-primary">
-                            Discussion{' '}
-                            <span className="comment-count">
-                              {post.comments.length}
+                          <Link
+                            to={`/groups/${groupID}/posts/${post._id}`}
+                            key={post._id}
+                          >
+                            <span className="btn btn-primary">
+                              Discussion{' '}
+                              <span className="comment-count">
+                                {post.comments.length}
+                              </span>
                             </span>
-                          </span>
-                        </Link>
+                          </Link>
+                        </div>
                       ))}
                   </div>
                 )}

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Card, Feed } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
+import Moment from 'react-moment'
 
 const CommunityFeed = ({ filteredPosts, filteredGroupPosts }) => (
   <Card fluid>
@@ -17,7 +18,7 @@ const CommunityFeed = ({ filteredPosts, filteredGroupPosts }) => (
               <Feed.Event>
                 <Feed.Label image={filteredPost.avatar} />
                 <Feed.Content>
-                  <Feed.Date content="1 day ago" />
+                <Feed.Date content={<Moment fromNow>{filteredPost.date}</Moment>} />
                   <Feed.Summary>
                     <Link to={`/profile/${filteredPost.user}`}>
                       {filteredPost.name}
@@ -35,7 +36,7 @@ const CommunityFeed = ({ filteredPosts, filteredGroupPosts }) => (
               <Feed.Event>
                 <Feed.Label image={filteredPost.avatar} />
                 <Feed.Content>
-                  <Feed.Date content="1 day ago" />
+                <Feed.Date content={<Moment fromNow>{filteredPost.date}</Moment>} />
                   <Feed.Summary>
                     <Link to={`/profile/${filteredPost.creator}`}>
                       {filteredPost.name}
