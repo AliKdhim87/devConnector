@@ -153,7 +153,7 @@ router.put('/emoji/:id', auth, async (req, res) => {
 
     const isEmojiAddedByUser =
       !!existingEmoji &&
-      existingEmoji.users.map((user) => user.toString()).includes(req.user.id);
+      emojis.find((emoji) => emoji.users.includes(req.user.id));
 
     if (isEmojiAddedByUser) {
       return res

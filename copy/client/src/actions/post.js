@@ -203,8 +203,8 @@ export const addEmoji = (postId, emoji) => async (dispatch) => {
       postId: postId,
       payload: res.data.emojis,
     });
+    console.log(res.data);
     dispatch(setAlert('Emoji Added', 'success'));
-
     // return res;
   } catch (error) {
     const errors = error.response.data.errors;
@@ -221,15 +221,13 @@ export const addEmoji = (postId, emoji) => async (dispatch) => {
 // Remove emoji from post
 export const removeEmoji = (postId, emojiId) => async (dispatch) => {
   try {
-    const res = await axios.delete(`/api/posts/emoji/${postId}/${emojiId}`);
+    await axios.delete(`/api/posts/emoji/${postId}/${emojiId}`);
 
     dispatch({
       type: REMOVE_EMOJI,
       payload: emojiId,
       postId: postId,
-      payload2: res.data.emojis,
     });
-
     dispatch(setAlert('Emoji Removed', 'success'));
   } catch (error) {
     console.log(error);
