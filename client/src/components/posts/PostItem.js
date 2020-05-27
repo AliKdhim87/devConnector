@@ -1,6 +1,7 @@
 import React, { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import { Button, Dropdown } from 'semantic-ui-react';
 import Moment from 'react-moment';
 import { connect } from 'react-redux';
 import EmojiPicker from '../post/EmojiPicker';
@@ -21,10 +22,10 @@ const PostItem = ({
   addEmoji,
   removeEmoji,
 }) => {
-  const [hideEmojiPicker, setHideEmojiPicker] = useState(false);
+  const [hideEmojiPicker, setHideEmojiPicker] = useState(true);
 
-  const handleEmojiPicker = (e) => {
-    addEmoji(_id, e);
+  const showHideEmojiPicker = () => {
+    setHideEmojiPicker((prevState) => !prevState);
   };
 
   return (
@@ -75,9 +76,17 @@ const PostItem = ({
           </Fragment>
         )}{' '}
         {hideEmojiPicker ? (
-          <i onClick={handleEmojiPicker}>Pick an emoji</i>
+          <Button circular onClick={showHideEmojiPicker}>
+            🙂
+          </Button>
         ) : (
-          <EmojiPicker onPick={handleEmojiPicker} />
+          <EmojiPicker
+            onBlur={showHideEmojiPicker}
+            onPick={(emo, event) => {
+              addEmoji(_id, emo);
+              showHideEmojiPicker();
+            }}
+          />
         )}
         {emojis.length > 0 && (
           <ul style={{ display: 'flex' }}>
@@ -85,10 +94,24 @@ const PostItem = ({
               <li key={index}>
                 <span
                   onClick={() => {
-                    removeEmoji(_id, emo._id);
+                    const isMine =
+                      !!auth &&
+                      !!emo.users.find((user) => {
+                        console.log({ user });
+                        console.log({ auth: auth.user._id });
+                        console.log(user === auth.user._id);
+                        console.log({ emo: emo._id });
+
+                        return user === auth.user._id;
+                      });
+
+                    console.log({ isMine });
+                    if (isMine) removeEmoji(_id, emo._id);
+                    else addEmoji(_id, emo);
                   }}
                 >
                   {emo.emoji.native}
+                  {emo.amount > 1 ? <small>{emo.amount}</small> : ''}
                 </span>
               </li>
             ))}

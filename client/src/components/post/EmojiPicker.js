@@ -1,9 +1,35 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import 'emoji-mart/css/emoji-mart.css';
 import { Picker } from 'emoji-mart';
 
-const EmojiPicker = ({ onPick }) => {
-  return <Picker onClick={onPick} />;
+function useOutsideAlerter(ref, cb) {
+  useEffect(() => {
+    /**
+     * Alert if clicked on outside of element
+     */
+    function handleClickOutside(event) {
+      if (ref.current && !ref.current.contains(event.target)) {
+        cb();
+      }
+    }
+    // Bind the event listener
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      // Unbind the event listener on clean up
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [ref]);
+}
+
+const EmojiPicker = ({ onPick, onBlur }) => {
+  const wrapperRef = useRef(null);
+  useOutsideAlerter(wrapperRef, onBlur);
+
+  return (
+    <span ref={wrapperRef}>
+      <Picker onClick={onPick} />
+    </span>
+  );
 };
 
 export default EmojiPicker;

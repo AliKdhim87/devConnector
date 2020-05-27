@@ -151,6 +151,8 @@ router.put('/emoji/:id', auth, async (req, res) => {
       (emoji) => emoji.emoji.unified === unified,
     );
 
+    console.log(existingEmoji.emoji.unified);
+
     const isEmojiAddedByUser =
       !!existingEmoji &&
       existingEmoji.users.map((user) => user.toString()).includes(req.user.id);
