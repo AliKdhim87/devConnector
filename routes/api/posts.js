@@ -24,6 +24,7 @@ router.post(
         name: user.name,
         avatar: user.avatar,
         user: req.user.id,
+        link: req.body.link || '',
       });
       const post = await newPost.save();
       res.json(post);
@@ -39,7 +40,9 @@ router.post(
 // @access  Private
 router.get('/', auth, async (req, res) => {
   try {
-    const posts = await Post.find().sort({ date: -1 });
+    const posts = await Post.find()
+      .populate('user', 'name avatar')
+      .sort({ date: -1 });
     res.json(posts);
   } catch (error) {
     console.error(error.message);
@@ -62,6 +65,19 @@ router.get('/:id', auth, async (req, res) => {
       return res.status(400).json({ msg: 'Post not found.' });
     }
     res.status(500).send('Server error!');
+  }
+});
+
+// @route   GET api/post
+// @desc    Get all posts
+// @access  Private
+router.get('/', auth, async (req, res) => {
+  try {
+    const posts = await Post.find().sort({ date: -1 });
+    res.json(posts);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send('Server error');
   }
 });
 
@@ -162,7 +178,7 @@ router.post(
         text: req.body.text,
         name: user.name,
         avatar: user.avatar,
-        user: req.user.id,
+        user: req.user.id
       };
 
       post.comments.unshift(newComment);

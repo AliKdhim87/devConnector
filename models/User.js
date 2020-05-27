@@ -2,7 +2,6 @@ const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
 
-
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -32,12 +31,34 @@ const userSchema = new mongoose.Schema({
   },
   myGroups: [
     {
-      groups: {
-        type: Schema.Types.ObjectId,
+      _id: {
+        type: mongoose.Types.ObjectId,
         ref: 'group'
       }
     }
-  ]
+  ],
+  privacyOptions: {
+    profileVisibility: {
+      friends: {
+        type: Boolean,
+        default: true
+      },
+      everyOne: {
+        type: Boolean,
+        default: true
+      }
+    },
+    messages: {
+      friends: {
+        type: Boolean,
+        default: true
+      },
+      everyOne: {
+        type: Boolean,
+        default: true
+      }
+    }
+  }
 });
 
 module.exports = User = mongoose.model('user', userSchema);

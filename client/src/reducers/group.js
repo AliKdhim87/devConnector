@@ -36,7 +36,14 @@ export default function (state = initailState, action) {
         group: payload,
         loading: false
       };
-    }
+    };
+    case UPDATE_GROUP: {
+      return {
+        ...state,
+        group: payload,
+        loading: false
+      };
+    };
     case DELETE_GROUP: {
       return {
         ...state,

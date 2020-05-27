@@ -1,7 +1,8 @@
-import React, { useState, Fragment, useEffect } from 'react';
+import React, { useState, Fragment, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import Moment from 'react-moment';
+import useDebounce from './debounce-hook';
 
 const SearchBar = () => {
   const config = {
@@ -12,6 +13,7 @@ const SearchBar = () => {
   const [userInput, setUserInput] = useState({
     query: ''
   });
+  const debouncedSearchTerm = useDebounce(userInput, 200);
 
   const [results, setResults] = useState([]);
   const [searchSubject, setSearchSubject] = useState('');
@@ -21,18 +23,21 @@ const SearchBar = () => {
       query: e.target.value
     });
   };
+
   const apiCall = async (searchSubject) => {
     try {
       const res = await axios.post(
         `api/search/${searchSubject}`,
-        userInput,
+        debouncedSearchTerm,
         config
       );
       setResults(res.data);
     } catch (error) {}
   };
+
   useEffect(() => {
     apiCall(searchSubject);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userInput, searchSubject]);
   return (
     <div>
@@ -44,7 +49,7 @@ const SearchBar = () => {
             value={searchSubject}
             onChange={(e) => {
               e.preventDefault();
-              setSearchSubject(e.target.value);
+                setSearchSubject(e.target.value);
               setResults([]);
               setUserInput({
                 query: ''

@@ -2,7 +2,6 @@ import React, { useEffect, Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
 import Moment from 'react-moment';
 import { getGroups } from '../../actions/group';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import GroupItem from './GroupItem';
 import GroupsForm from './GroupsForm';
@@ -40,7 +39,7 @@ const Groups = ({ getGroups, group: { groups, loading } }) => {
         )}
       </div>
 
-      {groups.length === 0 ? (
+      {groups.length === 0 && !loading? (
         <h3 className="text-dark text-center">NO GROUPS</h3>
       ) : (
         <GroupItem groups={groups} />

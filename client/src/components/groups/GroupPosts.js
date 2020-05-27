@@ -87,7 +87,7 @@ const GroupPosts = ({
             </p>
           </div>
           <div className="flex-r group-post-owner-buttons">
-            {!loading && !auth.loading && auth.user._id === post.creator._id && (
+            {!loading && auth && !auth.loading && auth.user._id === post.creator._id && (
               <button
                 type="button"
                 className={
@@ -100,7 +100,7 @@ const GroupPosts = ({
                 EDIT
               </button>
             )}
-            {!loading && !auth.loading && auth.user._id === post.creator._id && (
+            {!loading && auth && !auth.loading && auth.user._id === post.creator._id && (
               <button
                 type="button"
                 className={
@@ -216,7 +216,7 @@ const GroupPosts = ({
                     Posted on{' '}
                     <Moment format="YYYY/MM/DD">{comment.date}</Moment>
                   </p>
-                  {comment && comment.userId === auth.user._id && (
+                  {comment && auth && !auth.loading && comment.userId === auth.user._id && (
                     <button
                       type="button"
                       className="btn btn-danger"
