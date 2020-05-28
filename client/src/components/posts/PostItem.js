@@ -84,6 +84,11 @@ const PostItem = ({
             onBlur={showHideEmojiPicker}
             onPick={(emo, event) => {
               addEmoji(_id, emo);
+              // setLeftEmoji(
+              //   emojis.find((emoji) => emoji.emoji.unify === emo.unify),
+              // );
+
+              // console.log({ leftEmoji });
               showHideEmojiPicker();
             }}
           />
@@ -93,21 +98,40 @@ const PostItem = ({
             {emojis.map((emo, index) => (
               <li key={index}>
                 <span
+                  id={emo.unified}
                   onClick={() => {
                     const isMine =
                       !!auth &&
                       !!emo.users.find((user) => {
-                        console.log({ user });
-                        console.log({ auth: auth.user._id });
-                        console.log(user === auth.user._id);
-                        console.log({ emo: emo._id });
-
                         return user === auth.user._id;
                       });
 
                     console.log({ isMine });
                     if (isMine) removeEmoji(_id, emo._id);
-                    else addEmoji(_id, emo);
+                    else {
+                      document.addEventListener(
+                        'click',
+                        function (e) {
+                          // const abc = emojis.find((emoji) => {
+                          //   const emoElement = document.getElementById(
+                          //     `${emo.unified}`,
+                          //   );
+
+                          e = e || window.event;
+                          const target = e.target || e.srcElement,
+                            text = target.textContent || target.innerText;
+                          console.log(text);
+                        },
+                        false,
+                      );
+
+                      // (emoElement.innerHTML || emoElement.innerText || emoElement.textContent);
+
+                      // return emoji.emoji.unify === emo.unify;
+                    }
+
+                    // console.log({ abc });
+                    // addEmoji(_id, abc);
                   }}
                 >
                   {emo.emoji.native}
