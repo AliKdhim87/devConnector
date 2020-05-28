@@ -1,7 +1,7 @@
 import React, { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { Button, Dropdown } from 'semantic-ui-react';
+import { Button } from 'semantic-ui-react';
 import Moment from 'react-moment';
 import { connect } from 'react-redux';
 import EmojiPicker from '../post/EmojiPicker';
@@ -120,7 +120,12 @@ const PostItem = ({
                           e = e || window.event;
                           const target = e.target || e.srcElement,
                             text = target.textContent || target.innerText;
-                          console.log(text);
+                          // console.log(text);
+
+                          if (text === emo.emoji.native) {
+                            // console.log(text);
+                            console.log(emo.emoji.native);
+                          }
                         },
                         false,
                       );
