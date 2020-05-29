@@ -4,4 +4,6 @@ import auth from './auth';
 import profile from './profile';
 import post from './post';
 import message from './message';
-export default combineReducers({ alert, auth, profile, post, message });
+import group from './group'
+export default combineReducers({ alert, auth, profile, post, group message});
+

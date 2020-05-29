@@ -1,32 +1,64 @@
 const mongoose = require('mongoose');
 
+const Schema = mongoose.Schema;
+
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
-    trim: true,
+    trim: true
   },
   email: {
     type: String,
     required: true,
     trim: true,
-    unique: true,
+    unique: true
   },
   password: {
     type: String,
     required: true,
-    trim: true,
+    trim: true
   },
   avatar: {
-    type: String,
+    type: String
   },
   avatar_id: {
-    type: String,
+    type: String
   },
   date: {
     type: Date,
-    default: Date.now,
+    default: Date.now
   },
+  myGroups: [
+    {
+      _id: {
+        type: mongoose.Types.ObjectId,
+        ref: 'group'
+      }
+    }
+  ],
+  privacyOptions: {
+    profileVisibility: {
+      friends: {
+        type: Boolean,
+        default: true
+      },
+      everyOne: {
+        type: Boolean,
+        default: true
+      }
+    },
+    messages: {
+      friends: {
+        type: Boolean,
+        default: true
+      },
+      everyOne: {
+        type: Boolean,
+        default: true
+      }
+    }
+  }
 });
 
 module.exports = User = mongoose.model('user', userSchema);
