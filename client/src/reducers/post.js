@@ -17,7 +17,7 @@ const initailState = {
   error: {},
 };
 export default function (state = initailState, action) {
-  const { type, payload, postId, payload2 } = action;
+  const { type, payload, postId, emojis } = action;
   switch (type) {
     case GET_POSTS:
       return {
@@ -102,7 +102,7 @@ export default function (state = initailState, action) {
           post._id === postId
             ? {
                 ...post,
-                emojis: payload2,
+                emojis,
               }
             : post,
         ),

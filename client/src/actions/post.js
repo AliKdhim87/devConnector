@@ -227,7 +227,7 @@ export const removeEmoji = (postId, emojiId) => async (dispatch) => {
       type: REMOVE_EMOJI,
       payload: emojiId,
       postId: postId,
-      payload2: res.data.emojis,
+      emojis: res.data.emojis,
     });
 
     dispatch(setAlert('Emoji Removed', 'success'));

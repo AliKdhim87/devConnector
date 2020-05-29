@@ -85,11 +85,6 @@ const PostItem = ({
             onBlur={showHideEmojiPicker}
             onPick={(emo, event) => {
               addEmoji(_id, emo);
-              // setLeftEmoji(
-              //   emojis.find((emoji) => emoji.emoji.unify === emo.unify),
-              // );
-
-              // console.log({ leftEmoji });
               showHideEmojiPicker();
             }}
           />
@@ -98,8 +93,17 @@ const PostItem = ({
           <ul style={{ display: 'flex' }}>
             {emojis.map((emo, index) => (
               <li key={index}>
-                <span
-                  id={emo.unified}
+                <Button
+                  circular
+                  color={
+                    !!auth &&
+                    !!emo.users.find((user) => {
+                      return user === auth.user._id;
+                    })
+                      ? 'green'
+                      : 'white'
+                  }
+                  id={emo.emoji.unified}
                   onClick={() => {
                     const isMine =
                       !!auth &&
@@ -109,44 +113,12 @@ const PostItem = ({
 
                     console.log({ isMine });
                     if (isMine) removeEmoji(_id, emo._id);
-                    else {
-                      document.addEventListener(
-                        'click',
-                        function (e) {
-                          // const abc = emojis.find((emoji) => {
-                          //   const emoElement = document.getElementById(
-                          //     `${emo.unified}`,
-                          //   );
-
-                          e = e || window.event;
-                          const target = e.target || e.srcElement,
-                            text = target.textContent || target.innerText;
-                          // console.log(text);
-
-                          if (text === emo.emoji.native && emo.emoji.native) {
-                            console.log(text);
-                            console.log(emo.emoji.native);
-                            setEmojiToBeAdded(emo);
-                            console.log(emojiToBeAdded);
-
-                            addEmoji(_id, emojiToBeAdded);
-                          }
-                        },
-                        false,
-                      );
-
-                      // (emoElement.innerHTML || emoElement.innerText || emoElement.textContent);
-
-                      // return emoji.emoji.unify === emo.unify;
-                    }
-
-                    // console.log({ abc });
-                    // addEmoji(_id, abc);
+                    else addEmoji(_id, emo.emoji);
                   }}
                 >
                   {emo.emoji.native}
                   {emo.amount > 1 ? <small>{emo.amount}</small> : ''}
-                </span>
+                </Button>
               </li>
             ))}
           </ul>
