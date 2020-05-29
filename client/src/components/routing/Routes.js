@@ -14,6 +14,7 @@ import Profiles from '../profiles/Profiles';
 import Profile from '../profile/Profile';
 import Posts from '../posts/Posts';
 import Post from '../post/Post';
+import Message from '../message/Message';
 import NotFound from '../layout/NotFound';
 import PraivateRoute from '../routing/PraivateRoute';
 const Routes = () => {
@@ -34,6 +35,7 @@ const Routes = () => {
         <PraivateRoute exact path='/add-education' component={AddEducation} />
         <PraivateRoute exact path='/posts' component={Posts} />
         <PraivateRoute exact path='/posts/:id' component={Post} />
+        <PraivateRoute exact path='/message/:id' component={Message} />
         <Route component={NotFound} />
       </Switch>
     </section>
