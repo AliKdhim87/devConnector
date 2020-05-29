@@ -151,8 +151,6 @@ router.put('/emoji/:id', auth, async (req, res) => {
       (emoji) => emoji.emoji.unified === unified,
     );
 
-    console.log(existingEmoji);
-
     const isEmojiAddedByUser =
       !!existingEmoji &&
       existingEmoji.users.map((user) => user.toString()).includes(req.user.id);
@@ -174,7 +172,7 @@ router.put('/emoji/:id', auth, async (req, res) => {
     await post.save();
 
     res.json({
-      emojis: post.emojis,
+      emojis: emojis,
     });
   } catch (error) {
     console.error(error);
@@ -328,7 +326,7 @@ router.delete('/comment/:id/:comment_id', auth, async (req, res) => {
   }
 });
 
-// @route   PUT api/posts/comment/emoji/:comment_id
+// @route   PUT api/posts/comment/emoji/:id/:comment_id
 // @desc    add emoji to a comment
 // @access  Private
 
@@ -358,28 +356,39 @@ router.put('/comment/emoji/:id/:comment_id', auth, async (req, res) => {
 
     const post = await Post.findById(req.params.id);
     // Check if the emoji has already been chosen
-    const { emojis } = post.comments.find(
+    const { comments } = post;
+    const comment = comments.find(
       (comment) => comment.id === req.params.comment_id,
     );
-    const isEmojiAddedByUser = emojis.find(
-      (emoji) =>
-        emoji.user.toString() === req.user.id &&
-        emoji.emoji.unified === unified,
+    const { emojis } = comment;
+    // .emojis.find((emoji) => emoji.emoji.unified === unified);
+
+    const existingEmoji = emojis.find(
+      (emoji) => emoji.emoji.unified === unified,
     );
+
+    const isEmojiAddedByUser =
+      !!existingEmoji &&
+      existingEmoji.users.map((user) => user.toString()).includes(req.user.id);
 
     if (isEmojiAddedByUser) {
       return res
         .status(400)
         .json({ msg: 'You already chose it. Please add another one...' });
     }
-    emojis.unshift({ user: req.user.id, emoji });
 
+    if (existingEmoji) {
+      existingEmoji.users.unshift(req.user.id);
+    } else {
+      console.log({ existingEmoji });
+      emojis.unshift({ users: [req.user.id], emoji });
+    }
+
+    emojis.forEach((emoji) => (emoji.amount = emoji.users.length));
+    console.log(emojis);
     await post.save();
 
-    res.json(
-      post.comments.find((comment) => comment.id === req.params.comment_id)
-        .emojis,
-    );
+    res.json({ emojis });
   } catch (error) {
     console.error(error.message);
     res.status(500).send('Server error');
@@ -391,7 +400,7 @@ router.put('/comment/emoji/:id/:comment_id', auth, async (req, res) => {
 // @access  Private
 
 router.delete(
-  '/emoji/comment/:id/:comment_id/:emoji_id',
+  '/comment/emoji/:id/:comment_id/:emoji_id',
   auth,
   async (req, res) => {
     try {
@@ -400,25 +409,34 @@ router.delete(
       const comment = post.comments.find(
         (comment) => comment.id === req.params.comment_id,
       );
-      const emoji = comment.emojis.find(
+      const emojiAddedByUser = comment.emojis.find(
         (emoji) =>
-          emoji.id === emojiId && emoji.user.toString() === req.user.id,
+          emoji.id === emojiId &&
+          emoji.users.map((user) => user.toString()).includes(req.user.id),
       );
 
       // Check if the emoji exists
-      if (!emoji) {
+      if (!emojiAddedByUser) {
         return res.status(404).json({ msg: 'No emoji to be removed' });
       }
 
       // Get remove index
-      const removeIndex = comment.emojis
-        .map((emoji) => emoji.id)
-        .indexOf(emojiId);
+      const updatedEmojiUsers = emojiAddedByUser.users.filter(
+        (user) => user.toString() !== req.user.id,
+      );
 
-      comment.emojis.splice(removeIndex, 1);
+      emojiAddedByUser.users = updatedEmojiUsers;
+      emojiAddedByUser.amount = emojiAddedByUser.users.length;
+
+      if (emojiAddedByUser.users.length === 0) {
+        const updatedEmojiArray = post.emojis.filter(
+          (emoji) => emoji.id.toString() !== emojiId,
+        );
+        post.emojis = updatedEmojiArray;
+      }
 
       await post.save();
-      res.json(comment.emojis);
+      res.json({ emojis: comment.emojis });
     } catch (error) {
       console.error(error.message);
       if (error.message.includes('Cast to ObjectId failed')) {

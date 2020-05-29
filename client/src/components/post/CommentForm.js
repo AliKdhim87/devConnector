@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Button } from 'semantic-ui-react';
 import { addComment } from '../../actions/post';
-import EmojiPicker from '../post/EmojiPicker';
+import EmojiPicker from './EmojiPicker';
 
 const CommentForm = ({ postId, addComment }) => {
   const [text, setText] = useState('');

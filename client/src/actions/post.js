@@ -190,18 +190,30 @@ export const deleteComment = (postId, commentId) => async (dispatch) => {
 };
 
 // Add emoji to post
-export const addEmoji = (postId, emoji) => async (dispatch) => {
+export const addEmoji = (postId, emoji, commentId = undefined) => async (
+  dispatch,
+) => {
   const config = {
     headers: {
       'Content-Type': 'application/json',
     },
   };
   try {
-    const res = await axios.put(`/api/posts/emoji/${postId}`, emoji, config);
+    let res;
+    if (commentId) {
+      res = await axios.put(
+        `/api/posts/comment/emoji/${postId}/${commentId}`,
+        emoji,
+        config,
+      );
+    } else {
+      res = await axios.put(`/api/posts/emoji/${postId}`, emoji, config);
+    }
     dispatch({
       type: ADD_EMOJI,
       postId: postId,
       payload: res.data.emojis,
+      commentId,
     });
     dispatch(setAlert('Emoji Added', 'success'));
 
@@ -219,9 +231,19 @@ export const addEmoji = (postId, emoji) => async (dispatch) => {
 };
 
 // Remove emoji from post
-export const removeEmoji = (postId, emojiId) => async (dispatch) => {
+export const removeEmoji = (postId, emojiId, commentId = undefined) => async (
+  dispatch,
+) => {
   try {
-    const res = await axios.delete(`/api/posts/emoji/${postId}/${emojiId}`);
+    let res;
+    if (commentId) {
+      res = await axios.delete(
+        `/api/posts/comment/emoji/${postId}/${commentId}/${emojiId}`,
+      );
+      console.log(res.data.emojis);
+    } else {
+      res = await axios.delete(`/api/posts/emoji/${postId}/${emojiId}`);
+    }
 
     dispatch({
       type: REMOVE_EMOJI,

@@ -17,7 +17,7 @@ const initailState = {
   error: {},
 };
 export default function (state = initailState, action) {
-  const { type, payload, postId, emojis } = action;
+  const { type, payload, postId, emojis, commentId } = action;
   switch (type) {
     case GET_POSTS:
       return {
@@ -83,40 +83,103 @@ export default function (state = initailState, action) {
     }
 
     case ADD_EMOJI: {
-      return {
-        ...state,
-        posts: state.posts.map((post, index) =>
-          post._id === postId ? { ...post, emojis: payload } : post,
-        ),
-        post:
-          state.post && state.post._id === postId
-            ? { ...state.post, emojis: payload }
-            : state.post,
-        loading: false,
-      };
+      if (commentId) {
+        return {
+          ...state,
+          posts: state.posts.map((post, index) =>
+            post._id === postId
+              ? {
+                  ...post,
+                  comments: post.comments.map((comment) =>
+                    comment._id === commentId
+                      ? { ...comment, emojis: payload }
+                      : comment,
+                  ),
+                }
+              : post,
+          ),
+          post:
+            state.post && state.post._id === postId
+              ? {
+                  ...state.post,
+                  comments: state.post.comments.map((comment) =>
+                    comment._id === commentId
+                      ? { ...comment, emojis: payload }
+                      : comment,
+                  ),
+                }
+              : state.post,
+
+          loading: false,
+        };
+      } else {
+        return {
+          ...state,
+          posts: state.posts.map((post, index) =>
+            post._id === postId ? { ...post, emojis: payload } : post,
+          ),
+          post:
+            state.post && state.post._id === postId
+              ? { ...state.post, emojis: payload }
+              : state.post,
+
+          loading: false,
+        };
+      }
     }
     case REMOVE_EMOJI: {
-      return {
-        ...state,
-        posts: state.posts.map((post, index) =>
-          post._id === postId
-            ? {
-                ...post,
-                emojis,
-              }
-            : post,
-        ),
-        post:
-          state.post && state.post._id === postId
-            ? {
-                ...state.post,
-                emojis: state.post.emojis.filter(
-                  (emoji) => emoji._id !== payload,
-                ),
-              }
-            : state.post,
-        loading: false,
-      };
+      if (commentId) {
+        return {
+          ...state,
+          posts: state.posts.map((post, index) =>
+            post._id === postId
+              ? {
+                  ...post,
+                  comments: post.comments.map((comment) =>
+                    comment._id === commentId
+                      ? { ...comment, emojis: emojis }
+                      : comment,
+                  ),
+                }
+              : post,
+          ),
+          post:
+            state.post && state.post._id === postId
+              ? {
+                  ...state.post,
+                  comments: state.post.comments.map((comment) =>
+                    comment._id === commentId
+                      ? { ...comment, emojis: emojis }
+                      : comment,
+                  ),
+                }
+              : state.post,
+
+          loading: false,
+        };
+      } else {
+        return {
+          ...state,
+          posts: state.posts.map((post, index) =>
+            post._id === postId
+              ? {
+                  ...post,
+                  emojis,
+                }
+              : post,
+          ),
+          post:
+            state.post && state.post._id === postId
+              ? {
+                  ...state.post,
+                  emojis: state.post.emojis.filter(
+                    (emoji) => emoji._id !== payload,
+                  ),
+                }
+              : state.post,
+          loading: false,
+        };
+      }
     }
     default:
       return state;

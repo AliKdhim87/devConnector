@@ -23,7 +23,6 @@ const PostItem = ({
   removeEmoji,
 }) => {
   const [hideEmojiPicker, setHideEmojiPicker] = useState(true);
-  const [emojiToBeAdded, setEmojiToBeAdded] = useState({});
 
   const showHideEmojiPicker = () => {
     setHideEmojiPicker((prevState) => !prevState);
@@ -97,6 +96,7 @@ const PostItem = ({
                   circular
                   color={
                     !!auth &&
+                    !!auth.user &&
                     !!emo.users.find((user) => {
                       return user === auth.user._id;
                     })
@@ -107,11 +107,12 @@ const PostItem = ({
                   onClick={() => {
                     const isMine =
                       !!auth &&
+                      !!auth.user &&
                       !!emo.users.find((user) => {
                         return user === auth.user._id;
                       });
 
-                    console.log({ isMine });
+                  
                     if (isMine) removeEmoji(_id, emo._id);
                     else addEmoji(_id, emo.emoji);
                   }}
