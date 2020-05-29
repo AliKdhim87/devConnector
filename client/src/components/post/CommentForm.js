@@ -1,9 +1,23 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { Button } from 'semantic-ui-react';
 import { addComment } from '../../actions/post';
+import EmojiPicker from '../post/EmojiPicker';
+
 const CommentForm = ({ postId, addComment }) => {
   const [text, setText] = useState('');
+  const [hideEmojiPicker, setHideEmojiPicker] = useState(true);
+
+  const showHideEmojiPicker = () => {
+    setHideEmojiPicker((prevState) => !prevState);
+  };
+
+  const insertEmoji = (emojiObj) => {
+    const emoji = emojiObj.native;
+    setText((prevText) => prevText + emoji);
+  };
+
   return (
     <div className='post-form'>
       <div className='bg-primary p'>
@@ -26,6 +40,19 @@ const CommentForm = ({ postId, addComment }) => {
           onChange={(e) => setText(e.target.value)}
           required
         ></textarea>
+        {hideEmojiPicker ? (
+          <Button circular onClick={showHideEmojiPicker}>
+            🙂
+          </Button>
+        ) : (
+          <EmojiPicker
+            onBlur={showHideEmojiPicker}
+            onPick={(emojiObj) => {
+              showHideEmojiPicker();
+              insertEmoji(emojiObj);
+            }}
+          />
+        )}
         <input type='submit' className='btn btn-dark my-1' value='Submit' />
       </form>
     </div>
