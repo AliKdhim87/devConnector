@@ -14,6 +14,7 @@ import Profiles from '../profiles/Profiles';
 import Profile from '../profile/Profile';
 import Posts from '../posts/Posts';
 import Post from '../post/Post';
+import Message from '../message/Message';
 import NotFound from '../layout/NotFound';
 import PraivateRoute from '../routing/PraivateRoute';
 
@@ -47,7 +48,7 @@ const Routes = () => {
           path="/groups/:groupID/posts/:postID"
           component={GroupPosts}
         />
-
+        <PraivateRoute exact path='/message/:id' component={Message} />
         <PraivateRoute exact path="/dashboard" component={Dashboard} />
         <PraivateRoute exact path="/create-profile" component={CreateProfile} />
         <PraivateRoute exact path="/edit-userinfo" component={EditUserInfo} />
