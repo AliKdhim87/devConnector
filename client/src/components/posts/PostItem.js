@@ -23,6 +23,7 @@ const PostItem = ({
   removeEmoji,
 }) => {
   const [hideEmojiPicker, setHideEmojiPicker] = useState(true);
+  const [emojiToBeAdded, setEmojiToBeAdded] = useState({});
 
   const showHideEmojiPicker = () => {
     setHideEmojiPicker((prevState) => !prevState);
@@ -122,9 +123,13 @@ const PostItem = ({
                             text = target.textContent || target.innerText;
                           // console.log(text);
 
-                          if (text === emo.emoji.native) {
-                            // console.log(text);
+                          if (text === emo.emoji.native && emo.emoji.native) {
+                            console.log(text);
                             console.log(emo.emoji.native);
+                            setEmojiToBeAdded(emo);
+                            console.log(emojiToBeAdded);
+
+                            addEmoji(_id, emojiToBeAdded);
                           }
                         },
                         false,

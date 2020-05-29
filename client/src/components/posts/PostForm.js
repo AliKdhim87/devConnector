@@ -7,22 +7,16 @@ import EmojiPicker from '../post/EmojiPicker';
 
 const PostForm = ({ addPost }) => {
   const [text, setText] = useState('');
-  const [emojiStr, setEmojiStr] = useState('');
+
   const [hideEmojiPicker, setHideEmojiPicker] = useState(true);
 
   const showHideEmojiPicker = () => {
     setHideEmojiPicker((prevState) => !prevState);
   };
 
-  const insertEmoji = (e) => {
-    const emoji = e.native;
-    console.log(emoji);
-    setEmojiStr(emoji);
-    console.log({ emojiStr });
-
-    setText((prevText) => prevText + emojiStr);
-
-    console.log({ text });
+  const insertEmoji = (emojiObj) => {
+    const emoji = emojiObj.native;
+    setText((prevText) => prevText + emoji);
   };
 
   return (
@@ -54,9 +48,9 @@ const PostForm = ({ addPost }) => {
         ) : (
           <EmojiPicker
             onBlur={showHideEmojiPicker}
-            onPick={(e) => {
+            onPick={(emojiObj) => {
               showHideEmojiPicker();
-              insertEmoji(e);
+              insertEmoji(emojiObj);
             }}
           />
         )}
