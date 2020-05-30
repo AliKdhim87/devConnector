@@ -172,9 +172,7 @@ export default function (state = initailState, action) {
             state.post && state.post._id === postId
               ? {
                   ...state.post,
-                  emojis: state.post.emojis.filter(
-                    (emoji) => emoji._id !== payload,
-                  ),
+                  emojis,
                 }
               : state.post,
           loading: false,

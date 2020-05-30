@@ -250,6 +250,7 @@ export const removeEmoji = (postId, emojiId, commentId = undefined) => async (
       payload: emojiId,
       postId: postId,
       emojis: res.data.emojis,
+      commentId,
     });
 
     dispatch(setAlert('Emoji Removed', 'success'));
