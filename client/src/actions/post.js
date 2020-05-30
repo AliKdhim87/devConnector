@@ -240,7 +240,6 @@ export const removeEmoji = (postId, emojiId, commentId = undefined) => async (
       res = await axios.delete(
         `/api/posts/comment/emoji/${postId}/${commentId}/${emojiId}`,
       );
-      console.log(res.data.emojis);
     } else {
       res = await axios.delete(`/api/posts/emoji/${postId}/${emojiId}`);
     }

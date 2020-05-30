@@ -77,7 +77,13 @@ const PostItem = ({
         )}{' '}
         {hideEmojiPicker ? (
           <Button circular onClick={showHideEmojiPicker}>
-            🙂
+            <span
+              role='img'
+              aria-label='smiling face'
+              aria-labelledby='smiling face'
+            >
+              🙂
+            </span>
           </Button>
         ) : (
           <EmojiPicker
@@ -101,9 +107,8 @@ const PostItem = ({
                       return user === auth.user._id;
                     })
                       ? 'green'
-                      : 'white'
+                      : undefined
                   }
-                  id={emo.emoji.unified}
                   onClick={() => {
                     const isMine =
                       !!auth &&
@@ -112,7 +117,6 @@ const PostItem = ({
                         return user === auth.user._id;
                       });
 
-                  
                     if (isMine) removeEmoji(_id, emo._id);
                     else addEmoji(_id, emo.emoji);
                   }}

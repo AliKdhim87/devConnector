@@ -45,14 +45,19 @@ const CommentItem = ({
         )}
         {hideEmojiPicker ? (
           <Button circular onClick={showHideEmojiPicker}>
-            🙂
+            <span
+              role='img'
+              aria-label='smiling face'
+              aria-labelledby='smiling face'
+            >
+              🙂
+            </span>
           </Button>
         ) : (
           <EmojiPicker
             onBlur={showHideEmojiPicker}
             onPick={(emo) => {
               addEmoji(postId, emo, _id);
-              console.log(emo);
               showHideEmojiPicker();
             }}
           />
@@ -70,9 +75,8 @@ const CommentItem = ({
                       return user === auth.user._id;
                     })
                       ? 'green'
-                      : 'white'
+                      : undefined
                   }
-                  id={emo.emoji.unified}
                   onClick={() => {
                     const isMine =
                       !!auth &&

@@ -380,12 +380,10 @@ router.put('/comment/emoji/:id/:comment_id', auth, async (req, res) => {
     if (existingEmoji) {
       existingEmoji.users.unshift(req.user.id);
     } else {
-      console.log({ existingEmoji });
       emojis.unshift({ users: [req.user.id], emoji });
     }
 
     emojis.forEach((emoji) => (emoji.amount = emoji.users.length));
-    console.log(emojis);
     await post.save();
 
     res.json({ emojis });
