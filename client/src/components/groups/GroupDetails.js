@@ -28,10 +28,6 @@ const GroupDetails = ({
     getGroup(match.params.groupID);
   }, [getGroup, match]);
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const [editOpen, setEditOpen] = useState(false);
-  const toggleEdit = () => {
-    setEditOpen(!editOpen);
-  };
   const toggleSettings = () => {
     setSettingsOpen(!settingsOpen);
   };
@@ -51,7 +47,7 @@ const GroupDetails = ({
     });
   };
   const isMember = (group, userID) => {
-    if (group.members.filter((member) => member.user=== userID).length !== 0) {
+    if (group.members.filter((member) => member.user._id === userID).length !== 0) {
       return true;
     } else return false;
   };
@@ -188,13 +184,12 @@ const GroupDetails = ({
                     <h3 className="text-dark">NO POSTS SHARED</h3>
                   </div>
                 ) : (
-                  <div
-                  >
+                  <div>
                     {group &&
                       group.posts.map((post) => (
                         <div className="discussion-item">
                           <h3 className="m-0">{post.title}</h3>
-                          <p className="post-date" style={{margin:"0"}}>
+                          <p className="post-date" style={{ margin: '0' }}>
                             Posted on{' '}
                             <Moment format="YYYY/MM/DD">{post.date}</Moment>
                           </p>

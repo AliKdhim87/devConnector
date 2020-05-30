@@ -30,20 +30,14 @@ export default function (state = initailState, action) {
         groups: payload,
         loading: false
       };
-    case GET_GROUP: {
-      return {
-        ...state,
-        group: payload,
-        loading: false
-      };
-    };
+    case GET_GROUP:
     case UPDATE_GROUP: {
       return {
         ...state,
         group: payload,
         loading: false
       };
-    };
+    }
     case DELETE_GROUP: {
       return {
         ...state,

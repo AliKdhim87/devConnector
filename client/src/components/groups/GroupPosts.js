@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import Moment from 'react-moment';
 import { Link, useHistory, useParams } from 'react-router-dom';
-import { connect, useSelector } from 'react-redux';
+import { connect } from 'react-redux';
 import {
   getGroupPost,
   deleteGroupPost,

@@ -13,7 +13,7 @@ export default function useDebounce(value, delay) {
       };
     },
 
-    [value] 
+    [value, delay] 
   );
 
   return debouncedValue;

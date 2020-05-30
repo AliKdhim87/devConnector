@@ -1,5 +1,5 @@
-import React, { Fragment, useState } from 'react';
-import { withRouter, Link, useHistory, useParams } from 'react-router-dom';
+import React, { useState } from 'react';
+import { withRouter, useHistory, useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { updateGroup, deleteGroup } from '../../actions/group';
@@ -15,11 +15,6 @@ const GroupOwnerDashboard = ({ updateGroup, deleteGroup, isPublic, match }) => {
   const { name, description } = formData;
   const onChangeInputHandler = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
-  const onSubmitHandler = (e) => {
-    e.preventDefault();
-    updateGroup(groupID, formData);
-    history.push(`/groups/${groupID}`);
-  };
   const [modalOpen, setModalOpen] = useState(false);
   return (
     <section className="container">

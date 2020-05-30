@@ -13,7 +13,6 @@ const PostForm = ({ addPost }) => {
       ...formData,
       [e.target.name]: e.target.value
     });
-  const [media, setMedia] = useState(false);
 
   const { text, link } = formData;
   return (
@@ -64,8 +63,5 @@ const PostForm = ({ addPost }) => {
 PostForm.propTypes = {
   addPost: PropTypes.func.isRequired
 };
-const mapStateToProps = (state) => ({
-  auth: state.auth
-});
 
 export default connect(null, { addPost })(PostForm);

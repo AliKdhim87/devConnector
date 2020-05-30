@@ -1,6 +1,5 @@
 import React, { useEffect, Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
-import Moment from 'react-moment';
 import { getGroups } from '../../actions/group';
 import { connect } from 'react-redux';
 import GroupItem from './GroupItem';

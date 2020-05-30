@@ -22,13 +22,13 @@ const Dashboard = ({
 }) => {
   useEffect(() => {
     loadUser();
-  }, []);
+  }, [loadUser]);
   useEffect(() => {
     getPosts();
-  }, []);
+  }, [getPosts]);
   useEffect(() => {
     getGroups();
-  }, []);
+  }, [getGroups]);
 
   const [isGroupsOpen, setGroupsOpen] = useState(false);
 
@@ -40,8 +40,8 @@ const Dashboard = ({
   };
   let myGroupPosts = [];
   if (user) {
-    user.myGroups.map((group) => {
-      group._id.posts.map((post) => {
+    user.myGroups.forEach((group) => {
+      group._id.posts.forEach((post) => {
         const postDate = new Date(post.date).getTime();
         const difference = dateChecker(postDate);
         if (difference < 172800000) {
@@ -55,7 +55,7 @@ const Dashboard = ({
 
   let filteredGroups = [];
   if (groups) {
-    groups.map((group) => {
+    groups.forEach((group) => {
       const groupDate = new Date(group.createdAt).getTime();
       const difference = dateChecker(groupDate);
       if (difference < 172800000) {
@@ -66,8 +66,8 @@ const Dashboard = ({
 
   let filteredGroupPosts = [];
   if (groups) {
-    groups.map((group) => {
-      group.posts.map((groupPost) => {
+    groups.forEach((group) => {
+      group.posts.forEach((groupPost) => {
         const postDate = new Date(groupPost.date).getTime();
         const difference = dateChecker(postDate);
         if (difference < 172800000) {
@@ -75,14 +75,14 @@ const Dashboard = ({
           groupPost.groupId = group._id
           filteredGroupPosts.push(groupPost);
         }
+        else return;
       });
     });
   }
-  console.log(myGroupPosts)
 
   let filteredPosts = [];
   if (posts) {
-    posts.map((post) => {
+    posts.forEach((post) => {
       const postDate = new Date(post.date).getTime();
       const difference = dateChecker(postDate);
       if (difference < 172800000) {
@@ -100,7 +100,7 @@ const Dashboard = ({
             <div className="flex-c dashboard-profile">
               <Card fluid>
                 <div className="flex-c">
-                  <img src={user.avatar} />
+                  <img src={user.avatar} alt="avatar" />
                   <span className="text-primary p-1" style={{fontSize:"1.5rem"}}>{user.name}</span>
                   <span className="text-dark">
                     Member since: <Moment format="YY/MM/DD">{user.date}</Moment>

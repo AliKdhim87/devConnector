@@ -1,11 +1,9 @@
-import React, { Fragment, useState } from 'react';
-import { withRouter, Link, useHistory } from 'react-router-dom';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { addGroup } from '../../actions/group';
 
 const GroupsForm = ({ addGroup, setCreateGroupOpen }) => {
-  const history = useHistory();
   const [formData, setFormData] = useState({
     name: '',
     description: '',
