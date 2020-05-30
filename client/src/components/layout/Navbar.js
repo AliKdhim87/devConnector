@@ -1,29 +1,34 @@
-import React, { Fragment } from 'react';
-import { NavLink } from 'react-router-dom';
-import PropTypes from 'prop-types';
-import { logout } from '../../actions/auth';
-import { connect } from 'react-redux';
+import React, { Fragment } from "react";
+import { NavLink } from "react-router-dom";
+import { Link } from 'react-router-dom';
+import PropTypes from "prop-types";
+import { logout } from "../../actions/auth";
+import { connect } from "react-redux";
 const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
   const authLinks = (
     <ul>
       <li>
-        <NavLink to='/profiles'>Developers</NavLink>
+        <NavLink to="/profiles">Developers</NavLink>
       </li>
       <li>
-        <NavLink to='/posts'>Posts</NavLink>
+        <NavLink to="/posts">Posts</NavLink>
       </li>
       <li>
-        {' '}
-        <NavLink to='/dashboard'>
-          <i className='fas fa-user'></i>{' '}
-          <span className='hide-sm'>Dashboard </span>
+        {" "}
+        <Link to="/friends">
+          <i className="fas fa-user-friends" />{" "}
+          <span className="hide-sm"> Friends</span>
+        </Link>
+        <NavLink to="/dashboard">
+          <i className="fas fa-user"></i>{" "}
+          <span className="hide-sm">Dashboard </span>
         </NavLink>
       </li>
 
       <li>
-        <a onClick={logout} href='#!'>
-          <i className='fas fa-sign-out-alt'></i>{' '}
-          <span className='hide-sm'>Logout </span>
+        <a onClick={logout} href="#!">
+          <i className="fas fa-sign-out-alt"></i>{" "}
+          <span className="hide-sm">Logout </span>
         </a>
       </li>
     </ul>
@@ -31,22 +36,22 @@ const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
   const guestLinks = (
     <ul>
       <li>
-        <NavLink to='/profiles'>Developers</NavLink>
+        <NavLink to="/profiles">Developers</NavLink>
       </li>
       <li>
-        <NavLink to='/register'>Register</NavLink>
+        <NavLink to="/register">Register</NavLink>
       </li>
       <li>
-        <NavLink to='/login'>Login</NavLink>
+        <NavLink to="/login">Login</NavLink>
       </li>
     </ul>
   );
 
   return (
-    <nav className='navbar bg-dark'>
+    <nav className="navbar bg-dark">
       <h1>
-        <NavLink to='/'>
-          <i className='fas fa-code'></i> DevConnector
+        <NavLink to="/">
+          <i className="fas fa-code"></i> DevConnector
         </NavLink>
       </h1>
       {!loading && (

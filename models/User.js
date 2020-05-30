@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { ObjectId} = mongoose.Schema.Types;
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -27,6 +28,19 @@ const userSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  friends: [
+    {
+      type: ObjectId,
+      ref: 'User',
+     }
+  ],
+  friendRequests: [
+    {
+      user: { type: ObjectId},
+      date: Date,
+      isSent: Boolean,
+    },
+  ],
 });
 
 module.exports = User = mongoose.model('user', userSchema);
