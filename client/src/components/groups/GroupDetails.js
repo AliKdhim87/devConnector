@@ -28,6 +28,10 @@ const GroupDetails = ({
     getGroup(match.params.groupID);
   }, [getGroup, match]);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
+  const toggleEdit = () => {
+    setEditOpen(!editOpen);
+  };
   const toggleSettings = () => {
     setSettingsOpen(!settingsOpen);
   };
@@ -47,7 +51,10 @@ const GroupDetails = ({
     });
   };
   const isMember = (group, userID) => {
-    if (group.members.filter((member) => member.user._id === userID).length !== 0) {
+    if (
+      group.members.filter((member) => member.user === userID).length !== 0 ||
+      group.members.filter((member) => member.user._id === userID).length !== 0
+    ) {
       return true;
     } else return false;
   };
