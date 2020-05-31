@@ -1,20 +1,32 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import { Button } from 'semantic-ui-react';
 import Moment from 'react-moment';
 import Microlink from '@microlink/react';
 import { connect } from 'react-redux';
-import { addLike, removeLike, deletePost } from '../../actions/post';
+import { addLike, removeLike, deletePost, addEmoji,
+  removeEmoji} from '../../actions/post';
 import Spinner from '../layout/Spinner';
+import EmojiPicker from '../post/EmojiPicker';
 const PostItem = ({
   addLike,
   removeLike,
   deletePost,
   auth,
-  post: { _id, text, name, link, avatar, user, likes, comments, date, loading },
-  showActions
+  post: { _id, text, name, link, avatar, user, likes, comments, date, loading, emojis },
+  showActions,
+  addEmoji,
+  removeEmoji,
 }) => {
-  if (loading) return <Spinner />;
+  const [hideEmojiPicker, setHideEmojiPicker] = useState(true);
+
+  const showHideEmojiPicker = () => {
+    setHideEmojiPicker((prevState) => !prevState);
+  };
+if (loading) {return <Spinner />};
+
+  
   return (
     <div className="post bg-white p-1 my-1">
       <div>
@@ -37,7 +49,6 @@ const PostItem = ({
         <p className="post-date">
           Posted on <Moment format="YYYY/MM/DD">{date}</Moment>
         </p>
-
         {showActions && (
           <Fragment>
             <button
@@ -73,11 +84,65 @@ const PostItem = ({
                 </button>
               )}
           </Fragment>
+        )}{' '}
+        {hideEmojiPicker ? (
+          <Button circular onClick={showHideEmojiPicker}>
+            <span
+              role='img'
+              aria-label='smiling face'
+              aria-labelledby='smiling face'
+            >
+              🙂
+            </span>
+          </Button>
+        ) : (
+          <EmojiPicker
+            onBlur={showHideEmojiPicker}
+            onPick={(emo, event) => {
+              addEmoji(_id, emo);
+              showHideEmojiPicker();
+            }}
+          />
+        )}
+        {emojis.length > 0 && (
+          <ul style={{ display: 'flex' }}>
+            {emojis.map((emo, index) => (
+              <li key={index}>
+                <Button
+                  circular
+                  color={
+                    !!auth &&
+                    !!auth.user &&
+                    !!emo.users.find((user) => {
+                      return user === auth.user._id;
+                    })
+                      ? 'green'
+                      : undefined
+                  }
+                  onClick={() => {
+                    const isMine =
+                      !!auth &&
+                      !!auth.user &&
+                      !!emo.users.find((user) => {
+                        return user === auth.user._id;
+                      });
+
+                    if (isMine) removeEmoji(_id, emo._id);
+                    else addEmoji(_id, emo.emoji);
+                  }}
+                >
+                  {emo.emoji.native}
+                  {emo.amount > 1 ? <small>{emo.amount}</small> : ''}
+                </Button>
+              </li>
+            ))}
+          </ul>
         )}
       </div>
     </div>
   );
 };
+
 PostItem.defaultProps = {
   showActions: true
 };
@@ -87,11 +152,17 @@ PostItem.propTypes = {
   auth: PropTypes.object.isRequired,
   addLike: PropTypes.func.isRequired,
   removeLike: PropTypes.func.isRequired,
-  deletePost: PropTypes.func.isRequired
+  deletePost: PropTypes.func.isRequired,
+  addEmoji: PropTypes.func.isRequired,
+  removeEmoji: PropTypes.func.isRequired,
 };
 const mapStateToProps = (state) => ({
   auth: state.auth
 });
-export default connect(mapStateToProps, { addLike, removeLike, deletePost })(
-  PostItem
-);
+export default connect(mapStateToProps, {
+  addLike,
+  removeLike,
+  deletePost,
+  addEmoji,
+  removeEmoji,
+})(PostItem);

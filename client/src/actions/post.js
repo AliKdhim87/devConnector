@@ -9,6 +9,8 @@ import {
   GET_POST,
   ADD_COMMENT,
   REMOVE_COMMENT,
+  ADD_EMOJI,
+  REMOVE_EMOJI,
 } from './types';
 
 export const getPosts = () => async (dispatch) => {
@@ -143,11 +145,12 @@ export const addComment = (postId, formData) => async (dispatch) => {
       'Content-Type': 'application/json',
     },
   };
+
   try {
     const res = await axios.post(
       `/api/posts/comment/${postId}`,
       formData,
-      config
+      config,
     );
     dispatch({
       type: ADD_COMMENT,
@@ -175,6 +178,83 @@ export const deleteComment = (postId, commentId) => async (dispatch) => {
     });
     dispatch(setAlert('Comment Removed', 'success'));
   } catch (error) {
+    const errors = error.response.data.errors;
+
+    if (errors) {
+      errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
+    }
+    dispatch({
+      type: POST_ERROR,
+    });
+  }
+};
+
+// Add emoji to post
+export const addEmoji = (postId, emoji, commentId = undefined) => async (
+  dispatch,
+) => {
+  const config = {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  };
+  try {
+    let res;
+    if (commentId) {
+      res = await axios.put(
+        `/api/posts/comment/emoji/${postId}/${commentId}`,
+        emoji,
+        config,
+      );
+    } else {
+      res = await axios.put(`/api/posts/emoji/${postId}`, emoji, config);
+    }
+    dispatch({
+      type: ADD_EMOJI,
+      postId: postId,
+      payload: res.data.emojis,
+      commentId,
+    });
+    dispatch(setAlert('Emoji Added', 'success'));
+
+    // return res;
+  } catch (error) {
+    const errors = error.response.data.errors;
+
+    if (errors) {
+      errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
+    }
+    dispatch({
+      type: POST_ERROR,
+    });
+  }
+};
+
+// Remove emoji from post
+export const removeEmoji = (postId, emojiId, commentId = undefined) => async (
+  dispatch,
+) => {
+  try {
+    let res;
+    if (commentId) {
+      res = await axios.delete(
+        `/api/posts/comment/emoji/${postId}/${commentId}/${emojiId}`,
+      );
+    } else {
+      res = await axios.delete(`/api/posts/emoji/${postId}/${emojiId}`);
+    }
+
+    dispatch({
+      type: REMOVE_EMOJI,
+      payload: emojiId,
+      postId: postId,
+      emojis: res.data.emojis,
+      commentId,
+    });
+
+    dispatch(setAlert('Emoji Removed', 'success'));
+  } catch (error) {
+    console.log(error);
     const errors = error.response.data.errors;
 
     if (errors) {

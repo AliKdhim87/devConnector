@@ -23,14 +23,12 @@ export const DELETE_POST = 'DELETE_POST';
 export const ADD_POST = 'ADD_POST';
 export const ADD_COMMENT = 'ADD_COMMENT';
 export const REMOVE_COMMENT = 'REMOVE_COMMENT';
-
 export const SEND_MESSAGE = 'SEND_MESSAGE';
 export const SEND_MESSAGE_ERROR = 'SEND_MESSAGE_ERROR';
 export const GET_MESSAGES = 'GET_MESSAGES';
 export const DELETE_MESSAGE = 'DELETE_MESSAGE';
 export const GET_USERS = 'GET_USERS';
 export const DELETE_ALL_MESSAGES = 'DELETE_ALL_MESSAGES';
-
 //Group feature action types
 export const GET_GROUPS = 'GET_GROUPS';
 export const ADD_GROUP = 'ADD_GROUP'
@@ -45,5 +43,6 @@ export const ADD_POSTCOMMENT = 'ADD_POSTCOMMENT';
 export const DELETE_POSTCOMMENT = 'DELETE_POSTCOMMENT';
 export const JOIN_GROUP = 'JOIN_GROUP';
 export const LEAVE_GROUP = 'LEAVE_GROUP';
-
-
+//Emoji action types
+export const ADD_EMOJI = 'ADD_EMOJI';
+export const REMOVE_EMOJI = 'REMOVE_EMOJI';

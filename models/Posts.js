@@ -27,6 +27,27 @@ const PostSchema = new Schema({
       },
     },
   ],
+  emojis: [
+    {
+      users: [
+        {
+          type: Schema.Types.ObjectId,
+          ref: 'users',
+        },
+      ],
+      amount: Number,
+      emoji: {
+        colons: { type: String },
+        emoticons: [String],
+        id: { type: String },
+        name: { type: String },
+        native: { type: String },
+        short_names: [String],
+        skin: { type: Number },
+        unified: { type: String },
+      },
+    },
+  ],
   comments: [
     {
       user: {
@@ -45,6 +66,35 @@ const PostSchema = new Schema({
         type: Date,
         default: Date.now,
       },
+      likes: [
+        {
+          user: {
+            type: Schema.Types.ObjectId,
+            ref: 'users',
+          },
+        },
+      ],
+      emojis: [
+        {
+          users: [
+            {
+              type: Schema.Types.ObjectId,
+              ref: 'users',
+            },
+          ],
+          amount: Number,
+          emoji: {
+            colons: { type: String },
+            emoticons: [String],
+            id: { type: String },
+            name: { type: String },
+            native: { type: String },
+            short_names: [String],
+            skin: { type: Number },
+            unified: { type: String },
+          },
+        },
+      ],
     },
   ],
   date: {
