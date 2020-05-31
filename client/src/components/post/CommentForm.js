@@ -42,7 +42,13 @@ const CommentForm = ({ postId, addComment }) => {
         ></textarea>
         {hideEmojiPicker ? (
           <Button circular onClick={showHideEmojiPicker}>
-            🙂
+            <span
+              role='img'
+              aria-label='smiling face'
+              aria-labelledby='smiling face'
+            >
+              🙂
+            </span>
           </Button>
         ) : (
           <EmojiPicker
