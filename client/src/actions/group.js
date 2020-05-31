@@ -14,6 +14,8 @@ import {
   DELETE_POSTCOMMENT,
   JOIN_GROUP,
   LEAVE_GROUP,
+  ADD_EVENT,
+  DELETE_EVENT,
   POST_ERROR
 } from './types';
 
@@ -248,6 +250,55 @@ export const deleteGroupPost = (groupID, postID) => async (dispatch) => {
       payload: res.data
     });
     dispatch(setAlert('Post removed', 'success'));
+  } catch (error) {
+    dispatch({
+      type: POST_ERROR,
+      payload: {
+        msg: error.msg,
+        status: error.status
+      }
+    });
+  }
+};
+//Add Event 
+export const addEvent = (groupID, formData) => async (dispatch) => {
+  const config = {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  };
+  try {
+    const res = await axios.put(
+      `/api/groups/${groupID}/events`,
+      formData,
+      config
+    );
+    dispatch({
+      type: ADD_EVENT,
+      payload: res.data
+    });
+    dispatch(setAlert('Event Added', 'success'));
+  } catch (error) {
+    const errors = error.response.data.errors;
+    if (errors) {
+      errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
+    }
+    dispatch({
+      type: POST_ERROR
+    });
+  }
+};
+
+
+// Delete an event
+export const deleteEvent = (groupID, eventID) => async (dispatch) => {
+  try {
+    const res = await axios.put(`/api/groups/${groupID}/events/${eventID}`);
+    dispatch({
+      type: DELETE_EVENT,
+      payload: res.data
+    });
+    dispatch(setAlert('Event removed', 'success'));
   } catch (error) {
     dispatch({
       type: POST_ERROR,

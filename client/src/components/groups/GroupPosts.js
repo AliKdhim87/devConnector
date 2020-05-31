@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Moment from 'react-moment';
 import { Link, useHistory, useParams } from 'react-router-dom';
 import { connect } from 'react-redux';
+import Microlink from '@microlink/react';
 import {
   getGroupPost,
   deleteGroupPost,
@@ -82,37 +83,52 @@ const GroupPosts = ({
             <p className="group-post-text-and-date">
               {!loading && post && post.text}
             </p>
+            {post.link && post.link !== '' && !loading && (
+              <Microlink
+                media={['video', 'audio', 'image', 'logo']}
+                autoplay
+                controls
+                size="large"
+                url={post.link}
+              />
+            )}
             <p className="post-date group-post-text-and-date">
               {post && <Moment format="YYYY/MM/DD">{post.date}</Moment>}
             </p>
           </div>
           <div className="flex-r group-post-owner-buttons">
-            {!loading && auth && !auth.loading && auth.user._id === post.creator._id && (
-              <button
-                type="button"
-                className={
-                  openEditPost || openDeletePost ? `hidden` : `btn btn-dark`
-                }
-                onClick={() => {
-                  setOpenEditPost(true);
-                }}
-              >
-                EDIT
-              </button>
-            )}
-            {!loading && auth && !auth.loading && auth.user._id === post.creator._id && (
-              <button
-                type="button"
-                className={
-                  openDeletePost || openEditPost ? `hidden` : `btn btn-danger`
-                }
-                onClick={() => {
-                  setOpenDeletePost(true);
-                }}
-              >
-                <i className="fas fa-times"></i>
-              </button>
-            )}
+            {!loading &&
+              auth &&
+              !auth.loading &&
+              auth.user._id === post.creator._id && (
+                <button
+                  type="button"
+                  className={
+                    openEditPost || openDeletePost ? `hidden` : `btn btn-dark`
+                  }
+                  onClick={() => {
+                    setOpenEditPost(true);
+                  }}
+                >
+                  EDIT
+                </button>
+              )}
+            {!loading &&
+              auth &&
+              !auth.loading &&
+              auth.user._id === post.creator._id && (
+                <button
+                  type="button"
+                  className={
+                    openDeletePost || openEditPost ? `hidden` : `btn btn-danger`
+                  }
+                  onClick={() => {
+                    setOpenDeletePost(true);
+                  }}
+                >
+                  <i className="fas fa-times"></i>
+                </button>
+              )}
           </div>
           <div>
             <div className={openEditPost ? `shown` : `hidden`}>
@@ -216,17 +232,20 @@ const GroupPosts = ({
                     Posted on{' '}
                     <Moment format="YYYY/MM/DD">{comment.date}</Moment>
                   </p>
-                  {comment && auth && !auth.loading && comment.userId === auth.user._id && (
-                    <button
-                      type="button"
-                      className="btn btn-danger"
-                      onClick={() => {
-                        deletePostComment(groupID, postID, comment._id);
-                      }}
-                    >
-                      <i className="fas fa-times"></i>
-                    </button>
-                  )}
+                  {comment &&
+                    auth &&
+                    !auth.loading &&
+                    comment.userId === auth.user._id && (
+                      <button
+                        type="button"
+                        className="btn btn-danger"
+                        onClick={() => {
+                          deletePostComment(groupID, postID, comment._id);
+                        }}
+                      >
+                        <i className="fas fa-times"></i>
+                      </button>
+                    )}
                 </div>
               </div>
             ))}

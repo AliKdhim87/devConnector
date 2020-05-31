@@ -878,6 +878,7 @@ opacity: 0.75;
   .group-info-container {
     flex-direction: column;
   }
+
   .group-item {
     width: 85%;
   }

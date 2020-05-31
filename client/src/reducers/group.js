@@ -12,7 +12,9 @@ import {
   LEAVE_GROUP,
   ADD_POSTCOMMENT,
   DELETE_POSTCOMMENT,
-  POST_ERROR
+  POST_ERROR,
+  ADD_EVENT,
+  DELETE_EVENT
 } from '../actions/types';
 const initailState = {
   groups: [],
@@ -106,6 +108,18 @@ export default function (state = initailState, action) {
           ...state.post,
           comments: payload
         },
+        loading: false
+      };
+    case ADD_EVENT:
+      return {
+        ...state,
+        group: { ...state.group, events: payload },
+        loading: false
+      };
+    case DELETE_EVENT:
+      return {
+        ...state,
+        group: { ...state.group, events: payload },
         loading: false
       };
 

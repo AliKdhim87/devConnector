@@ -67,7 +67,7 @@ const GroupOwnerDashboard = ({ updateGroup, deleteGroup, isPublic, match }) => {
         </small>
         <button
           className="btn btn-danger center"
-          style={{ width: '20%' }}
+          style={{ width: '12rem' }}
           onClick={() => {
             setModalOpen(true);
           }}

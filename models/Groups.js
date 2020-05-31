@@ -16,6 +16,27 @@ const GroupSchema = new Schema({
     required: true,
     trim: true
   },
+  events: [
+    {
+      title: { 
+        type: String, 
+        required: true 
+      },
+      description: { 
+        type: String 
+      },
+      start: { 
+        type: Date, required: true 
+      },
+      end: { 
+        type: Date 
+      },
+      creator:{
+        type: Schema.Types.ObjectId,
+        ref:'user'
+      }
+    }
+  ],
   posts: [
     {
       title: {
@@ -29,6 +50,9 @@ const GroupSchema = new Schema({
       text: {
         type: String,
         required: true
+      },
+      link:{
+        type:String
       },
       date: {
         type: Date,
