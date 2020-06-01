@@ -1,5 +1,5 @@
 {
-  "mongoURI": "",
-  "jwtSecret": "",
-  "githubToken": ""
+  "mongoURI": "mongodb+srv://alikadhim:Aaa12345@devconnector-r4trv.mongodb.net/test?retryWrites=true&w=majority",
+  "jwtSecret": "secretToken",
+  "githubToken": "5c392950804ec36179976ec2eb586d21e8a64ce1"
 }

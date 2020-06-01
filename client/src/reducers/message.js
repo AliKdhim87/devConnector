@@ -6,12 +6,14 @@ import {
   DELETE_MESSAGE,
   DELETE_ALL_MESSAGES,
   SEND_MESSAGE_ERROR,
+  CONNECTED_USERS
 } from '../actions/types';
 const initailState = {
   messages: [],
   users: [],
+  connectedUsers: [],
   errors: {},
-  loading: true,
+  loading: true
 };
 export default (state = initailState, action) => {
   const { type, payload } = action;
@@ -21,7 +23,7 @@ export default (state = initailState, action) => {
       return {
         ...state,
         messages: payload,
-        loading: false,
+        loading: false
       };
 
     case DELETE_ALL_MESSAGES:
@@ -29,26 +31,32 @@ export default (state = initailState, action) => {
         ...state,
         messages: [],
         users: state.users.filter((user) => user.corresponder._id !== payload),
-        loading: false,
+        loading: false
       };
     case DELETE_MESSAGE:
       return {
         ...state,
         messages: payload,
-        loading: false,
+        loading: false
       };
     case GET_USERS:
       return {
         ...state,
         users: payload,
-        loading: false,
+        loading: false
+      };
+    case CONNECTED_USERS:
+      //@ Todo make the connected users work
+      return {
+        ...state,
+        connectedUsers: [...state.connectedUsers, payload]
       };
     case SEND_MESSAGE_ERROR:
     case PROFILE_ERROR:
       return {
         ...state,
         errors: payload,
-        loading: false,
+        loading: false
       };
     default:
       return state;

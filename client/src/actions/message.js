@@ -1,6 +1,4 @@
 import axios from 'axios';
-
-import { setAlert } from './alert';
 import {
   SEND_MESSAGE,
   GET_USERS,
@@ -8,40 +6,12 @@ import {
   DELETE_MESSAGE,
   DELETE_ALL_MESSAGES,
   SEND_MESSAGE_ERROR,
+  CONNECTED_USERS
 } from './types';
 
-export const sendMessage = (formData, corresponderId) => async (dispatch) => {
-  const config = {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  };
-
-  try {
-    const res = await axios.post(
-      `/api/users/message/${corresponderId}`,
-      formData,
-      config
-    );
-
-    dispatch({ type: SEND_MESSAGE, payload: res.data });
-  } catch (error) {
-    const errors = error.response.data.errors;
-
-    if (errors) {
-      errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
-    }
-
-    dispatch({
-      type: SEND_MESSAGE_ERROR,
-      payload: {
-        msg: error.response.data.statusText,
-        status: error.response.status,
-      },
-    });
-  }
+export const sendMessage = (formData) => async (dispatch) => {
+  dispatch({ type: SEND_MESSAGE, payload: formData });
 };
-
 export const getMessages = (
   corresponderId,
   formData,
@@ -60,8 +30,8 @@ export const getMessages = (
       type: SEND_MESSAGE_ERROR,
       payload: {
         msg: error.response.data.statusText,
-        status: error.response.status,
-      },
+        status: error.response.status
+      }
     });
   }
 };
@@ -75,9 +45,9 @@ export const fetchContacts = () => async (dispatch) => {
     dispatch({
       type: SEND_MESSAGE_ERROR,
       payload: {
-        msg: error.response.data.statusText,
-        status: error.response.status,
-      },
+        msg: error.response.statusText,
+        status: error.response.status
+      }
     });
   }
 };
@@ -93,8 +63,8 @@ export const deleteMesage = (corresponderId, messageId) => async (dispatch) => {
       type: SEND_MESSAGE_ERROR,
       payload: {
         msg: error.response.data.statusText,
-        status: error.response.status,
-      },
+        status: error.response.status
+      }
     });
   }
 };
@@ -107,8 +77,12 @@ export const deleteAllMessages = (corresponderId) => async (dispatch) => {
       type: SEND_MESSAGE_ERROR,
       payload: {
         msg: error.response.data.statusText,
-        status: error.response.status,
-      },
+        status: error.response.status
+      }
     });
   }
+};
+
+export const connectedUsers = (users) => (dispatch) => {
+  dispatch({ type: CONNECTED_USERS, payload: users });
 };

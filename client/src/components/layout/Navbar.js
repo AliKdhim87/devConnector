@@ -1,9 +1,11 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { logout } from '../../actions/auth';
 import { connect } from 'react-redux';
-const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
+import io from 'socket.io-client';
+let socket;
+const Navbar = ({ auth: { isAuthenticated, loading, user }, logout }) => {
   const authLinks = (
     <ul>
       <li>
@@ -48,6 +50,12 @@ const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
       </li>
     </ul>
   );
+  useEffect(() => {
+    if (user) {
+      socket = io('http://localhost:5000');
+      socket.emit('notification', user._id);
+    }
+  }, [user]);
 
   return (
     <nav className="navbar bg-dark">

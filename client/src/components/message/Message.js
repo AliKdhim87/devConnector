@@ -8,6 +8,7 @@ import {
   getMessages,
   fetchContacts,
   deleteAllMessages,
+  connectedUsers
 } from '../../actions/message';
 import UsersChatList from './UsersChatList';
 import InputMessage from './InputMessage';
@@ -21,6 +22,7 @@ const Message = ({
   message,
   getMessages,
   deleteAllMessages,
+  connectedUsers
 }) => {
   useEffect(() => {
     getMessages(match.params.id);
@@ -29,9 +31,9 @@ const Message = ({
 
   return (
     <>
-      <div className='row'>
-        <div className='user-chat-list'>
-          {message &&
+      <div className="row">
+        <div className="user-chat-list">
+          {message.users.length > 0 &&
             message.users.map((user) => (
               <UsersChatList
                 corresponder={user}
@@ -40,7 +42,7 @@ const Message = ({
               />
             ))}
         </div>
-        <ScrollToBotton className='messages'>
+        <ScrollToBotton className="messages">
           {message.messages.length !== 0 && (
             <ChatBox messages={message.messages} me={auth.user} />
           )}
@@ -48,8 +50,9 @@ const Message = ({
         <InputMessage
           corresponderId={match.params.id}
           sendMessage={sendMessage}
-          getMessages={getMessages}
           me={auth.user}
+          connectedUsers={connectedUsers}
+          messages={message.messages}
         />
       </div>
     </>
@@ -62,11 +65,11 @@ Message.propTypes = {
   fetchContacts: PropTypes.func.isRequired,
   getMessages: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
-  message: PropTypes.object.isRequired,
+  message: PropTypes.object.isRequired
 };
 const mapStateToProps = (state) => ({
   auth: state.auth,
-  message: state.message,
+  message: state.message
 });
 
 export default connect(mapStateToProps, {
@@ -74,4 +77,5 @@ export default connect(mapStateToProps, {
   deleteAllMessages,
   fetchContacts,
   getMessages,
+  connectedUsers
 })(Message);

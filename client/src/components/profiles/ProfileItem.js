@@ -8,32 +8,32 @@ const ProfileItem = ({
     status,
     company,
     location,
-    skills,
+    skills
   },
-  me,
+  me
 }) => {
   return (
-    <div className='profile bg-light'>
-      <img src={avatar} className='round-img' alt={name} />
+    <div className="profile bg-light">
+      <img src={avatar} className="round-img" alt={name} />
       <div>
         <h2>{name}</h2>
         <p>
           {status} {company && <span> at {company}</span>}
         </p>
-        <p className='my-1'>{location && <span>{location}</span>}</p>
-        <Link to={`/profile/${_id}`} className='btn btn-primary'>
+        <p className="my-1">{location && <span>{location}</span>}</p>
+        <Link to={`/profile/${_id}`} className="btn btn-primary">
           View Profile
         </Link>
         {me.isAuthenticated && me.user._id !== _id && (
-          <Link to={`/message/${_id}`} className='btn btn-primary'>
+          <Link to={`/message/${_id}`} className="btn btn-primary">
             Send Message
           </Link>
         )}
       </div>
       <ul>
         {skills.slice(0, 4).map((skill, index) => (
-          <li key={index} className='text-primary'>
-            <i className='fas fa-check'></i> {skill}{' '}
+          <li key={index} className="text-primary">
+            <i className="fas fa-check"></i> {skill}{' '}
           </li>
         ))}
       </ul>
@@ -41,6 +41,6 @@ const ProfileItem = ({
   );
 };
 ProfileItem.propTypes = {
-  profile: PropTypes.object.isRequired,
+  profile: PropTypes.object.isRequired
 };
 export default ProfileItem;

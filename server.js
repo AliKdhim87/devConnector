@@ -9,35 +9,83 @@ const path = require('path');
 const Message = require('./models/Message');
 
 connectDB();
+let users = [];
+io.on('connection', function (socket) {
+  console.log('A user connected');
 
-// io.on('connection', function (socket) {
-//   let connectedClients = {};
-//   console.log('client connect');
-//   socket.on('message', function (data) {
-//     connectedClients[data.corresponderId] = socket.id;
-//   });
-//   socket.on('privateMessage', async (owner, corresponderId) => {
-//     const id = connectedClients[owner];
+  // Attach incoming listener for new user
+  socket.on('user_connected', (user_id) => {
+    // Save in array
+    users[user_id] = socket.id;
+    // Socket id will be used to send message to individaul person
+    if (user_id) {
+      console.log('User has been reading the message.');
+      console.log(user_id);
+    }
+    // Notify all connected users
+    io.emit('user_connected', user_id);
+  });
+  socket.on('send_message', async (data) => {
+    // Send Event To The Receiver
+    const socketIdSender = users[data.recciver];
+    const socketIdReceiver = users[data.sender];
+    const messageId = Message.createNewMessageId();
+    console.log(socketIdSender);
+    try {
+      await Message.findOneAndUpdate(
+        { owner: data.sender, corresponder: data.recciver },
+        {
+          $push: {
+            messages: {
+              _id: messageId,
+              message: data.message,
+              isSent: true,
+              read: true
+            }
+          },
+          $set: { hasNewMessage: true }
+        },
+        { new: true, upsert: true }
+      ).exec();
+      await Message.updateOne(
+        { owner: data.recciver, corresponder: data.sender },
+        {
+          $push: { messages: { message: data.message } }
+        },
+        { new: true, upsert: true }
+      ).exec();
 
-//     const corresponderMessages = await Message.findOneAndUpdate(
-//       { owner: owner, corresponder: corresponderId },
-//       { $set: { hasNewMessage: false } },
-//       { new: true, upsert: true }
-//     )
-//       .populate({
-//         path: 'corresponder',
-//         select: 'name avatar',
-//       })
-//       .exec();
+      const senderMessages = await Message.findOneAndUpdate(
+        { owner: data.recciver, corresponder: data.sender },
+        { $set: { hasNewMessage: false } },
+        { new: true, upsert: true }
+      )
+        .populate({
+          path: 'corresponder',
+          select: 'name avatar'
+        })
+        .exec();
+      const receiverMessages = await Message.findOneAndUpdate(
+        { owner: data.sender, corresponder: data.recciver },
+        { $set: { hasNewMessage: false } },
+        { new: true, upsert: true }
+      )
+        .populate({
+          path: 'corresponder',
+          select: 'name avatar'
+        })
+        .exec();
 
-//     console.log(corresponderMessages);
-//     io.sockets.to(id).emit('sendMessage', corresponderMessages);
-//   });
-
-//   socket.on('disconnect', () => {
-//     console.log('user disconnect');
-//   });
-// });
+      io.to(socketIdSender).emit('new_message', senderMessages);
+      io.to(socketIdReceiver).emit('new_message', receiverMessages);
+    } catch (error) {
+      console.log(error.message);
+    }
+  });
+  socket.on('disconnect', () => {
+    console.log('User Disconnected');
+  });
+});
 
 // Init Middleware
 app.use(express.json({ extended: false }));
@@ -50,7 +98,6 @@ app.use('/api/groups', require('./routes/api/groups'));
 app.use('/api/posts', require('./routes/api/posts'));
 app.use('/api/users/message', require('./routes/api/message'));
 app.use('/api/search', require('./routes/api/search'));
-
 
 // Serve static assets in production
 if (process.env.NODE_ENV === 'production') {
