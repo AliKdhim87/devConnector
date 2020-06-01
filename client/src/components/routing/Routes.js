@@ -18,6 +18,10 @@ import Message from '../message/Message';
 import NotFound from '../layout/NotFound';
 import PraivateRoute from '../routing/PraivateRoute';
 
+import FriendsList from '../friends/FriendsList';
+import FriendsRequestslist from '../friends/FriendRequestsList';
+// test comment
+
 import GroupPosts from '../groups/GroupPosts';
 import GroupDetails from '../groups/GroupDetails';
 import GroupsForm from '../groups/GroupsForm';
@@ -57,6 +61,8 @@ const Routes = () => {
         <PraivateRoute exact path="/add-education" component={AddEducation} />
         <PraivateRoute exact path="/posts" component={Posts} />
         <PraivateRoute exact path="/posts/:id" component={Post} />
+        <PraivateRoute exact path="/friends" component={FriendsList} />
+        <PraivateRoute exact path="/requests" component={FriendsRequestslist} />
         <Route component={NotFound} />
       </Switch>
     </section>

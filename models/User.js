@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { ObjectId } = mongoose.Schema.Types;
 
 const Schema = mongoose.Schema;
 
@@ -29,6 +30,21 @@ const userSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   },
+
+  friends: [
+    {
+      type: ObjectId,
+      ref: 'User'
+    }
+  ],
+  friendRequests: [
+    {
+      user: { type: ObjectId },
+      date: Date,
+      isSent: Boolean
+    }
+  ]
+
   myGroups: [
     {
       _id: {

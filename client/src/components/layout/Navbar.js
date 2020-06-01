@@ -11,12 +11,24 @@ const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
       </li>
       <li>
         <NavLink to="/posts">Posts</NavLink>
+
+      </li>
+      <li>
+        {' '}
+        <NavLink to="/friends">
+          <i className="fas fa-user-friends" />{' '}
+          <span className="hide-sm"> Friends</span>
+        </NavLink>
+      </li>
+      <li>
+
       </li>
       <li>
         <NavLink to="/groups">Groups</NavLink>
       </li>
       <li>
         {' '}
+
         <NavLink to="/dashboard">
           <i className="fas fa-user"></i>{' '}
           <span className="hide-sm">Dashboard </span>
