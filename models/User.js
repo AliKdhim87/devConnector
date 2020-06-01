@@ -43,8 +43,7 @@ const userSchema = new mongoose.Schema({
       date: Date,
       isSent: Boolean
     }
-  ]
-
+  ],
   myGroups: [
     {
       _id: {
@@ -76,13 +75,13 @@ const userSchema = new mongoose.Schema({
     },
     isConfirmed: {
       type: Boolean,
-      default: false,
+      default: false
     },
     social: {
       google: { type: String, default: null },
       github: { type: String, default: null },
-      facebook: { type: String, default: null },
-    },
+      facebook: { type: String, default: null }
+    }
   }
 });
 

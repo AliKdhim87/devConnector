@@ -5,8 +5,13 @@ import { Button } from 'semantic-ui-react';
 import Moment from 'react-moment';
 import Microlink from '@microlink/react';
 import { connect } from 'react-redux';
-import { addLike, removeLike, deletePost, addEmoji,
-  removeEmoji} from '../../actions/post';
+import {
+  addLike,
+  removeLike,
+  deletePost,
+  addEmoji,
+  removeEmoji
+} from '../../actions/post';
 import Spinner from '../layout/Spinner';
 import EmojiPicker from '../post/EmojiPicker';
 const PostItem = ({
@@ -14,19 +19,32 @@ const PostItem = ({
   removeLike,
   deletePost,
   auth,
-  post: { _id, text, name, link, avatar, user, likes, comments, date, loading, emojis },
+  post: {
+    _id,
+    text,
+    name,
+    link,
+    avatar,
+    user,
+    likes,
+    comments,
+    date,
+    loading,
+    emojis
+  },
   showActions,
   addEmoji,
-  removeEmoji,
+  removeEmoji
 }) => {
   const [hideEmojiPicker, setHideEmojiPicker] = useState(true);
 
   const showHideEmojiPicker = () => {
     setHideEmojiPicker((prevState) => !prevState);
   };
-if (loading) {return <Spinner />};
+  if (loading) {
+    return <Spinner />;
+  }
 
-  
   return (
     <div className="post bg-white p-1 my-1">
       <div>
@@ -88,9 +106,9 @@ if (loading) {return <Spinner />};
         {hideEmojiPicker ? (
           <Button circular onClick={showHideEmojiPicker}>
             <span
-              role='img'
-              aria-label='smiling face'
-              aria-labelledby='smiling face'
+              role="img"
+              aria-label="smiling face"
+              aria-labelledby="smiling face"
             >
               🙂
             </span>
@@ -154,7 +172,7 @@ PostItem.propTypes = {
   removeLike: PropTypes.func.isRequired,
   deletePost: PropTypes.func.isRequired,
   addEmoji: PropTypes.func.isRequired,
-  removeEmoji: PropTypes.func.isRequired,
+  removeEmoji: PropTypes.func.isRequired
 };
 const mapStateToProps = (state) => ({
   auth: state.auth
@@ -164,5 +182,5 @@ export default connect(mapStateToProps, {
   removeLike,
   deletePost,
   addEmoji,
-  removeEmoji,
+  removeEmoji
 })(PostItem);
