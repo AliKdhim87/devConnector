@@ -43,7 +43,7 @@ export const getAllProfiles = () => async (dispatch) => {
     dispatch({
       type: PROFILE_ERROR,
       payload: {
-        msg: error.response.statusText,
+        msg: error.response.data.statusText,
         status: error.response.status,
       },
     });

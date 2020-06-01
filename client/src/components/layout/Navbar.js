@@ -11,6 +11,7 @@ const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
       </li>
       <li>
         <NavLink to="/posts">Posts</NavLink>
+
       </li>
       <li>
         {' '}
@@ -20,17 +21,29 @@ const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
         </NavLink>
       </li>
       <li>
+
+      </li>
+      <li>
+        <NavLink to="/groups">Groups</NavLink>
+      </li>
+      <li>
+        {' '}
+
         <NavLink to="/dashboard">
           <i className="fas fa-user"></i>{' '}
           <span className="hide-sm">Dashboard </span>
         </NavLink>
       </li>
-
       <li>
         <a onClick={logout} href="#!">
           <i className="fas fa-sign-out-alt"></i>{' '}
           <span className="hide-sm">Logout </span>
         </a>
+      </li>
+      <li>
+        <NavLink to="/search">
+          <i className="fas fa-search"></i>
+        </NavLink>
       </li>
     </ul>
   );
