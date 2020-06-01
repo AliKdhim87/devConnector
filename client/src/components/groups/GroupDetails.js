@@ -122,7 +122,7 @@ const GroupDetails = ({
             </button>
           )}
           {/* Button that toggle between settings for the creator of the group */}
-          {group &&
+          {group && group.creator &&
             auth &&
             !auth.loading &&
             auth.user._id === group.creator._id && (
