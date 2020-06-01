@@ -64,6 +64,27 @@ const GroupSchema = new Schema({
       avatar: {
         type: String
       },
+      emojis: [
+        {
+          users: [
+            {
+              type: Schema.Types.ObjectId,
+              ref: 'users',
+            },
+          ],
+          amount: Number,
+          emoji: {
+            colons: { type: String },
+            emoticons: [String],
+            id: { type: String },
+            name: { type: String },
+            native: { type: String },
+            short_names: [String],
+            skin: { type: Number },
+            unified: { type: String },
+          },
+        },
+      ],
       comments: [
         {
           creator: {

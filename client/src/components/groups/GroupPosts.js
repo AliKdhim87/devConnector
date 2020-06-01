@@ -4,12 +4,16 @@ import Moment from 'react-moment';
 import { Link, useHistory, useParams } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Microlink from '@microlink/react';
+import { Button } from 'semantic-ui-react';
+import EmojiPicker from '../post/EmojiPicker';
 import {
   getGroupPost,
   deleteGroupPost,
   addPostComment,
   deletePostComment,
-  updateGroupPost
+  updateGroupPost,
+  addGroupPostEmoji,
+  removeGroupPostEmoji
 } from '../../actions/group';
 import Spinner from '../layout/Spinner';
 
@@ -19,7 +23,9 @@ const GroupPosts = ({
   deleteGroupPost,
   updateGroupPost,
   addPostComment,
+  addGroupPostEmoji,
   deletePostComment,
+  removeGroupPostEmoji,
   group: { post, comments, loading }
 }) => {
   const history = useHistory();
@@ -58,6 +64,11 @@ const GroupPosts = ({
       title: ''
     });
   };
+  const [hideEmojiPicker, setHideEmojiPicker] = useState(true);
+
+  const showHideEmojiPicker = () => {
+    setHideEmojiPicker((prevState) => !prevState);
+  };
 
   if (!loading && post && post.creator && auth)
     return (
@@ -91,6 +102,59 @@ const GroupPosts = ({
                 size="large"
                 url={post.link}
               />
+            )}
+            {hideEmojiPicker ? (
+              <Button circular onClick={showHideEmojiPicker}>
+                <span
+                  role="img"
+                  aria-label="smiling face"
+                  aria-labelledby="smiling face"
+                >
+                  🙂
+                </span>
+              </Button>
+            ) : (
+              <EmojiPicker
+                onBlur={showHideEmojiPicker}
+                onPick={(emo, event) => {
+                  addGroupPostEmoji(groupID, postID, emo);
+                  showHideEmojiPicker();
+                }}
+              />
+            )}
+            {post.emojis.length > 0 && (
+              <ul style={{ display: 'flex' }}>
+                {post.emojis && post.emojis.map((emo, index) => (
+                  <li key={index}>
+                    <Button
+                      circular
+                      color={
+                        !!auth &&
+                        !!auth.user &&
+                        !!emo.users.find((user) => {
+                          return user === auth.user._id;
+                        })
+                          ? 'green'
+                          : undefined
+                      }
+                      onClick={() => {
+                        const isMine =
+                          !!auth &&
+                          !!auth.user &&
+                          !!emo.users.find((user) => {
+                            return user === auth.user._id;
+                          });
+
+                        if (isMine) removeGroupPostEmoji(groupID, postID, emo._id);
+                        else addGroupPostEmoji(groupID, postID, emo.emoji);
+                      }}
+                    >
+                      {emo.emoji.native}
+                      {emo.amount > 1 ? <small>{emo.amount}</small> : ''}
+                    </Button>
+                  </li>
+                ))}
+              </ul>
             )}
             <p className="post-date group-post-text-and-date">
               {post && <Moment format="YYYY/MM/DD">{post.date}</Moment>}
@@ -264,7 +328,9 @@ GroupPosts.propTypes = {
   post: PropTypes.object.isRequired,
   group: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
-  comments: PropTypes.array
+  comments: PropTypes.array,
+  addGroupPostEmoji: PropTypes.func.isRequired,
+  removeGroupPostEmoji: PropTypes.func.isRequired
 };
 const mapStateToProps = (state) => ({
   group: state.group,
@@ -278,5 +344,7 @@ export default connect(mapStateToProps, {
   updateGroupPost,
   deleteGroupPost,
   addPostComment,
-  deletePostComment
+  deletePostComment,
+  addGroupPostEmoji,
+  removeGroupPostEmoji
 })(GroupPosts);

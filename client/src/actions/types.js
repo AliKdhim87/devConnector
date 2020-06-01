@@ -51,3 +51,5 @@ export const DELETE_EVENT = 'DELETE_EVENT';
 //Emoji action types
 export const ADD_EMOJI = 'ADD_EMOJI';
 export const REMOVE_EMOJI = 'REMOVE_EMOJI';
+export const ADD_GROUPPOSTEMOJI = 'ADD_GROUPPOSTEMOJI';
+export const REMOVE_GROUPPOSTEMOJI = 'REMOVE_GROUPPOSTEMOJI'

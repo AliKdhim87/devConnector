@@ -14,7 +14,9 @@ import {
   DELETE_POSTCOMMENT,
   POST_ERROR,
   ADD_EVENT,
-  DELETE_EVENT
+  DELETE_EVENT,
+  ADD_GROUPPOSTEMOJI,
+  REMOVE_GROUPPOSTEMOJI
 } from '../actions/types';
 const initailState = {
   groups: [],
@@ -122,7 +124,13 @@ export default function (state = initailState, action) {
         group: { ...state.group, events: payload },
         loading: false
       };
-
+    case ADD_GROUPPOSTEMOJI:
+    case REMOVE_GROUPPOSTEMOJI:
+      return {
+        ...state,
+        post: { ...state.post, emojis: payload },
+        loading: false
+      };
     default:
       return state;
   }
