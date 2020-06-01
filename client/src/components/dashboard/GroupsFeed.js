@@ -18,14 +18,14 @@ const GroupsFeed = ({ filteredGroups, myGroupPosts }) => (
               <Feed.Event>
                 <Feed.Content>
                   <Feed.Date content={<Moment fromNow>{group.createdAt}</Moment>} />
-                  <Feed.Summary>
+                  { <Feed.Summary>
                     A new group named{' '}
                     <Link to={`/groups/${group._id}`}>{group.name}</Link> is
                     created by{' '}
-                    <Link to={`/profile/${group.creator._id}`}>
-                      {group.creator.name} .
+                    <Link to={`/profile/${group.creator && group.creator._id}`}>
+                      {group.creator && group.creator.name} .
                     </Link>
-                  </Feed.Summary>
+                  </Feed.Summary>}
                 </Feed.Content>
               </Feed.Event>
             );
