@@ -1,46 +1,46 @@
 const mongoose = require('mongoose');
-const { ObjectId} = mongoose.Schema.Types;
+const { ObjectId } = mongoose.Schema.Types;
 
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
-    trim: true,
+    trim: true
   },
   email: {
     type: String,
     required: true,
     trim: true,
-    unique: true,
+    unique: true
   },
   password: {
     type: String,
     required: true,
-    trim: true,
+    trim: true
   },
   avatar: {
-    type: String,
+    type: String
   },
   avatar_id: {
-    type: String,
+    type: String
   },
   date: {
     type: Date,
-    default: Date.now,
+    default: Date.now
   },
   friends: [
     {
       type: ObjectId,
-      ref: 'User',
-     }
+      ref: 'User'
+    }
   ],
   friendRequests: [
     {
-      user: { type: ObjectId},
+      user: { type: ObjectId },
       date: Date,
-      isSent: Boolean,
-    },
-  ],
+      isSent: Boolean
+    }
+  ]
 });
 
 module.exports = User = mongoose.model('user', userSchema);

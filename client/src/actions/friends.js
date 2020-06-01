@@ -98,8 +98,6 @@ export const RejectFriendRequest = (requestId) => async (dispatch) => {
   }
 };
 
-
-
 export const Unfriend = (friendId) => async (dispatch) => {
   try {
     const res = await axios.delete(`api/friends/${friendId}`);
@@ -116,7 +114,6 @@ export const Unfriend = (friendId) => async (dispatch) => {
     });
   }
 };
-
 
 export const CancelFriendRequest = (requestId) => async (dispatch) => {
   try {

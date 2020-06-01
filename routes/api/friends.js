@@ -13,7 +13,6 @@ const {
   removeFriend
 } = require('../../middleware/friends');
 
-
 // @route           GET api/friends
 // @description     Get all friends
 // @access          Private
@@ -23,18 +22,18 @@ router.get('/', auth, async (req, res) => {
     user = await User.findOne({ _id: req.user.id }).populate({
       path: 'friends',
       model: User
-    })
+    });
     res.json({
       friends: user.friends
         ? user.friends
-        .map((friend) => friend.toObject())
-        .map((friend) => ({
-          id: friend._id,
-          name: friend.name,
-          email: friend.email,
-          avatar: friend.avatar,
-          friends: friend.friends
-        }))
+            .map((friend) => friend.toObject())
+            .map((friend) => ({
+              id: friend._id,
+              name: friend.name,
+              email: friend.email,
+              avatar: friend.avatar,
+              friends: friend.friends
+            }))
         : []
     });
   } catch (err) {
@@ -114,7 +113,9 @@ router.post('/:friendId', auth, async (req, res) => {
       { $addToSet: { friendRequests: receivedRequest } }
     );
 
-    res.status(200).json({ message: 'Friend request created successfully!', sentRequest });
+    res
+      .status(200)
+      .json({ message: 'Friend request created successfully!', sentRequest });
   } catch (err) {
     console.error(err.mesaage);
     res.status(500).send('server error');
@@ -151,7 +152,6 @@ router.get('/requests', auth, async (req, res) => {
   }
 });
 
-
 // @route           PUT api/friends/requests/:requestId
 // @description     Accept friend request
 // @access          Private
@@ -176,7 +176,10 @@ router.put('/requests/:requestId', auth, async (req, res) => {
     }
     res
       .status(200)
-      .json({ message: 'Friend request has been approved successfully!', requestInfo });
+      .json({
+        message: 'Friend request has been approved successfully!',
+        requestInfo
+      });
   } catch (err) {
     console.error(err.mesaage);
     res.status(500).send('server error');
@@ -199,22 +202,15 @@ router.delete('/requests/:requestId', auth, async (req, res) => {
     // return a success message
     res
       .status(200)
-      .json({ message: 'Friend request has been declined successfully!', requestInfo});
+      .json({
+        message: 'Friend request has been declined successfully!',
+        requestInfo
+      });
   } catch (err) {
     console.error(err.mesaage);
     res.status(500).send('server error');
   }
 });
-
-
-
-
-
-
-
-
-
-
 
 // @route           DELETE api/friends/:friendId
 // @description     Delete friend
@@ -231,13 +227,14 @@ router.delete('/:friendId', auth, async (req, res) => {
       await removeFriend(friendInfo);
     }
     // return a success message
-    res.status(200).json({ message: 'Friend has been removed successfully!', friendInfo });
+    res
+      .status(200)
+      .json({ message: 'Friend has been removed successfully!', friendInfo });
   } catch (err) {
     console.error(err.mesaage);
     res.status(500).send('server error');
   }
 });
-
 
 // @route           DELETE api/friends/:friendId
 // @description     Delete friend
@@ -254,13 +251,13 @@ router.delete('/requests/:requestId', auth, async (req, res) => {
       await cancelFriendRequest(friendInfo);
     }
     // return a success message
-    res.status(200).json({ message: 'Friend has been removed successfully!', friendInfo });
+    res
+      .status(200)
+      .json({ message: 'Friend has been removed successfully!', friendInfo });
   } catch (err) {
     console.error(err.mesaage);
     res.status(500).send('server error');
   }
 });
-
-
 
 module.exports = router;

@@ -1,10 +1,10 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { Label, Icon } from "semantic-ui-react";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import { sendFriendRequest } from "../../actions/friends";
-import { CancelFriendRequest } from "../../actions/friends";
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { Label, Icon } from 'semantic-ui-react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { sendFriendRequest } from '../../actions/friends';
+import { CancelFriendRequest } from '../../actions/friends';
 
 const ProfileItem = ({
   auth: { user, isAuthenticated },
@@ -15,8 +15,8 @@ const ProfileItem = ({
     status,
     company,
     location,
-    skills,
-  },
+    skills
+  }
 }) => {
   const FriendButton = () => {
     // console.log(loggedUser)
@@ -34,7 +34,7 @@ const ProfileItem = ({
         if (isFriend.length > 0) {
           return (
             <Label>
-              {" "}
+              {' '}
               <Icon name="check circle" color="green" /> Friend
             </Label>
           );
@@ -47,8 +47,8 @@ const ProfileItem = ({
                 onClick={() => CancelFriendRequest(requestId)}
                 className="btn btn-primary"
               >
-                {" "}
-                Cancel request{" "}
+                {' '}
+                Cancel request{' '}
               </button>
             );
           } else {
@@ -65,8 +65,8 @@ const ProfileItem = ({
             onClick={() => sendFriendRequest(_id)}
             className="btn btn-primary"
           >
-            {" "}
-            Add Friend{" "}
+            {' '}
+            Add Friend{' '}
           </button>
         );
       }
@@ -90,7 +90,7 @@ const ProfileItem = ({
       <ul>
         {skills.slice(0, 4).map((skill, index) => (
           <li key={index} className="text-primary">
-            <i className="fas fa-check"></i> {skill}{" "}
+            <i className="fas fa-check"></i> {skill}{' '}
           </li>
         ))}
       </ul>
