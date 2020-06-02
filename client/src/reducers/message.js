@@ -5,8 +5,7 @@ import {
   GET_MESSAGES,
   DELETE_MESSAGE,
   DELETE_ALL_MESSAGES,
-  SEND_MESSAGE_ERROR,
-  CONNECTED_USERS
+  SEND_MESSAGE_ERROR
 } from '../actions/types';
 const initailState = {
   messages: [],
@@ -44,12 +43,6 @@ export default (state = initailState, action) => {
         ...state,
         users: payload,
         loading: false
-      };
-    case CONNECTED_USERS:
-      //@ Todo make the connected users work
-      return {
-        ...state,
-        connectedUsers: [...state.connectedUsers, payload]
       };
     case SEND_MESSAGE_ERROR:
     case PROFILE_ERROR:

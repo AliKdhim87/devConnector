@@ -7,8 +7,7 @@ import {
   sendMessage,
   getMessages,
   fetchContacts,
-  deleteAllMessages,
-  connectedUsers
+  deleteAllMessages
 } from '../../actions/message';
 import UsersChatList from './UsersChatList';
 import InputMessage from './InputMessage';
@@ -21,8 +20,7 @@ const Message = ({
   match,
   message,
   getMessages,
-  deleteAllMessages,
-  connectedUsers
+  deleteAllMessages
 }) => {
   useEffect(() => {
     getMessages(match.params.id);
@@ -51,7 +49,6 @@ const Message = ({
           corresponderId={match.params.id}
           sendMessage={sendMessage}
           me={auth.user}
-          connectedUsers={connectedUsers}
           messages={message.messages}
         />
       </div>
@@ -76,6 +73,5 @@ export default connect(mapStateToProps, {
   sendMessage,
   deleteAllMessages,
   fetchContacts,
-  getMessages,
-  connectedUsers
+  getMessages
 })(Message);

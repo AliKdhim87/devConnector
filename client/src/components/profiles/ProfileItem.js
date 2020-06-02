@@ -25,7 +25,7 @@ const ProfileItem = ({
           View Profile
         </Link>
         {me.isAuthenticated && me.user._id !== _id && (
-          <Link to={`/message/${_id}`} className="btn btn-primary">
+          <Link to={`/message/${_id}`} className="btn btn-primary my">
             Send Message
           </Link>
         )}

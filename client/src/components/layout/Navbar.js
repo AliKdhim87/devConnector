@@ -1,16 +1,53 @@
 import React, { Fragment, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
+import { Dropdown, Image, List } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { logout } from '../../actions/auth';
+import { fetchContacts } from '../../actions/message';
 import { connect } from 'react-redux';
 import io from 'socket.io-client';
 let socket;
-const Navbar = ({ auth: { isAuthenticated, loading, user }, logout }) => {
+const Navbar = ({
+  auth: { isAuthenticated, loading, user },
+  logout,
+  message,
+  fetchContacts
+}) => {
   const authLinks = (
     <ul>
       <li>
         <NavLink to="/profiles">Developers</NavLink>
       </li>
+      <li>
+        <Dropdown icon="mail">
+          <Dropdown.Menu>
+            <List relaxed>
+              {message.users.length > 0 &&
+                message.users.map(
+                  (user) =>
+                    !user.hasNewMessage && (
+                      <List.Item key={user.corresponder._id}>
+                        <Image avatar src={user.corresponder.avatar} />
+                        <List.Content>
+                          <List.Header
+                            as="a"
+                            href={`/message/${user.corresponder._id}`}
+                          >
+                            {user.corresponder.name}
+                          </List.Header>
+
+                          <List.Description>
+                            You have a message
+                          </List.Description>
+                        </List.Content>
+                      </List.Item>
+                    )
+                )}
+            </List>
+          </Dropdown.Menu>
+        </Dropdown>
+      </li>
+
       <li>
         <NavLink to="/posts">Posts</NavLink>
       </li>
@@ -53,10 +90,11 @@ const Navbar = ({ auth: { isAuthenticated, loading, user }, logout }) => {
   useEffect(() => {
     if (user) {
       socket = io('http://localhost:5000');
-      socket.emit('notification', user._id);
+      // Send the email to the server
+      socket.emit('user_connected', user._id);
+      fetchContacts();
     }
-  }, [user]);
-
+  }, [user, fetchContacts]);
   return (
     <nav className="navbar bg-dark">
       <h1>
@@ -75,6 +113,7 @@ Navbar.propTypes = {
   auth: PropTypes.object.isRequired
 };
 const mapStateToProps = (state) => ({
-  auth: state.auth
+  auth: state.auth,
+  message: state.message
 });
-export default connect(mapStateToProps, { logout })(Navbar);
+export default connect(mapStateToProps, { logout, fetchContacts })(Navbar);

@@ -109,8 +109,8 @@ img {
 }
 
 /* Margin */
-.m-0{
-  margin:0;
+.m-0 {
+  margin: 0;
 }
 .m {
   margin: 0.5rem;
@@ -522,7 +522,7 @@ button {
   display: flex;
   align-items: center;
   font-family: Helvetica;
-  color: #828282;
+  color: var(--dark-color);
   letter-spacing: 0.3px;
 }
 
@@ -551,7 +551,7 @@ button {
 }
 
 .backgroundBlue {
-  background: #17a2b8;
+  background: var(--primary-color);
 }
 
 .backgroundLight {
@@ -562,11 +562,19 @@ button {
 .btn-delete {
   cursor: pointer;
   position: absolute;
-  color: #484e53;
+  color: var(--dark-color);
 }
 .btn-delete-isSent {
   right: -1px;
   top: -8px;
+}
+@media (max-width: 500px) {
+  .user-chat-list {
+    width: 35%;
+  }
+  .messages {
+    width: 65%;
+  }
 }
 /* Posts Page */
 .post-form .post-form-header {
@@ -751,37 +759,35 @@ button {
   margin: 0 1rem;
   text-align: center;
 }
-.newsfeed-container{
-  margin:auto;
+.newsfeed-container {
+  margin: auto;
   width: 100%;
-  
 }
 
-.ui.fluid.card{
+.ui.fluid.card {
   padding: 1rem;
 }
 
-.settings-icon{
-  font-size:1.75rem;
-  margin:0.25rem;
+.settings-icon {
+  font-size: 1.75rem;
+  margin: 0.25rem;
 }
-.link-button{
+.link-button {
   font-size: 1.25rem;
 }
-.link-button i:hover{
-cursor: pointer;
-transform: scale(1.3);
-opacity: 0.75;
+.link-button i:hover {
+  cursor: pointer;
+  transform: scale(1.3);
+  opacity: 0.75;
 }
 
-.discussion-item{
+.discussion-item {
   display: flex;
-  margin:1rem;
+  margin: 1rem;
   border-bottom: 2px solid lightgray;
   min-width: 50rem;
   align-items: center;
   justify-content: space-between;
-
 }
 
 /* Mobile Styles */
@@ -915,23 +921,23 @@ opacity: 0.75;
   }
   .dashboard-profile {
     width: 100%;
-    margin:0;
+    margin: 0;
     text-align: center;
   }
-  
-  .newsfeed-container{
-    margin:auto;
+
+  .newsfeed-container {
+    margin: auto;
     width: 100%;
-    font-size:1.5rem
+    font-size: 1.5rem;
   }
-  .newsfeed-container h4{
+  .newsfeed-container h4 {
     font-size: 2rem;
   }
-  .ui.fluid.card{
+  .ui.fluid.card {
     max-height: 53rem;
     padding: 1rem;
   }
-  .discussion-item{
+  .discussion-item {
     min-width: 40rem;
   }
 }

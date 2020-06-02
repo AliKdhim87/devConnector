@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Form, TextArea, Button } from 'semantic-ui-react';
 import io from 'socket.io-client';
 let socket;
-const InputMessage = ({ corresponderId, sendMessage, me, connectedUsers }) => {
+const InputMessage = ({ corresponderId, sendMessage, me }) => {
   const [message, setMessage] = useState('');
   const [socketMessage, setSocketMessage] = useState('');
 
@@ -12,14 +12,12 @@ const InputMessage = ({ corresponderId, sendMessage, me, connectedUsers }) => {
       socket = io('http://localhost:5000');
       // Send the email to the server
       socket.emit('user_connected', me._id);
-      socket.on('user_connected', (_id) => {
-        connectedUsers(_id);
-      });
+
       socket.on('new_message', (msg) => {
         setSocketMessage(msg);
       });
     }
-  }, [connectedUsers, me]);
+  }, [me]);
 
   if (
     socketMessage &&
@@ -31,18 +29,15 @@ const InputMessage = ({ corresponderId, sendMessage, me, connectedUsers }) => {
   }
   const onSubmit = (event) => {
     event.preventDefault();
-    if (message === '' && message === ' ') {
-      console.log('Enter somthing');
-    } else {
-      // Send Message To The Server
-      socket.emit('send_message', {
-        sender: me && me._id,
-        recciver: corresponderId,
-        message
-      });
 
-      setMessage('');
-    }
+    // Send Message To The Server
+    socket.emit('send_message', {
+      sender: me && me._id,
+      recciver: corresponderId,
+      message
+    });
+
+    setMessage('');
   };
   const onChange = (e) => {
     setMessage(e.target.value);

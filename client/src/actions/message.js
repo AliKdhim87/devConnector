@@ -5,8 +5,7 @@ import {
   GET_MESSAGES,
   DELETE_MESSAGE,
   DELETE_ALL_MESSAGES,
-  SEND_MESSAGE_ERROR,
-  CONNECTED_USERS
+  SEND_MESSAGE_ERROR
 } from './types';
 
 export const sendMessage = (formData) => async (dispatch) => {
@@ -81,8 +80,4 @@ export const deleteAllMessages = (corresponderId) => async (dispatch) => {
       }
     });
   }
-};
-
-export const connectedUsers = (users) => (dispatch) => {
-  dispatch({ type: CONNECTED_USERS, payload: users });
 };
