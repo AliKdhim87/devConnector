@@ -1,39 +1,52 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Form, TextArea, Button } from 'semantic-ui-react';
-// import io from 'socket.io-client';
+import io from 'socket.io-client';
 let socket;
-const InputMessage = ({ corresponderId, sendMessage, me, getMessages }) => {
+const InputMessage = ({ corresponderId, sendMessage, me }) => {
   const [message, setMessage] = useState('');
+  const [socketMessage, setSocketMessage] = useState('');
 
-  // useEffect(() => {
-  //   socket = io('http://localhost:5000');
-  //   socket.emit('message', { corresponderId });
-  //   socket.on('sendMessage', (msg) => {
-  //     if (msg) {
-  //       return getMessages(null, msg, true);
-  //       // console.log(msg);
-  //     }
-  //   });
-  // }, []);
+  useEffect(() => {
+    if (me !== null) {
+      socket = io('http://localhost:5000');
+      // Send the email to the server
+      socket.emit('user_connected', me._id);
+
+      socket.on('new_message', (msg) => {
+        setSocketMessage(msg);
+      });
+    }
+  }, [me]);
+
+  if (
+    socketMessage &&
+    socketMessage.message !== '' &&
+    socketMessage.message !== ' '
+  ) {
+    sendMessage(socketMessage);
+    setSocketMessage('');
+  }
+  const onSubmit = (event) => {
+    event.preventDefault();
+
+    // Send Message To The Server
+    socket.emit('send_message', {
+      sender: me && me._id,
+      recciver: corresponderId,
+      message
+    });
+
+    setMessage('');
+  };
+  const onChange = (e) => {
+    setMessage(e.target.value);
+  };
   return (
-    <Form
-      style={{ width: '99%' }}
-      onSubmit={(event) => {
-        event.preventDefault();
-        // socket.emit('privateMessage', me && me._id, corresponderId);
-
-        if (message === '' && message === ' ') {
-          console.log('Enter somthing');
-        } else {
-          sendMessage({ message }, corresponderId);
-          setMessage('');
-        }
-      }}
-    >
+    <Form style={{ width: '99%' }} onSubmit={onSubmit}>
       <TextArea
-        onChange={(e) => setMessage(e.target.value)}
-        placeholder='Write Your Message'
+        onChange={onChange}
+        placeholder="Write Your Message"
         value={message}
       />
 
@@ -44,7 +57,7 @@ const InputMessage = ({ corresponderId, sendMessage, me, getMessages }) => {
 
 InputMessage.propTypes = {
   sendMessage: PropTypes.func.isRequired,
-  corresponderId: PropTypes.string.isRequired,
+  corresponderId: PropTypes.string.isRequired
 };
 
 export default InputMessage;

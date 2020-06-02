@@ -34,15 +34,18 @@ export const UNFRIEND = 'UNFRIEND';
 export const CANCEL_REQUEST = 'CANCEL_REQUEST'
 export const FRIENDS_ERROR = 'FRIENDS_ERROR'
 
+// Messages feature action types
 export const SEND_MESSAGE = 'SEND_MESSAGE';
 export const SEND_MESSAGE_ERROR = 'SEND_MESSAGE_ERROR';
 export const GET_MESSAGES = 'GET_MESSAGES';
 export const DELETE_MESSAGE = 'DELETE_MESSAGE';
 export const GET_USERS = 'GET_USERS';
 export const DELETE_ALL_MESSAGES = 'DELETE_ALL_MESSAGES';
+export const CONNECTED_USERS = 'CONNECTED_USERS';
+
 //Group feature action types
 export const GET_GROUPS = 'GET_GROUPS';
-export const ADD_GROUP = 'ADD_GROUP'
+export const ADD_GROUP = 'ADD_GROUP';
 export const GET_GROUP = 'GET_GROUP';
 export const UPDATE_GROUP = 'UPDATE_GROUP';
 export const DELETE_GROUP = 'DELETE_GROUP';
@@ -54,6 +57,7 @@ export const ADD_POSTCOMMENT = 'ADD_POSTCOMMENT';
 export const DELETE_POSTCOMMENT = 'DELETE_POSTCOMMENT';
 export const JOIN_GROUP = 'JOIN_GROUP';
 export const LEAVE_GROUP = 'LEAVE_GROUP';
+
 export const ADD_EVENT = 'ADD_EVENT';
 export const DELETE_EVENT = 'DELETE_EVENT';
 

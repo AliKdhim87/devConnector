@@ -5,16 +5,16 @@ const thisSchema = new mongoose.Schema(
     owner: {
       type: mongoose.Types.ObjectId,
       required: true,
-      ref: 'user',
+      ref: 'user'
     },
     corresponder: {
       type: mongoose.Types.ObjectId,
       required: true,
-      ref: 'user',
+      ref: 'user'
     },
     hasNewMessage: {
       type: Boolean,
-      default: false,
+      default: false
     },
 
     messages: [
@@ -22,23 +22,27 @@ const thisSchema = new mongoose.Schema(
         message: {
           type: String,
           required: true,
-          trim: true,
+          trim: true
         },
         date: {
           type: Date,
           default: Date.now(),
-          required: true,
+          required: true
         },
         isSent: {
           type: Boolean,
           default: false,
-          required: true,
+          required: true
         },
-      },
-    ],
+        read: {
+          type: Boolean,
+          default: false
+        }
+      }
+    ]
   },
   {
-    timestamps: true,
+    timestamps: true
   }
 );
 
