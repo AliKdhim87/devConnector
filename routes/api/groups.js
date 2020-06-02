@@ -76,7 +76,7 @@ router.get('/:groupID', auth, async (req, res) => {
   try {
     const group = await Group.findById(req.params.groupID)
       .populate('creator', 'name avatar')
-      .populate('members.user', 'name');
+      .populate('members.user', 'name avatar');
     if (!group) {
       return res.status(404).json({ msg: 'Group not found.' });
     }
@@ -303,6 +303,7 @@ router.post(
           title: req.body.title,
           creator: req.user.id,
           text: req.body.text,
+          link: req.body.link || '',
           avatar: user.avatar,
           name: user.name,
           date: Date.now(),
@@ -378,7 +379,90 @@ router.delete('/:groupID/posts/:postID', auth, async (req, res) => {
   } catch (error) {
     console.error(error.message);
     if (error.message.includes('Cast to ObjectId failed')) {
-      return res.status(400).json({ msg: 'Group not found.' });
+      return res.status(400).json({ msg: 'Event not found.' });
+    }
+    res.status(500).send('Server error!');
+  }
+});
+
+// // @route   PUT api/groups/:groupID/events
+// // @desc    add an event to the group
+// // @access  Private
+router.put(
+  '/:groupID/events',
+  [
+    auth,
+    check('title', 'Title is required').not().isEmpty(),
+    check('start', 'Start date is required').not().isEmpty()
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    try {
+      const group = await Group.findById(req.params.groupID);
+      const user = await User.findById(req.user.id);
+      // Check if the user is a member
+      if (
+        group.members.filter((member) => member.user.toString() === req.user.id)
+          .length <= 0
+      ) {
+        return res.status(401).json({ msg: 'User not Authorized' });
+      } else {
+        const newEvent = {
+          title: req.body.title,
+          creator: req.user.id,
+          description: req.body.description,
+          start: req.body.start,
+          end: req.body.end
+        };
+        console.log(newEvent)
+        group.events.push(newEvent);
+        await group.save();
+        res.send(group.events);
+      }
+    } catch (error) {
+      console.error(error.message);
+      if (error.message.includes('Cast to ObjectId failed')) {
+        return res.status(400).json({ msg: 'Group not found.' });
+      }
+      res.status(500).send('Server error!');
+    }
+  }
+);
+
+// // @route   PUT api/groups/:groupID/events/:eventID
+// // @desc    delete an event in group
+// // @access  Private
+router.put('/:groupID/events/:eventID', auth, async (req, res) => {
+  try {
+    const group = await Group.findById(req.params.groupID);
+    // Pull out the event
+    const event = group.events.find(
+      (event) => event._id.toString() === req.params.eventID
+    );
+    console.log(group.events)
+    //  Make sure post exists
+    if (!event) {
+      return res.status(404).json({ msg: 'Event does not exist' });
+    }
+    // check if the current user is authorized
+    if (event.creator.toString() !== req.user.id) {
+      return res.status(401).json({ msg: 'User not Authorized' });
+    }
+    // Get remove index
+    const removeIndex = group.events
+      .map((event) => event._id.toString())
+      .indexOf(req.params.eventID);
+    group.events.splice(removeIndex, 1);
+
+    await group.save();
+    res.json(group.events);
+  } catch (error) {
+    console.error(error.message);
+    if (error.message.includes('Cast to ObjectId failed')) {
+      return res.status(400).json({ msg: 'Event not found.' });
     }
     res.status(500).send('Server error!');
   }
@@ -463,6 +547,126 @@ router.put(
     }
   }
 );
+
+
+// @route   PUT api/groups/:groupID/posts/:postID/emoji
+// @desc    add emoji to a post
+// @access  Private
+
+router.put('/:groupID/posts/:postID/emoji', auth, async (req, res) => {
+  try {
+    const {
+      colons,
+      emoticons,
+      id,
+      name,
+      native,
+      skin,
+      short_names,
+      unified,
+    } = req.body;
+
+    const emoji = {
+      colons,
+      emoticons,
+      id,
+      name,
+      native,
+      skin,
+      short_names,
+      unified,
+    };
+
+    const group = await Group.findById(req.params.groupID);
+    const post = group.posts.find((post) => post._id.toString() === req.params.postID);
+    console.log(post)
+    //  Make sure post exists
+    if (!post) {
+      return res.status(404).json({ msg: 'Post does not exist' });
+    }
+    const { emojis } = post;
+    const existingEmoji = emojis.find(
+      (emoji) => emoji.emoji.unified === unified,
+    );
+
+    const isEmojiAddedByUser =
+      !!existingEmoji &&
+      existingEmoji.users.map((user) => user.toString()).includes(req.user.id);
+
+    if (isEmojiAddedByUser) {
+      return res
+        .status(400)
+        .json({ msg: 'You already chose it. Please add another one...' });
+    }
+
+    if (existingEmoji) {
+      existingEmoji.users.unshift(req.user.id);
+    } else {
+      emojis.unshift({ users: [req.user.id], emoji });
+    }
+
+    emojis.forEach((emoji) => (emoji.amount = emoji.users.length));
+
+    await group.save();
+
+    res.json({
+      emojis: emojis,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Server error');
+  }
+});
+
+// @route   PUT api/groups/:groupID/posts/:postsID/:emojiID
+// @desc    Remove emoji from a post
+// @access  Private
+router.put('/:groupID/posts/:postID/:emojiID', auth, async (req, res) => {
+  try {
+    const group = await Group.findById(req.params.groupID);
+    const emojiId = req.params.emojiID;
+    //pull out post
+    const post = group.posts.find((post) => post._id.toString() === req.params.postID);
+    //  Make sure post exists
+    if (!post) {
+      return res.status(404).json({ msg: 'Post does not exist' });
+    }
+    // Check if the emoji has already been chosen
+    const emojiAddedByUser = post.emojis.find(
+      (emoji) =>
+        emoji.id.toString() === emojiId && emoji.users.includes(req.user.id),
+    );
+
+    if (!emojiAddedByUser) {
+      return res.status(400).json({ msg: 'No emoji to be removed' });
+    }
+    // Get remove index
+
+    const updatedEmojiUsers = emojiAddedByUser.users.filter(
+      (user) => user.toString() !== req.user.id,
+    );
+
+    emojiAddedByUser.users = updatedEmojiUsers;
+    emojiAddedByUser.amount = emojiAddedByUser.users.length;
+
+    if (emojiAddedByUser.users.length === 0) {
+      const updatedEmojiArray = post.emojis.filter(
+        (emoji) => emoji.id.toString() !== emojiId,
+      );
+
+      post.emojis = updatedEmojiArray;
+    }
+
+    await group.save();
+    res.json({
+      emojis: post.emojis,
+    });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send('Server error');
+  }
+});
+
 
 // /***************************************************************************************************/
 

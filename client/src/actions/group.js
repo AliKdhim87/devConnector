@@ -14,7 +14,11 @@ import {
   DELETE_POSTCOMMENT,
   JOIN_GROUP,
   LEAVE_GROUP,
-  POST_ERROR
+  ADD_EVENT,
+  DELETE_EVENT,
+  POST_ERROR,
+  ADD_GROUPPOSTEMOJI,
+  REMOVE_GROUPPOSTEMOJI
 } from './types';
 
 // Get all groups
@@ -258,6 +262,55 @@ export const deleteGroupPost = (groupID, postID) => async (dispatch) => {
     });
   }
 };
+//Add Event 
+export const addEvent = (groupID, formData) => async (dispatch) => {
+  const config = {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  };
+  try {
+    const res = await axios.put(
+      `/api/groups/${groupID}/events`,
+      formData,
+      config
+    );
+    dispatch({
+      type: ADD_EVENT,
+      payload: res.data
+    });
+    dispatch(setAlert('Event Added', 'success'));
+  } catch (error) {
+    const errors = error.response.data.errors;
+    if (errors) {
+      errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
+    }
+    dispatch({
+      type: POST_ERROR
+    });
+  }
+};
+
+
+// Delete an event
+export const deleteEvent = (groupID, eventID) => async (dispatch) => {
+  try {
+    const res = await axios.put(`/api/groups/${groupID}/events/${eventID}`);
+    dispatch({
+      type: DELETE_EVENT,
+      payload: res.data
+    });
+    dispatch(setAlert('Event removed', 'success'));
+  } catch (error) {
+    dispatch({
+      type: POST_ERROR,
+      payload: {
+        msg: error.msg,
+        status: error.status
+      }
+    });
+  }
+};
 
 // Add a comment to the post
 export const addPostComment = (groupID, postID, formData) => async (
@@ -309,5 +362,58 @@ export const deletePostComment = (groupID, postID, commentID) => async (
         status: error.status
       }
     });
+  }
+};
+
+
+export const addGroupPostEmoji = (groupID, postID, emoji) => async (
+  dispatch,
+) => {
+  const config = {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  };
+  try {
+    const res = await axios.put(`/api/groups/${groupID}/posts/${postID}/emoji`, emoji, config);
+    dispatch({
+      type: ADD_GROUPPOSTEMOJI,
+      payload: res.data.emojis,
+      postID:postID,
+      groupID:groupID
+    });
+    dispatch(setAlert('Emoji Added', 'success'));
+
+    // return res;
+  } catch (error) {
+    const errors = error.response.data.errors;
+
+    if (errors) {
+      errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
+    }
+    dispatch({
+      type: POST_ERROR,
+    });
+  }
+};
+
+// Remove emoji from post
+export const removeGroupPostEmoji = (groupID, postID, emojiID) => async (
+  dispatch,
+) => {
+  try {
+    const res = await axios.put(`/api/groups/${groupID}/posts/${postID}/${emojiID}`);
+
+    dispatch({
+      type: REMOVE_GROUPPOSTEMOJI,
+      payload: res.data.emojis,
+      postId: postID,
+      emojis: res.data.emojis,
+    });
+
+    dispatch(setAlert('Emoji Removed', 'success'));
+  } catch (error) {
+    console.log(error);
+
   }
 };

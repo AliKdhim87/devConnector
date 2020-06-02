@@ -16,6 +16,27 @@ const GroupSchema = new Schema({
     required: true,
     trim: true
   },
+  events: [
+    {
+      title: { 
+        type: String, 
+        required: true 
+      },
+      description: { 
+        type: String 
+      },
+      start: { 
+        type: Date, required: true 
+      },
+      end: { 
+        type: Date 
+      },
+      creator:{
+        type: Schema.Types.ObjectId,
+        ref:'user'
+      }
+    }
+  ],
   posts: [
     {
       title: {
@@ -30,6 +51,9 @@ const GroupSchema = new Schema({
         type: String,
         required: true
       },
+      link:{
+        type:String
+      },
       date: {
         type: Date,
         default: Date.now
@@ -40,6 +64,27 @@ const GroupSchema = new Schema({
       avatar: {
         type: String
       },
+      emojis: [
+        {
+          users: [
+            {
+              type: Schema.Types.ObjectId,
+              ref: 'users',
+            },
+          ],
+          amount: Number,
+          emoji: {
+            colons: { type: String },
+            emoticons: [String],
+            id: { type: String },
+            name: { type: String },
+            native: { type: String },
+            short_names: [String],
+            skin: { type: Number },
+            unified: { type: String },
+          },
+        },
+      ],
       comments: [
         {
           creator: {

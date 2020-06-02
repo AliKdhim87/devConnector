@@ -884,6 +884,7 @@ button {
   .group-info-container {
     flex-direction: column;
   }
+
   .group-item {
     width: 85%;
   }

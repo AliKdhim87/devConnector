@@ -3,12 +3,17 @@ import PropTypes from 'prop-types';
 import Moment from 'react-moment';
 import { Link, useHistory, useParams } from 'react-router-dom';
 import { connect } from 'react-redux';
+import Microlink from '@microlink/react';
+import { Button } from 'semantic-ui-react';
+import EmojiPicker from '../post/EmojiPicker';
 import {
   getGroupPost,
   deleteGroupPost,
   addPostComment,
   deletePostComment,
-  updateGroupPost
+  updateGroupPost,
+  addGroupPostEmoji,
+  removeGroupPostEmoji
 } from '../../actions/group';
 import Spinner from '../layout/Spinner';
 
@@ -18,7 +23,9 @@ const GroupPosts = ({
   deleteGroupPost,
   updateGroupPost,
   addPostComment,
+  addGroupPostEmoji,
   deletePostComment,
+  removeGroupPostEmoji,
   group: { post, comments, loading }
 }) => {
   const history = useHistory();
@@ -57,6 +64,11 @@ const GroupPosts = ({
       title: ''
     });
   };
+  const [hideEmojiPicker, setHideEmojiPicker] = useState(true);
+
+  const showHideEmojiPicker = () => {
+    setHideEmojiPicker((prevState) => !prevState);
+  };
 
   if (!loading && post && post.creator && auth)
     return (
@@ -82,37 +94,105 @@ const GroupPosts = ({
             <p className="group-post-text-and-date">
               {!loading && post && post.text}
             </p>
+            {post.link && post.link !== '' && !loading && (
+              <Microlink
+                media={['video', 'audio', 'image', 'logo']}
+                autoplay
+                controls
+                size="large"
+                url={post.link}
+              />
+            )}
+            {hideEmojiPicker ? (
+              <Button circular onClick={showHideEmojiPicker}>
+                <span
+                  role="img"
+                  aria-label="smiling face"
+                  aria-labelledby="smiling face"
+                >
+                  🙂
+                </span>
+              </Button>
+            ) : (
+              <EmojiPicker
+                onBlur={showHideEmojiPicker}
+                onPick={(emo, event) => {
+                  addGroupPostEmoji(groupID, postID, emo);
+                  showHideEmojiPicker();
+                }}
+              />
+            )}
+            {post.emojis.length > 0 && (
+              <ul style={{ display: 'flex' }}>
+                {post.emojis && post.emojis.map((emo, index) => (
+                  <li key={index}>
+                    <Button
+                      circular
+                      color={
+                        !!auth &&
+                        !!auth.user &&
+                        !!emo.users.find((user) => {
+                          return user === auth.user._id;
+                        })
+                          ? 'green'
+                          : undefined
+                      }
+                      onClick={() => {
+                        const isMine =
+                          !!auth &&
+                          !!auth.user &&
+                          !!emo.users.find((user) => {
+                            return user === auth.user._id;
+                          });
+
+                        if (isMine) removeGroupPostEmoji(groupID, postID, emo._id);
+                        else addGroupPostEmoji(groupID, postID, emo.emoji);
+                      }}
+                    >
+                      {emo.emoji.native}
+                      {emo.amount > 1 ? <small>{emo.amount}</small> : ''}
+                    </Button>
+                  </li>
+                ))}
+              </ul>
+            )}
             <p className="post-date group-post-text-and-date">
               {post && <Moment format="YYYY/MM/DD">{post.date}</Moment>}
             </p>
           </div>
           <div className="flex-r group-post-owner-buttons">
-            {!loading && auth && !auth.loading && auth.user._id === post.creator._id && (
-              <button
-                type="button"
-                className={
-                  openEditPost || openDeletePost ? `hidden` : `btn btn-dark`
-                }
-                onClick={() => {
-                  setOpenEditPost(true);
-                }}
-              >
-                EDIT
-              </button>
-            )}
-            {!loading && auth && !auth.loading && auth.user._id === post.creator._id && (
-              <button
-                type="button"
-                className={
-                  openDeletePost || openEditPost ? `hidden` : `btn btn-danger`
-                }
-                onClick={() => {
-                  setOpenDeletePost(true);
-                }}
-              >
-                <i className="fas fa-times"></i>
-              </button>
-            )}
+            {!loading &&
+              auth &&
+              !auth.loading &&
+              auth.user._id === post.creator._id && (
+                <button
+                  type="button"
+                  className={
+                    openEditPost || openDeletePost ? `hidden` : `btn btn-dark`
+                  }
+                  onClick={() => {
+                    setOpenEditPost(true);
+                  }}
+                >
+                  EDIT
+                </button>
+              )}
+            {!loading &&
+              auth &&
+              !auth.loading &&
+              auth.user._id === post.creator._id && (
+                <button
+                  type="button"
+                  className={
+                    openDeletePost || openEditPost ? `hidden` : `btn btn-danger`
+                  }
+                  onClick={() => {
+                    setOpenDeletePost(true);
+                  }}
+                >
+                  <i className="fas fa-times"></i>
+                </button>
+              )}
           </div>
           <div>
             <div className={openEditPost ? `shown` : `hidden`}>
@@ -216,17 +296,20 @@ const GroupPosts = ({
                     Posted on{' '}
                     <Moment format="YYYY/MM/DD">{comment.date}</Moment>
                   </p>
-                  {comment && auth && !auth.loading && comment.userId === auth.user._id && (
-                    <button
-                      type="button"
-                      className="btn btn-danger"
-                      onClick={() => {
-                        deletePostComment(groupID, postID, comment._id);
-                      }}
-                    >
-                      <i className="fas fa-times"></i>
-                    </button>
-                  )}
+                  {comment &&
+                    auth &&
+                    !auth.loading &&
+                    comment.userId === auth.user._id && (
+                      <button
+                        type="button"
+                        className="btn btn-danger"
+                        onClick={() => {
+                          deletePostComment(groupID, postID, comment._id);
+                        }}
+                      >
+                        <i className="fas fa-times"></i>
+                      </button>
+                    )}
                 </div>
               </div>
             ))}
@@ -245,7 +328,9 @@ GroupPosts.propTypes = {
   post: PropTypes.object.isRequired,
   group: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
-  comments: PropTypes.array
+  comments: PropTypes.array,
+  addGroupPostEmoji: PropTypes.func.isRequired,
+  removeGroupPostEmoji: PropTypes.func.isRequired
 };
 const mapStateToProps = (state) => ({
   group: state.group,
@@ -259,5 +344,7 @@ export default connect(mapStateToProps, {
   updateGroupPost,
   deleteGroupPost,
   addPostComment,
-  deletePostComment
+  deletePostComment,
+  addGroupPostEmoji,
+  removeGroupPostEmoji
 })(GroupPosts);

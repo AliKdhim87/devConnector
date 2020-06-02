@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { ObjectId } = mongoose.Schema.Types;
 
 const Schema = mongoose.Schema;
 
@@ -29,6 +30,20 @@ const userSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   },
+
+  friends: [
+    {
+      type: ObjectId,
+      ref: 'User'
+    }
+  ],
+  friendRequests: [
+    {
+      user: { type: ObjectId },
+      date: Date,
+      isSent: Boolean
+    }
+  ],
   myGroups: [
     {
       _id: {
@@ -57,6 +72,15 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         default: true
       }
+    },
+    isConfirmed: {
+      type: Boolean,
+      default: false
+    },
+    social: {
+      google: { type: String, default: null },
+      github: { type: String, default: null },
+      facebook: { type: String, default: null }
     }
   }
 });
