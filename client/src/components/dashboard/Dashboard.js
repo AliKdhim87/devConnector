@@ -5,12 +5,14 @@ import Moment from 'react-moment';
 import { loadUser } from '../../actions/auth';
 import { getPosts } from '../../actions/post';
 import { getGroups } from '../../actions/group';
+import { getFriendsList } from '../../actions/friends';
 import { connect } from 'react-redux';
 import Spinner from '../layout/Spinner';
 import GroupsFeed from './GroupsFeed';
 import FriendsFeed from './FriendsFeed';
 import CommunityFeed from './CommunityFeed';
 import { Card } from 'semantic-ui-react';
+import * as uuid from 'uuid';
 
 const Dashboard = ({
   loadUser,
@@ -18,7 +20,9 @@ const Dashboard = ({
   getPosts,
   post: { posts },
   getGroups,
-  group: { groups }
+  group: { groups },
+  getFriendsList,
+  friendsObject: { friends }
 }) => {
   useEffect(() => {
     loadUser();
@@ -29,6 +33,9 @@ const Dashboard = ({
   useEffect(() => {
     getGroups();
   }, [getGroups]);
+  useEffect(() => {
+    getFriendsList();
+  }, [getFriendsList]);
 
   const [isGroupsOpen, setGroupsOpen] = useState(false);
 
@@ -45,7 +52,7 @@ const Dashboard = ({
         const postDate = new Date(post.date).getTime();
         const difference = dateChecker(postDate);
         if (difference < 172800000) {
-          post.groupName = group._id.name
+          post.groupName = group._id.name;
           post.groupId = group._id._id;
           myGroupPosts.push(post);
         }
@@ -71,11 +78,10 @@ const Dashboard = ({
         const postDate = new Date(groupPost.date).getTime();
         const difference = dateChecker(postDate);
         if (difference < 172800000) {
-          groupPost.groupName = group.name
-          groupPost.groupId = group._id
+          groupPost.groupName = group.name;
+          groupPost.groupId = group._id;
           filteredGroupPosts.push(groupPost);
-        }
-        else return;
+        } else return;
       });
     });
   }
@@ -91,6 +97,16 @@ const Dashboard = ({
     });
   }
 
+  let filteredFriendPosts = [];
+  if (posts && user) {
+    posts.forEach((post) => {
+      if (user.friends.includes(post.user._id)) {
+        filteredFriendPosts.push(post);
+      }
+      return;
+    });
+  }
+
   if (loading) return <Spinner />;
   return (
     <section className="container">
@@ -101,7 +117,12 @@ const Dashboard = ({
               <Card fluid>
                 <div className="flex-c">
                   <img src={user.avatar} alt="avatar" />
-                  <span className="text-primary p-1" style={{fontSize:"1.5rem"}}>{user.name}</span>
+                  <span
+                    className="text-primary p-1"
+                    style={{ fontSize: '1.5rem' }}
+                  >
+                    {user.name}
+                  </span>
                   <span className="text-dark">
                     Member since: <Moment format="YY/MM/DD">{user.date}</Moment>
                   </span>
@@ -118,7 +139,7 @@ const Dashboard = ({
                     {user &&
                       user.myGroups.map((group) => {
                         return (
-                          <div>
+                          <div key={uuid.v4()}>
                             <Link to={`/groups/${group._id._id}`}>
                               {group._id.name}
                             </Link>
@@ -136,9 +157,12 @@ const Dashboard = ({
                     My Friends
                   </h4>
                   <div className="flex-c">
-                    <Link>Bla Bla</Link>
-                    <Link>Bla Bla</Link>
-                    <Link>Bla Bla</Link>
+                    {friends &&
+                      friends.map((friend) => (
+                        <Link to={`profile/${friend.id}`} key={friend.id}>
+                          {friend.name}
+                        </Link>
+                      ))}
                   </div>
                 </div>
                 <Link to={`/settings`}>
@@ -152,7 +176,11 @@ const Dashboard = ({
             <div className="flex-c newsfeed-container">
               <div className="flex-r newsfeed flex-center">
                 <Card.Group>
-                  <FriendsFeed />
+                  <FriendsFeed
+                    friends={friends}
+                    filteredFriendPosts={filteredFriendPosts}
+                    dateChecker={dateChecker}
+                  />
                   {myGroupPosts && filteredGroups && (
                     <GroupsFeed
                       myGroupPosts={myGroupPosts}
@@ -179,16 +207,22 @@ Dashboard.propTypes = {
   loadUser: PropTypes.func.isRequired,
   getPosts: PropTypes.func.isRequired,
   getGroups: PropTypes.func.isRequired,
+  getFriendsList: PropTypes.func.isRequired,
   group: PropTypes.object.isRequired,
   post: PropTypes.object.isRequired,
-  auth: PropTypes.object.isRequired
+  auth: PropTypes.object.isRequired,
+  friendsObject: PropTypes.object.isRequired
 };
 const mapStateToProps = (state) => ({
   auth: state.auth,
   post: state.post,
-  group: state.group
+  group: state.group,
+  friendsObject: state.friendsObject
 });
 
-export default connect(mapStateToProps, { loadUser, getPosts, getGroups })(
-  Dashboard
-);
+export default connect(mapStateToProps, {
+  loadUser,
+  getPosts,
+  getGroups,
+  getFriendsList
+})(Dashboard);
