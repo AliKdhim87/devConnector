@@ -4,7 +4,15 @@ const { check, validationResult } = require('express-validator');
 const auth = require('../../middleware/auth');
 const User = require('../../models/User');
 const Group = require('../../models/Groups');
-
+const {
+  JoinedGroupNotification,
+  leftGroupNotification,
+  deleteGroupNotification,
+  addPostGroupNotification,
+  addEventGroupNotification,
+  addCommentGroupNotification,
+  addEmojiPostGroupNotification
+} = require('../../emails/account');
 /* GROUPS--- CREATE GROUPS - GET GROUPS - DELETE GROUPS - ADD/REMOVE MEMBERS */
 /***************************************************************************************************/
 
@@ -114,6 +122,20 @@ router.delete('/:groupID', auth, async (req, res) => {
       );
       user.save();
     });
+    // Email notification
+    const ownerGroup = await User.findById(group.creator);
+    group.members.map(async (member) => {
+      const users = await User.findById(member.user);
+      console.log(users);
+      if (users.notifications) {
+        deleteGroupNotification(
+          users.name,
+          ownerGroup.name,
+          group.name,
+          users.email
+        );
+      }
+    });
 
     res.json({ msg: 'Group removed' });
   } catch (error) {
@@ -198,6 +220,17 @@ router.put('/join/:groupID', auth, async (req, res) => {
       await currentUser.save();
       group.members.push(newMember);
       await group.save();
+      // Notification email
+      const ownerGroup = await User.findById(group.creator);
+      if (ownerGroup.notifications) {
+        JoinedGroupNotification(
+          ownerGroup.name,
+          currentUser.name,
+          group.name,
+          ownerGroup.email
+        );
+      }
+
       res.send(group.members);
     }
   } catch (error) {
@@ -235,6 +268,17 @@ router.put('/leave/:groupID', auth, async (req, res) => {
     );
     await user.save();
     await group.save();
+    // Notification email
+    const ownerGroup = await User.findById(group.creator);
+    if (ownerGroup.notifications) {
+      leftGroupNotification(
+        ownerGroup.name,
+        user.name,
+        group.name,
+        ownerGroup.email
+      );
+    }
+
     res.send(group.members);
   } catch (error) {
     console.error(error.message);
@@ -311,6 +355,27 @@ router.post(
         };
         group.posts.push(newPost);
         await group.save();
+
+        /*
+        Send email notifications
+        1-first remove the sender from the group members.
+        2-loop through The user schema to get the users info
+        2-check the notifications prop if true then send the email notifications.
+        */
+        const personAddPost = user.name;
+        group.members
+          .filter((member) => member.user.toString() !== req.user.id)
+          .forEach(async (user) => {
+            const users = await User.findById(user.user);
+            if (users.notifications) {
+              addPostGroupNotification(
+                users.name,
+                personAddPost,
+                group.name,
+                users.email
+              );
+            }
+          });
         res.send(group.posts);
       }
     } catch (error) {
@@ -417,9 +482,32 @@ router.put(
           start: req.body.start,
           end: req.body.end
         };
-        console.log(newEvent)
+        console.log(newEvent);
         group.events.push(newEvent);
         await group.save();
+        /*
+        Send email notifications
+        1-first remove the sender from the group members.
+        2-loop through The user schema to get the users info
+        2-check the notifications prop if true then send the email notifications.
+        */
+        const personAddEvent = user.name;
+        group.members
+          .filter((member) => member.user.toString() !== req.user.id)
+          .forEach(async (user) => {
+            const users = await User.findById(user.user);
+            if (users.notifications) {
+              addEventGroupNotification(
+                users.name,
+                personAddEvent,
+                group.name,
+                users.email,
+                newEvent.start,
+                newEvent.end,
+                newEvent.title
+              );
+            }
+          });
         res.send(group.events);
       }
     } catch (error) {
@@ -442,7 +530,7 @@ router.put('/:groupID/events/:eventID', auth, async (req, res) => {
     const event = group.events.find(
       (event) => event._id.toString() === req.params.eventID
     );
-    console.log(group.events)
+    console.log(group.events);
     //  Make sure post exists
     if (!event) {
       return res.status(404).json({ msg: 'Event does not exist' });
@@ -503,6 +591,30 @@ router.put(
       };
       post.comments.push(newComment);
       await group.save();
+
+      /*
+        Send email notifications
+        1-first remove the sender from the group members.
+        2-loop through The user schema to get the users info
+        2-check the notifications prop if true then send the email notifications.
+        */
+
+      group.members
+        .filter((member) => member.user.toString() !== req.user.id)
+        .forEach(async (user) => {
+          const users = await User.findById(user.user);
+          if (users.notifications) {
+            addCommentGroupNotification(
+              users.name,
+              currentUser.name,
+              group.name,
+              users.email,
+              post.title,
+              newComment.text
+            );
+          }
+        });
+
       res.send(post.comments);
     } catch (error) {
       console.error(error.message);
@@ -548,7 +660,6 @@ router.put(
   }
 );
 
-
 // @route   PUT api/groups/:groupID/posts/:postID/emoji
 // @desc    add emoji to a post
 // @access  Private
@@ -563,7 +674,7 @@ router.put('/:groupID/posts/:postID/emoji', auth, async (req, res) => {
       native,
       skin,
       short_names,
-      unified,
+      unified
     } = req.body;
 
     const emoji = {
@@ -574,19 +685,20 @@ router.put('/:groupID/posts/:postID/emoji', auth, async (req, res) => {
       native,
       skin,
       short_names,
-      unified,
+      unified
     };
 
     const group = await Group.findById(req.params.groupID);
-    const post = group.posts.find((post) => post._id.toString() === req.params.postID);
-    console.log(post)
+    const post = group.posts.find(
+      (post) => post._id.toString() === req.params.postID
+    );
     //  Make sure post exists
     if (!post) {
       return res.status(404).json({ msg: 'Post does not exist' });
     }
     const { emojis } = post;
     const existingEmoji = emojis.find(
-      (emoji) => emoji.emoji.unified === unified,
+      (emoji) => emoji.emoji.unified === unified
     );
 
     const isEmojiAddedByUser =
@@ -609,8 +721,30 @@ router.put('/:groupID/posts/:postID/emoji', auth, async (req, res) => {
 
     await group.save();
 
+    /*
+        Send email notifications
+        1-first remove the sender from the group members.
+        2-loop through The user schema to get the users info
+        2-check the notifications prop if true then send the email notifications.
+        */
+    const userAddEmoji = await User.findById(req.user.id);
+    group.members
+      .filter((member) => member.user.toString() !== req.user.id)
+      .forEach(async (user) => {
+        const users = await User.findById(user.user);
+        if (users.notifications) {
+          addEmojiPostGroupNotification(
+            users.name,
+            userAddEmoji.name,
+            group.name,
+            users.email,
+            post.title
+          );
+          console.log();
+        }
+      });
     res.json({
-      emojis: emojis,
+      emojis: emojis
     });
   } catch (error) {
     console.error(error);
@@ -626,7 +760,9 @@ router.put('/:groupID/posts/:postID/:emojiID', auth, async (req, res) => {
     const group = await Group.findById(req.params.groupID);
     const emojiId = req.params.emojiID;
     //pull out post
-    const post = group.posts.find((post) => post._id.toString() === req.params.postID);
+    const post = group.posts.find(
+      (post) => post._id.toString() === req.params.postID
+    );
     //  Make sure post exists
     if (!post) {
       return res.status(404).json({ msg: 'Post does not exist' });
@@ -634,7 +770,7 @@ router.put('/:groupID/posts/:postID/:emojiID', auth, async (req, res) => {
     // Check if the emoji has already been chosen
     const emojiAddedByUser = post.emojis.find(
       (emoji) =>
-        emoji.id.toString() === emojiId && emoji.users.includes(req.user.id),
+        emoji.id.toString() === emojiId && emoji.users.includes(req.user.id)
     );
 
     if (!emojiAddedByUser) {
@@ -643,7 +779,7 @@ router.put('/:groupID/posts/:postID/:emojiID', auth, async (req, res) => {
     // Get remove index
 
     const updatedEmojiUsers = emojiAddedByUser.users.filter(
-      (user) => user.toString() !== req.user.id,
+      (user) => user.toString() !== req.user.id
     );
 
     emojiAddedByUser.users = updatedEmojiUsers;
@@ -651,7 +787,7 @@ router.put('/:groupID/posts/:postID/:emojiID', auth, async (req, res) => {
 
     if (emojiAddedByUser.users.length === 0) {
       const updatedEmojiArray = post.emojis.filter(
-        (emoji) => emoji.id.toString() !== emojiId,
+        (emoji) => emoji.id.toString() !== emojiId
       );
 
       post.emojis = updatedEmojiArray;
@@ -659,14 +795,13 @@ router.put('/:groupID/posts/:postID/:emojiID', auth, async (req, res) => {
 
     await group.save();
     res.json({
-      emojis: post.emojis,
+      emojis: post.emojis
     });
   } catch (error) {
     console.error(error.message);
     res.status(500).send('Server error');
   }
 });
-
 
 // /***************************************************************************************************/
 

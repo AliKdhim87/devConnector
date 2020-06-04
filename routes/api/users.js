@@ -20,8 +20,8 @@ router.post(
     check('email', 'Pleace include a valid email.').isEmail(),
     check(
       'password',
-      'Pleace enter a password with 6 or more characters.',
-    ).isLength({ min: 6 }),
+      'Pleace enter a password with 6 or more characters.'
+    ).isLength({ min: 6 })
   ],
   async (req, res) => {
     const errors = validationResult(req);
@@ -43,15 +43,15 @@ router.post(
         email,
         avatar:
           '//www.gravatar.com/avatar/4f3488d24174fc7d950cfe39a72827c0?s=200&r=pg&d=mm',
-        password,
+        password
       });
       const salt = await bcrypt.genSalt(10);
       user.password = await bcrypt.hash(password, salt);
       await user.save();
       const payload = {
         user: {
-          id: user.id,
-        },
+          id: user.id
+        }
       };
       jwt.sign(payload, scret, { expiresIn: 36000 }, (error, token) => {
         if (error) throw error;
@@ -61,7 +61,7 @@ router.post(
       console.error(error.message);
       res.status(500).send('Server error!');
     }
-  },
+  }
 );
 
 // @route   PATCH api/users
@@ -80,7 +80,7 @@ router.patch(
       if (!user) {
         return res.status(404).json({ msg: 'Ther is not user' });
       }
-
+      // Update user avatar
       if (req.file) {
         // Delete the old avatar from cloudinary by id
         if (user.avatar_id) {
@@ -88,9 +88,17 @@ router.patch(
         }
         user.avatar = req.file.secure_url;
         user.avatar_id = req.file.public_id;
+      } else if (
+        req.body.notification == 'true' ||
+        req.body.notification == 'false'
+      ) {
+        // change the Notifiction mode
+        user.notifications = req.body.notification;
       } else {
+        // Update user name
         user.name = req.body.name;
       }
+      //Here I change the user avatar from his post
       if (post !== null) {
         post.name = user.name;
         post.avatar = user.avatar;
@@ -101,12 +109,12 @@ router.patch(
       await user.save();
       res.json(user);
     } catch (error) {
-      console.log(error.message);
+      console.error(error.message);
     }
   },
   (error, req, res, next) => {
     res.status(400).send({ msg: error.message });
-  },
+  }
 );
 
 module.exports = router;
