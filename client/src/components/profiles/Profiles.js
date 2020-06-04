@@ -40,11 +40,7 @@ Profiles.propTypes = {
   profile: PropTypes.object.isRequired
 };
 const mapStateToProps = (state) => ({
-<<<<<<< HEAD
-  profile: state.profile
-=======
   profile: state.profile,
-  auth: state.auth,
->>>>>>> 58363e066b7c04c8310416ed2d4a3e49e944e25d
+  auth: state.auth
 });
 export default connect(mapStateToProps, { getAllProfiles })(Profiles);

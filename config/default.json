@@ -1,5 +1,5 @@
 {
   "mongoURI": "",
   "jwtSecret": "",
-  "githubClientId": "",
-  "githubSecret": "",
+  "githubToken": ""
+}
