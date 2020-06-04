@@ -1,45 +1,65 @@
-import React from 'react'
-import { Card, Feed } from 'semantic-ui-react'
+import React from 'react';
+import { Card, Feed } from 'semantic-ui-react';
+import Moment from 'react-moment';
+import { Link } from 'react-router-dom';
+import * as uuid from 'uuid';
 
-const FriendsFeed = () => (
+const FriendsFeed = ({ friends, filteredFriendPosts, dateChecker }) => {
+  let latestFriendPosts = [];
+  filteredFriendPosts.map((post) => {
+    const postDate = new Date(post.date).getTime();
+    const difference = dateChecker(postDate);
+    if (difference < 172800000) {
+      latestFriendPosts.push(post);
+    }
+  });
+
+  console.log(latestFriendPosts);
+
+  return (
     <Card fluid>
-    <Card.Content>
-      <Card.Header>Latest posts from your friends <i className="fas fa-user-friends m-1"></i></Card.Header>
-    </Card.Content>
-    <Card.Content>
-      <Feed>
-        <Feed.Event>
-          <Feed.Label image='https://i7.pngguru.com/preview/362/94/461/pikachu-ash-ketchum-pokemon-art-academy-pokemon-go-pokedex-pikachu.jpg' />
-          <Feed.Content>
-            <Feed.Date content='1 day ago' />
-            <Feed.Summary>
-              You added <a>Jenny Hess</a> to your <a>coworker</a> group.
-            </Feed.Summary>
-          </Feed.Content>
-        </Feed.Event>
-
-        <Feed.Event>
-          <Feed.Label image='https://i7.pngguru.com/preview/362/94/461/pikachu-ash-ketchum-pokemon-art-academy-pokemon-go-pokedex-pikachu.jpg' />
-          <Feed.Content>
-            <Feed.Date content='3 days ago' />
-            <Feed.Summary>
-              You added <a>Molly Malone</a> as a friend.
-            </Feed.Summary>
-          </Feed.Content>
-        </Feed.Event>
-
-        <Feed.Event>
-          <Feed.Label image='https://i7.pngguru.com/preview/362/94/461/pikachu-ash-ketchum-pokemon-art-academy-pokemon-go-pokedex-pikachu.jpg' />
-          <Feed.Content>
-            <Feed.Date content='4 days ago' />
-            <Feed.Summary>
-              You added <a>Elliot Baker</a> to your <a>musicians</a> group.
-            </Feed.Summary>
-          </Feed.Content>
-        </Feed.Event>
-      </Feed>
-    </Card.Content>
-  </Card>
-)
+      <Card.Content>
+        <Card.Header>
+          Latest posts from your friends{' '}
+          <i className="fas fa-user-friends m-1"></i>
+        </Card.Header>
+      </Card.Content>
+      <Card.Content>
+        <Feed>
+          {friends &&
+            friends.map((friend) => (
+              <Feed.Event key={uuid.v4()}>
+                <Feed.Label image="https://i7.pngguru.com/preview/362/94/461/pikachu-ash-ketchum-pokemon-art-academy-pokemon-go-pokedex-pikachu.jpg" />
+                <Feed.Content>
+                  <Feed.Date content="1 day ago" />
+                  <Feed.Summary>
+                    You and <a>{friend.name}</a> are friends now.
+                  </Feed.Summary>
+                </Feed.Content>
+              </Feed.Event>
+            ))}
+        </Feed>
+        <Feed>
+          {latestFriendPosts &&
+            latestFriendPosts.map((post) => {
+              return (
+                <Feed.Event key={uuid.v4()}>
+                  <Feed.Label image={post.avatar} />
+                  <Feed.Content>
+                    <Feed.Date content={<Moment fromNow>{post.date}</Moment>} />
+                    <Feed.Summary>
+                      Your friend{' '}
+                      <Link to={`/profile/${post.user._id}`}>{post.name}</Link>{' '}
+                      shared a new <Link to={`/posts/${post._id}`}>post</Link>
+                    </Feed.Summary>
+                  </Feed.Content>
+                </Feed.Event>
+              );
+            })}
+        </Feed>
+      </Card.Content>
+    </Card>
+  );
+};
 
 export default FriendsFeed;

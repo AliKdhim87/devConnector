@@ -8,7 +8,6 @@ const {
   checkRequestById,
   makeFriendshipFromRequest,
   removeFriendRequest,
-  cancelFriendRequest,
   checkFriendById,
   removeFriend
 } = require('../../middleware/friends');
@@ -112,10 +111,7 @@ router.post('/:friendId', auth, async (req, res) => {
       { _id: friendId },
       { $addToSet: { friendRequests: receivedRequest } }
     );
-
-    res
-      .status(200)
-      .json({ message: 'Friend request created successfully!', sentRequest });
+    res.status(200).json(sentRequest);
   } catch (err) {
     console.error(err.mesaage);
     res.status(500).send('server error');
@@ -174,12 +170,10 @@ router.put('/requests/:requestId', auth, async (req, res) => {
       const accepting = await User.findById(requestInfo.acceptingUser.id);
       const requesting = await User.findById(requestInfo.requestingUser.id);
     }
-    res
-      .status(200)
-      .json({
-        message: 'Friend request has been approved successfully!',
-        requestInfo
-      });
+    res.status(200).json({
+      message: 'Friend request has been approved successfully!',
+      requestInfo
+    });
   } catch (err) {
     console.error(err.mesaage);
     res.status(500).send('server error');
@@ -200,12 +194,10 @@ router.delete('/requests/:requestId', auth, async (req, res) => {
       await removeFriendRequest(requestInfo);
     }
     // return a success message
-    res
-      .status(200)
-      .json({
-        message: 'Friend request has been declined successfully!',
-        requestInfo
-      });
+    res.status(200).json({
+      message: 'Friend request has been declined successfully!',
+      requestInfo
+    });
   } catch (err) {
     console.error(err.mesaage);
     res.status(500).send('server error');
@@ -237,23 +229,32 @@ router.delete('/:friendId', auth, async (req, res) => {
 });
 
 // @route           DELETE api/friends/:friendId
-// @description     Delete friend
+// @description     cancel friend request
 // @access          Private
-router.delete('/requests/:requestId', auth, async (req, res) => {
-  const { requestId } = req.params;
+router.delete('/cancel/:UserIdOfRequest', auth, async (req, res) => {
+  const { UserIdOfRequest } = req.params;
   const { id } = req.user;
+  const senderOfRequest = await User.findById(id);
+  const selectedRequest = await senderOfRequest.friendRequests.find(
+    (request) => {
+      return ObjectId(request.user).equals(UserIdOfRequest);
+    }
+  );
 
   try {
-    // Check if there is a request
-    const friendInfo = await checkFriendById(requestId, id);
-    // If there is one, remove it from both users friendRequests arrays (filter and set)
-    if (friendInfo.IsFriendFound) {
-      await cancelFriendRequest(friendInfo);
-    }
-    // return a success message
-    res
-      .status(200)
-      .json({ message: 'Friend has been removed successfully!', friendInfo });
+    // Remove from the sender user array
+    await User.updateOne(
+      { _id: senderOfRequest.id },
+      { $pull: { friendRequests: { user: selectedRequest.user } } }
+    );
+
+    // Remove from the receiver user array
+    await User.updateOne(
+      { _id: selectedRequest.user },
+      { $pull: { friendRequests: { user: senderOfRequest.id } } }
+    );
+
+    res.status(200).json(selectedRequest);
   } catch (err) {
     console.error(err.mesaage);
     res.status(500).send('server error');

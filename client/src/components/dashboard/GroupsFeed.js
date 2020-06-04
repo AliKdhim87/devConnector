@@ -2,6 +2,7 @@ import React from 'react';
 import { Card, Feed } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import Moment from 'react-moment';
+import * as uuid from "uuid";
 
 const GroupsFeed = ({ filteredGroups, myGroupPosts }) => (
   <Card fluid>
@@ -15,7 +16,7 @@ const GroupsFeed = ({ filteredGroups, myGroupPosts }) => (
         {filteredGroups &&
           filteredGroups.map((group) => {
             return (
-              <Feed.Event>
+              <Feed.Event key={uuid.v4()}>
                 <Feed.Content>
                   <Feed.Date content={<Moment fromNow>{group.createdAt}</Moment>} />
                   { <Feed.Summary>
