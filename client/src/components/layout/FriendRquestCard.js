@@ -7,7 +7,7 @@ import {
   RejectFriendRequest
 } from '../../actions/friends';
 
-const CardExampleGroups = ({
+const FriendRquestCard = ({
   auth,
   friend: {
     _id,
@@ -40,7 +40,7 @@ const CardExampleGroups = ({
     </Card>
   </Card.Group>
 );
-CardExampleGroups.propTypes = {
+FriendRquestCard.propTypes = {
   AcceptFriendRequest: PropTypes.func.isRequired,
   RejectFriendRequest: PropTypes.func.isRequired
 };
@@ -50,4 +50,4 @@ const mapStateToProps = (state) => ({
 export default connect(mapStateToProps, {
   AcceptFriendRequest,
   RejectFriendRequest
-})(CardExampleGroups);
+})(FriendRquestCard);

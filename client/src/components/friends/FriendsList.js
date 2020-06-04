@@ -13,13 +13,16 @@ const FriendsList = ({
   useEffect(() => {
     getFriendsList();
   }, [getFriendsList]);
+  console.log(friends);
   return (
     <Fragment>
       {loading ? (
         <Spinner />
       ) : (
         <Fragment>
-          <Link to="/requests" className="btn btn-light">See Friend Requests</Link>
+          <Link to="/requests" className="btn btn-light">
+            See Friend Requests
+          </Link>
           <h1 className="large text-primary">Friends List</h1>
           <div className="profiles">
             {friends.length > 0 ? (

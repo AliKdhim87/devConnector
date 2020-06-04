@@ -2,7 +2,6 @@ import axios from 'axios';
 // import { setAlert } from './alert';
 import {
   GET_FRIENDSLIST,
-  GET_FRIEND,
   GET_FRIENDREQUESTSLIST,
   SEND_FRIENDREQUEST,
   ACCEPT_FRIENDREQUEST,
@@ -20,7 +19,6 @@ export const getFriendsList = () => async (dispatch) => {
       type: GET_FRIENDSLIST,
       payload: res.data.friends
     });
-    // console.log('from action',res.data.friends)
   } catch (err) {
     dispatch({
       type: FRIENDS_ERROR,
@@ -55,7 +53,6 @@ export const sendFriendRequest = (friendId) => async (dispatch) => {
       type: SEND_FRIENDREQUEST,
       payload: res.data
     });
-    // console.log('from action friendrequests',res.data)
   } catch (err) {
     dispatch({
       type: FRIENDS_ERROR,
@@ -115,29 +112,13 @@ export const Unfriend = (friendId) => async (dispatch) => {
   }
 };
 
+// cancel friend request
 export const CancelFriendRequest = (requestId) => async (dispatch) => {
   try {
-    const res = await axios.delete(`api/friends/requests/${requestId}`);
+    const res = await axios.delete(`api/friends/cancel/${requestId}`);
 
     dispatch({
       type: CANCEL_REQUEST,
-      payload: res.data
-    });
-    // console.log('from action friendrequests', res.data);
-  } catch (err) {
-    dispatch({
-      type: FRIENDS_ERROR,
-      payload: { msg: err.response.statusText, status: err.response.status }
-    });
-  }
-};
-
-// Get profile by id
-export const getFriendById = (userId) => async (dispatch) => {
-  try {
-    const res = await axios.get(`/api/profile/user/${userId}`);
-    dispatch({
-      type: GET_FRIEND,
       payload: res.data
     });
   } catch (err) {
