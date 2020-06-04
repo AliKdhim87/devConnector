@@ -23,6 +23,7 @@ export const DELETE_POST = 'DELETE_POST';
 export const ADD_POST = 'ADD_POST';
 export const ADD_COMMENT = 'ADD_COMMENT';
 export const REMOVE_COMMENT = 'REMOVE_COMMENT';
+
 export const GET_FRIEND = 'GET_FRIEND'
 export const GET_FRIENDSLIST = 'GET_FRIENDSLIST';
 export const GET_FRIENDREQUESTSLIST = 'GET_FRIENDREQUESTSLIST';
@@ -32,3 +33,35 @@ export const REJECT_FRIENDREQUEST = 'REJECT_FRIENDREQUEST';
 export const UNFRIEND = 'UNFRIEND';
 export const CANCEL_REQUEST = 'CANCEL_REQUEST'
 export const FRIENDS_ERROR = 'FRIENDS_ERROR'
+
+export const SEND_MESSAGE = 'SEND_MESSAGE';
+export const SEND_MESSAGE_ERROR = 'SEND_MESSAGE_ERROR';
+export const GET_MESSAGES = 'GET_MESSAGES';
+export const DELETE_MESSAGE = 'DELETE_MESSAGE';
+export const GET_USERS = 'GET_USERS';
+export const DELETE_ALL_MESSAGES = 'DELETE_ALL_MESSAGES';
+//Group feature action types
+export const GET_GROUPS = 'GET_GROUPS';
+export const ADD_GROUP = 'ADD_GROUP'
+export const GET_GROUP = 'GET_GROUP';
+export const UPDATE_GROUP = 'UPDATE_GROUP';
+export const DELETE_GROUP = 'DELETE_GROUP';
+export const GET_GROUPPOST = 'GET_GROUPPOST';
+export const ADD_GROUPPOST = 'ADD_GROUPPOST';
+export const UPDATE_GROUPPOST = 'UPDATE_GROUPPOST';
+export const DELETE_GROUPPOST = 'DELETE_GROUPPOST';
+export const ADD_POSTCOMMENT = 'ADD_POSTCOMMENT';
+export const DELETE_POSTCOMMENT = 'DELETE_POSTCOMMENT';
+export const JOIN_GROUP = 'JOIN_GROUP';
+export const LEAVE_GROUP = 'LEAVE_GROUP';
+export const ADD_EVENT = 'ADD_EVENT';
+export const DELETE_EVENT = 'DELETE_EVENT';
+
+
+
+//Emoji action types
+export const ADD_EMOJI = 'ADD_EMOJI';
+export const REMOVE_EMOJI = 'REMOVE_EMOJI';
+export const ADD_GROUPPOSTEMOJI = 'ADD_GROUPPOSTEMOJI';
+export const REMOVE_GROUPPOSTEMOJI = 'REMOVE_GROUPPOSTEMOJI'
+

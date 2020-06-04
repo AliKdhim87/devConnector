@@ -15,8 +15,9 @@ const ProfileItem = ({
     status,
     company,
     location,
-    skills
-  }
+    skills,
+  },
+  me,
 }) => {
   const FriendButton = () => {
     if (isAuthenticated) {
@@ -83,6 +84,12 @@ const ProfileItem = ({
           View Profile
         </Link>
         <FriendButton className="btn btn-primary" />
+        {me.isAuthenticated && me.user._id !== _id && (
+          <Link to={`/message/${_id}`} className='btn btn-primary'>
+            Send Message
+          </Link>
+        )}
+
       </div>
       <ul>
         {skills.slice(0, 4).map((skill, index) => (

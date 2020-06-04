@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import Spinner from '../layout/Spinner';
 import { getAllProfiles } from '../../actions/profile';
 import ProfileItem from './ProfileItem';
-const Profiles = ({ getAllProfiles, profile: { profiles, loading } }) => {
+const Profiles = ({ getAllProfiles, profile: { profiles, loading }, auth }) => {
   useEffect(() => {
     getAllProfiles();
   }, [getAllProfiles]);
@@ -23,10 +23,10 @@ const Profiles = ({ getAllProfiles, profile: { profiles, loading } }) => {
           <div className="profiles">
             {profiles.length > 0 ? (
               profiles.map((profile) => (
-                <ProfileItem key={profile._id} profile={profile} />
+                <ProfileItem key={profile._id} profile={profile} me={auth} />
               ))
             ) : (
-              <h4> No Profiles found...</h4>
+              <h4 className="text-center"> No Profiles found...</h4>
             )}
           </div>
         </Fragment>
@@ -40,6 +40,11 @@ Profiles.propTypes = {
   profile: PropTypes.object.isRequired
 };
 const mapStateToProps = (state) => ({
+<<<<<<< HEAD
   profile: state.profile
+=======
+  profile: state.profile,
+  auth: state.auth,
+>>>>>>> 58363e066b7c04c8310416ed2d4a3e49e944e25d
 });
 export default connect(mapStateToProps, { getAllProfiles })(Profiles);

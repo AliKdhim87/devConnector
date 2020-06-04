@@ -42,8 +42,9 @@ router.post(
     ]
   ],
   async (req, res) => {
-    const erros = validationResult(req);
-    if (!erros.isEmpty()) {
+    const errors = validationResult(req);
+    const user = await User.findById(req.user.id);
+    if (!errors.isEmpty()) {
       return res.status(400).json({ errors: erros.array() });
     }
     const {
@@ -63,6 +64,7 @@ router.post(
     // Build Profile Object
     const profileFields = {};
     profileFields.user = req.user.id;
+    profileFields.name = user.name;
     if (company) profileFields.company = company;
     if (website) profileFields.website = website;
     if (location) profileFields.location = location;
@@ -148,6 +150,17 @@ router.delete('/', auth, async (req, res) => {
     await Profile.findOneAndRemove({ user: req.user.id });
     //  Remove user
     await User.findOneAndRemove({ _id: req.user.id });
+    // remove group created by user
+    const userGroups = await Group.find({ creator: req.user.id });
+    userGroups.forEach(group=>{
+      group.posts = group.posts.filter(post=>post.creator.toString()!== req.user.id);
+      group.members = group.members.filter(member=>member.user._id.toString()!== req.user.id)
+      group.posts.forEach(post=>{
+        post.comments = post.comments.filter(comment=> comment.creator.toString()!==req.user.id)
+      })
+      group.save()
+    })
+    
     res.json({ msg: 'User deleted' });
   } catch (error) {
     console.error(error.message);

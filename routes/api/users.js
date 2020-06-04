@@ -20,7 +20,7 @@ router.post(
     check('email', 'Pleace include a valid email.').isEmail(),
     check(
       'password',
-      'Pleace enter a password with 6 or more characters.'
+      'Pleace enter a password with 6 or more characters.',
     ).isLength({ min: 6 }),
   ],
   async (req, res) => {
@@ -61,7 +61,7 @@ router.post(
       console.error(error.message);
       res.status(500).send('Server error!');
     }
-  }
+  },
 );
 
 // @route   PATCH api/users
@@ -106,7 +106,7 @@ router.patch(
   },
   (error, req, res, next) => {
     res.status(400).send({ msg: error.message });
-  }
+  },
 );
 
 module.exports = router;
