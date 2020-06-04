@@ -45,7 +45,7 @@ const Dashboard = ({
         const postDate = new Date(post.date).getTime();
         const difference = dateChecker(postDate);
         if (difference < 172800000) {
-          post.groupName = group._id.name
+          post.groupName = group._id.name;
           post.groupId = group._id._id;
           myGroupPosts.push(post);
         }
@@ -71,11 +71,10 @@ const Dashboard = ({
         const postDate = new Date(groupPost.date).getTime();
         const difference = dateChecker(postDate);
         if (difference < 172800000) {
-          groupPost.groupName = group.name
-          groupPost.groupId = group._id
+          groupPost.groupName = group.name;
+          groupPost.groupId = group._id;
           filteredGroupPosts.push(groupPost);
-        }
-        else return;
+        } else return;
       });
     });
   }
@@ -101,7 +100,12 @@ const Dashboard = ({
               <Card fluid>
                 <div className="flex-c">
                   <img src={user.avatar} alt="avatar" />
-                  <span className="text-primary p-1" style={{fontSize:"1.5rem"}}>{user.name}</span>
+                  <span
+                    className="text-primary p-1"
+                    style={{ fontSize: '1.5rem' }}
+                  >
+                    {user.name}
+                  </span>
                   <span className="text-dark">
                     Member since: <Moment format="YY/MM/DD">{user.date}</Moment>
                   </span>
