@@ -6,19 +6,58 @@ sgMail.setApiKey(sendGridApiKey);
 // const HttpError = require('../model/http-error');
 
 const template = (name, firstText, linkPath, secondText, linkText) => {
-  return `<!DOCTYPE html>
+  return `
   <html lang="en">
     <head>
-      <meta charset="UTF-8" />
-      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <link
-        rel="stylesheet"
-        href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
-        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
-        crossorigin="anonymous"
-      />
+    <style>
+    .container {
+      width: 90%;
+      margin: auto;
+    }
+    .jumbotron.jumbotron-fluid {
+      background: #0e0a0aa6;
+      color: white;
+      padding: 1.5rem;
+      text-align: center;
+      font-family: monospace;
+    }
+    h4 {
+      text-align: center;
+      font-family: sans-serif;
+    }
+    .message-container {
+      background: #f4f4f4;
+      padding: 1rem;
+    }
+    p.lead {
+      font-size: 16px;
+      font-family: sans-serif;
+    }
+    a.btn {
+      display: inline-block;
+      text-decoration: none;
+      padding: 0.4rem 1.3rem;
+      font-size: 1rem;
+      border: none;
+      cursor: pointer;
+      margin-right: 0.5rem;
+      transition: opacity 0.2s ease-in;
+      outline: none;
+      background: #343a40;
+      color: #fff;
+      border-radius: 6px;
+    }
+    .dropdown-divider {
+      width: 90%;
+      background: #484e5361;
+      height: 1px;
+      margin: 17px auto;
+      border-radius: 8px;
+    }
+  </style>
       <title>Dev Connector App</title>
     </head>
+    
     <body>
       <div class="container">
         <div class="jumbotron jumbotron-fluid">
@@ -28,7 +67,7 @@ const template = (name, firstText, linkPath, secondText, linkText) => {
         </div>
         <section style="height: 40vh;">
           <h4 class="text-center">Hello ${name}</h4>
-          <div class="bg-light p-3">
+          <div class="message-container">
             <p class="lead">
               ${firstText}
             </p>
@@ -102,7 +141,7 @@ const friendAddedNotification = async (name, person, email) => {
       name,
       `${person} wants to be your friend`,
       `http://placesharer.herokuapp.com`,
-      `If you do not want to receive e-mail notifications, you can disable it on your profile page.`,
+      `If you do not want to receive e-mail notifications, you can disable it on <a href="http://localhost:3000/edit-userinfo">edit user info</a>`,
       `Go to App`
     )
   };
@@ -122,7 +161,7 @@ const friendAcceptedNotification = async (name, person, email) => {
       name,
       `You are now friends with ${person}`,
       `http://placesharer.herokuapp.com`,
-      `If you do not want to receive e-mail notifications, you can disable it on your profile page.`,
+      `If you do not want to receive e-mail notifications, you can disable it on <a href="http://localhost:3000/edit-userinfo">edit user info</a>`,
       `Go to App`
     ),
     text: `Hello ${name} \n 
@@ -144,12 +183,12 @@ const likeNotification = async (name, person, post, email) => {
       name,
       `${person} liked your post ${post}`,
       `http://localhost:3000`,
-      `If you do not want to receive e-mail notifications, you can disable it on your profile page.`,
+      `If you do not want to receive e-mail notifications, you can disable it on <a href="http://localhost:3000/edit-userinfo">edit user info</a>`,
       `Go to App`
     ),
     text: `   Hello ${name}, 
     ${person} liked your post ${post}
-    If you do not want to receive e-mail notifications, you can disable it on your profile page.\n`
+    If you do not want to receive e-mail notifications, you can disable it on <a href="http://localhost:3000/edit-userinfo">edit user info</a>\n`
   };
   try {
     await sgMail.send(mailOptions);
@@ -167,12 +206,12 @@ const emojiNotification = async (name, person, post, email) => {
       name,
       `${person} add emoji to your post ${post}`,
       `http://localhost:3000`,
-      `If you do not want to receive e-mail notifications, you can disable it on your profile page.`,
+      `If you do not want to receive e-mail notifications, you can disable it on <a href="http://localhost:3000/edit-userinfo">edit user info</a>`,
       `Go to App`
     ),
     text: `   Hello ${name}, 
     ${person}  add emoji to your post ${post}
-    If you do not want to receive e-mail notifications, you can disable it on your profile page.\n`
+    If you do not want to receive e-mail notifications, you can disable it on <a href="http://localhost:3000/edit-userinfo">edit user info</a>\n`
   };
   try {
     await sgMail.send(mailOptions);
@@ -190,12 +229,12 @@ const addCommentNotification = async (name, person, post, email, comment) => {
       name,
       `${person} add <strong>${comment}</strong> comment to your post ${post}`,
       `http://localhost:3000`,
-      `If you do not want to receive e-mail notifications, you can disable it on your profile page.`,
+      `If you do not want to receive e-mail notifications, you can disable it on <a href="http://localhost:3000/edit-userinfo">edit user info</a>`,
       `Go to App`
     ),
     text: `   Hello ${name}, 
     ${person}  add comment to your post ${post}
-    If you do not want to receive e-mail notifications, you can disable it on your profile page.\n`
+    If you do not want to receive e-mail notifications, you can disable it on <a href="http://localhost:3000/edit-userinfo">edit user info</a>\n`
   };
   try {
     await sgMail.send(mailOptions);
@@ -212,12 +251,12 @@ const addCommentEmojiNotification = async (name, person, comment, email) => {
       name,
       `${person} add emoji to your comment ${comment}`,
       `http://localhost:3000`,
-      `If you do not want to receive e-mail notifications, you can disable it on your profile page.`,
+      `If you do not want to receive e-mail notifications, you can disable it on <a href="http://localhost:3000/edit-userinfo">edit user info</a>`,
       `Go to App`
     ),
     text: `   Hello ${name}, 
     ${person}  add emoji to your comment ${comment}
-    If you do not want to receive e-mail notifications, you can disable it on your profile page.\n`
+    If you do not want to receive e-mail notifications, you can disable it on <a href="http://localhost:3000/edit-userinfo">edit user info</a>\n`
   };
   try {
     await sgMail.send(mailOptions);
@@ -235,12 +274,12 @@ const JoinedGroupNotification = async (name, person, group, email) => {
       name,
       `${person} joined in your Group ${group}`,
       `http://localhost:3000`,
-      `If you do not want to receive e-mail notifications, you can disable it on your profile page.`,
+      `If you do not want to receive e-mail notifications, you can disable it on <a href="http://localhost:3000/edit-userinfo">edit user info</a>`,
       `Go to App`
     ),
     text: `   Hello ${name}, 
     ${person}  joined in your Group${group}
-    If you do not want to receive e-mail notifications, you can disable it on your profile page.\n`
+    If you do not want to receive e-mail notifications, you can disable it on <a href="http://localhost:3000/edit-userinfo">edit user info</a>\n`
   };
   try {
     await sgMail.send(mailOptions);
@@ -258,12 +297,12 @@ const leftGroupNotification = async (name, person, group, email) => {
       name,
       `${person} left your Group ${group}`,
       `http://localhost:3000`,
-      `If you do not want to receive e-mail notifications, you can disable it on your profile page.`,
+      `If you do not want to receive e-mail notifications, you can disable it on <a href="http://localhost:3000/edit-userinfo">edit user info</a>`,
       `Go to App`
     ),
     text: `   Hello ${name}, 
     ${person}  left your Group${group}
-    If you do not want to receive e-mail notifications, you can disable it on your profile page.\n`
+    If you do not want to receive e-mail notifications, you can disable it on <a href="http://localhost:3000/edit-userinfo">edit user info</a>\n`
   };
   try {
     await sgMail.send(mailOptions);
@@ -281,12 +320,12 @@ const deleteGroupNotification = async (name, owner, group, email) => {
       name,
       `${owner} deleted Group ${group}`,
       `http://localhost:3000`,
-      `If you do not want to receive e-mail notifications, you can disable it on your profile page.`,
+      `If you do not want to receive e-mail notifications, you can disable it on <a href="http://localhost:3000/edit-userinfo">edit user info</a>`,
       `Go to App`
     ),
     text: `   Hello ${name}, 
     ${owner}  deleted Group${group}
-    If you do not want to receive e-mail notifications, you can disable it on your profile page.\n`
+    If you do not want to receive e-mail notifications, you can disable it on <a href="http://localhost:3000/edit-userinfo">edit user info</a>\n`
   };
   try {
     await sgMail.send(mailOptions);
@@ -304,12 +343,12 @@ const addPostGroupNotification = async (name, personAddPost, group, email) => {
       name,
       `${personAddPost} add post on group ${group}`,
       `http://localhost:3000`,
-      `If you do not want to receive e-mail notifications, you can disable it on your profile page.`,
+      `If you do not want to receive e-mail notifications, you can disable it on <a href="http://localhost:3000/edit-userinfo">edit user info</a>`,
       `Go to App`
     ),
     text: `   Hello ${name}, 
     ${personAddPost} add post on group ${group}
-    If you do not want to receive e-mail notifications, you can disable it on your profile page.\n`
+    If you do not want to receive e-mail notifications, you can disable it on <a href="http://localhost:3000/edit-userinfo">edit user info</a>\n`
   };
   try {
     await sgMail.send(mailOptions);
@@ -335,12 +374,12 @@ const addEventGroupNotification = async (
       name,
       `${personAddEvent} add an event ${eventTitle} on group ${group}. It will start from ${startTime} to ${endTime}`,
       `http://localhost:3000`,
-      `If you do not want to receive e-mail notifications, you can disable it on your profile page.`,
+      `If you do not want to receive e-mail notifications, you can disable it on <a href="http://localhost:3000/edit-userinfo">edit user info</a>`,
       `Go to App`
     ),
     text: ` Hello ${name}, 
     ${personAddEvent} add event ${eventTitle} on group ${group}
-    If you do not want to receive e-mail notifications, you can disable it on your profile page.\n`
+    If you do not want to receive e-mail notifications, you can disable it on <a href="http://localhost:3000/edit-userinfo">edit user info</a>\n`
   };
   try {
     await sgMail.send(mailOptions);
@@ -365,12 +404,12 @@ const addCommentGroupNotification = async (
       name,
       `${person} add <strong>${comment}</strong> comment to your post ${post} in ${group} group`,
       `http://localhost:3000`,
-      `If you do not want to receive e-mail notifications, you can disable it on your profile page.`,
+      `If you do not want to receive e-mail notifications, you can disable it on <a href="http://localhost:3000/edit-userinfo">edit user info</a>`,
       `Go to App`
     ),
     text: `   Hello ${name}, 
     ${person}  add comment to your post ${post} in ${group} group
-    If you do not want to receive e-mail notifications, you can disable it on your profile page.\n`
+    If you do not want to receive e-mail notifications, you can disable it on <a href="http://localhost:3000/edit-userinfo">edit user info</a>\n`
   };
   try {
     await sgMail.send(mailOptions);
@@ -394,12 +433,12 @@ const addEmojiPostGroupNotification = async (
       name,
       `${person} add emoji to your ${post} post in ${group} group`,
       `http://localhost:3000`,
-      `If you do not want to receive e-mail notifications, you can disable it on your profile page.`,
+      `If you do not want to receive e-mail notifications, you can disable it on <a href="http://localhost:3000/edit-userinfo">edit user info</a>`,
       `Go to App`
     ),
     text: `   Hello ${name}, 
     ${person}  add $ emoji to your ${post} post in ${group} group
-    If you do not want to receive e-mail notifications, you can disable it on your profile page.\n`
+    If you do not want to receive e-mail notifications, you can disable it on <a href="http://localhost:3000/edit-userinfo">edit user info</a>\n`
   };
   try {
     await sgMail.send(mailOptions);
@@ -418,12 +457,12 @@ const friendSharedPlace = async (friend, place, emails) => {
       `!`,
       `Your friend ${friend} shared a new place : ${place}`,
       `http://placesharer.herokuapp.com`,
-      `If you do not want to receive e-mail notifications, you can disable it on your profile page.`,
+      `If you do not want to receive e-mail notifications, you can disable it on <a href="http://localhost:3000/edit-userinfo">edit user info</a>`,
       `Go to App`
     ),
     text: `Hello! \n 
        Your friend ${friend} shared a new place : ${place} \n\n 
-       If you do not want to receive e-mail notifications, you can disable it on your profile page.\n`
+       If you do not want to receive e-mail notifications, you can disable it on <a href="http://localhost:3000/edit-userinfo">edit user info</a>\n`
   };
   try {
     await sgMail.send(mailOptions);
