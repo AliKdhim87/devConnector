@@ -19,7 +19,6 @@ const ProfileItem = ({
   }
 }) => {
   const FriendButton = () => {
-    // console.log(loggedUser)
     if (isAuthenticated) {
       const loggedUser = user._id === _id;
       if (!loggedUser) {
@@ -28,9 +27,7 @@ const ProfileItem = ({
         const hasRequest = user.friendRequests.filter(
           (req) => req.user === _id
         );
-
-        const requestId = hasRequest.map((req) => req._id);
-        console.log(requestId);
+        const UserIdOfRequest = hasRequest.map((req) => req.user);
         if (isFriend.length > 0) {
           return (
             <Label>
@@ -44,7 +41,7 @@ const ProfileItem = ({
           if (hasRequest[0].isSent) {
             return (
               <button
-                onClick={() => CancelFriendRequest(requestId)}
+                onClick={() => CancelFriendRequest(UserIdOfRequest)}
                 className="btn btn-primary"
               >
                 {' '}

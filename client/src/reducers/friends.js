@@ -1,12 +1,10 @@
 import {
   GET_FRIENDSLIST,
   GET_FRIENDREQUESTSLIST,
-  SEND_FRIENDREQUEST,
   ACCEPT_FRIENDREQUEST,
   REJECT_FRIENDREQUEST,
   FRIENDS_ERROR,
-  UNFRIEND,
-  CANCEL_REQUEST
+  UNFRIEND
 } from '../actions/types';
 
 const initialState = {
@@ -35,13 +33,6 @@ export default function (state = initialState, action) {
         friendsrquestlist: payload,
         loading: false
       };
-    case SEND_FRIENDREQUEST:
-      return {
-        ...state,
-        friendsrquestlist: { ...state.friendsrquestlist, payload },
-        isSent: payload.sentRequest.isSent,
-        loading: false
-      };
     case ACCEPT_FRIENDREQUEST:
       return {
         ...state,
@@ -53,7 +44,7 @@ export default function (state = initialState, action) {
       };
 
     case REJECT_FRIENDREQUEST:
-    case CANCEL_REQUEST:  
+      // case CANCEL_REQUEST:
       return {
         ...state,
         friendsrquestlist: state.friendsrquestlist.filter(

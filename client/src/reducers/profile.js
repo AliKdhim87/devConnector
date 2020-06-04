@@ -4,14 +4,14 @@ import {
   CLEAR_PROFILE,
   UPDATE_PROFILE,
   GET_PROFILES,
-  GET_REPOS,
+  GET_REPOS
 } from '../actions/types';
 const initailState = {
   profile: null,
   profiles: [],
   repos: [],
   loading: true,
-  errors: {},
+  errors: {}
 };
 
 export default (state = initailState, action) => {
@@ -23,33 +23,33 @@ export default (state = initailState, action) => {
       return {
         ...state,
         profile: payload,
-        loading: false,
+        loading: false
       };
     case GET_PROFILES: {
       return {
         ...state,
         profiles: payload,
-        loading: false,
+        loading: false
       };
     }
     case PROFILE_ERROR:
       return {
         ...state,
         errors: payload,
-        loading: false,
+        loading: false
       };
     case CLEAR_PROFILE:
       return {
         ...state,
         profile: null,
         repos: [],
-        loading: false,
+        loading: false
       };
     case GET_REPOS:
       return {
         ...state,
         repos: payload,
-        loading: false,
+        loading: false
       };
     default:
       return state;

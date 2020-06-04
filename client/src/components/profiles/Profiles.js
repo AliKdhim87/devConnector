@@ -15,12 +15,12 @@ const Profiles = ({ getAllProfiles, profile: { profiles, loading } }) => {
         <Spinner />
       ) : (
         <Fragment>
-          <h1 className='large text-primary'>Developers</h1>
-          <p className='lead'>
-            <i className='fab fa-connectdevelop'></i> Browse and connect with
+          <h1 className="large text-primary">Developers</h1>
+          <p className="lead">
+            <i className="fab fa-connectdevelop"></i> Browse and connect with
             developers
           </p>
-          <div className='profiles'>
+          <div className="profiles">
             {profiles.length > 0 ? (
               profiles.map((profile) => (
                 <ProfileItem key={profile._id} profile={profile} />
@@ -37,9 +37,9 @@ const Profiles = ({ getAllProfiles, profile: { profiles, loading } }) => {
 
 Profiles.propTypes = {
   getAllProfiles: PropTypes.func.isRequired,
-  profile: PropTypes.object.isRequired,
+  profile: PropTypes.object.isRequired
 };
 const mapStateToProps = (state) => ({
-  profile: state.profile,
+  profile: state.profile
 });
 export default connect(mapStateToProps, { getAllProfiles })(Profiles);
