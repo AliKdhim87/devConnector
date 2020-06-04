@@ -12,6 +12,11 @@ const {
   removeFriend
 } = require('../../middleware/friends');
 
+const {
+  friendAddedNotification,
+  friendAcceptedNotification
+} = require('../../emails/account');
+
 // @route           GET api/friends
 // @description     Get all friends
 // @access          Private
@@ -111,6 +116,11 @@ router.post('/:friendId', auth, async (req, res) => {
       { _id: friendId },
       { $addToSet: { friendRequests: receivedRequest } }
     );
+    // Email notification
+    if (friend.notifications) {
+      friendAddedNotification(friend.name, user.name, friend.email);
+    }
+
     res.status(200).json(sentRequest);
   } catch (err) {
     console.error(err.mesaage);
@@ -155,7 +165,6 @@ router.put('/requests/:requestId', auth, async (req, res) => {
   const { requestId } = req.params;
   const { id } = req.user;
   const user = await User.findById(id);
-
   try {
     // Check if there is a request
     const requestInfo = await checkRequestById(id, requestId);
@@ -169,6 +178,15 @@ router.put('/requests/:requestId', auth, async (req, res) => {
       await makeFriendshipFromRequest(requestInfo);
       const accepting = await User.findById(requestInfo.acceptingUser.id);
       const requesting = await User.findById(requestInfo.requestingUser.id);
+      // Todo ask Mosleh about this code and also about the clientside
+    }
+    // Email notification
+    if (requestInfo.acceptingUser.notifications) {
+      friendAcceptedNotification(
+        requestInfo.acceptingUser.name,
+        requestInfo.requestingUser.name,
+        requestInfo.acceptingUser.email
+      );
     }
     res.status(200).json({
       message: 'Friend request has been approved successfully!',

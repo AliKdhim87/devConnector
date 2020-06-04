@@ -3,7 +3,6 @@ const config = require('config');
 const sendGridApiKey = config.get('SEND_GRID_API_KEY');
 const sgMail = require('@sendgrid/mail');
 sgMail.setApiKey(sendGridApiKey);
-// const HttpError = require('../model/http-error');
 
 const template = (name, firstText, linkPath, secondText, linkText) => {
   return `
@@ -133,14 +132,14 @@ const resetPasswordEmail = async (name, email) => {
 const friendAddedNotification = async (name, person, email) => {
   const mailOptions = {
     to: email,
-    from: 'yourplaces.hyf@gmail.com',
+    from: 'aboal7anan@gmail.com',
     subject: 'You have a new friend request',
     text: `Hello ${name} \n 
-           ${person} wants to be your friend \n`,
+           ${person} wants to be your friend <a href="http://localhost:3000/requests">click here to approve or decline</a>\n`,
     html: template(
       name,
-      `${person} wants to be your friend`,
-      `http://placesharer.herokuapp.com`,
+      `${person} wants to be your friend <a href="http://localhost:3000/requests">click here to approve or decline</a>`,
+      `http://localhost:3000`,
       `If you do not want to receive e-mail notifications, you can disable it on <a href="http://localhost:3000/edit-userinfo">edit user info</a>`,
       `Go to App`
     )
@@ -155,12 +154,12 @@ const friendAddedNotification = async (name, person, email) => {
 const friendAcceptedNotification = async (name, person, email) => {
   const mailOptions = {
     to: email,
-    from: 'yourplaces.hyf@gmail.com',
+    from: 'aboal7anan@gmail.com',
     subject: 'Your friend request is accepted',
     html: template(
       name,
       `You are now friends with ${person}`,
-      `http://placesharer.herokuapp.com`,
+      `http://localhost:3000`,
       `If you do not want to receive e-mail notifications, you can disable it on <a href="http://localhost:3000/edit-userinfo">edit user info</a>`,
       `Go to App`
     ),
