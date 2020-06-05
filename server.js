@@ -7,6 +7,7 @@ const io = socketio(server);
 const connectDB = require('./config/db');
 const path = require('path');
 const Message = require('./models/Message');
+const Notification = require('./models/Notification');
 
 connectDB();
 let users = [];
@@ -73,6 +74,14 @@ io.on('connection', function (socket) {
           select: 'name avatar'
         })
         .exec();
+      const notification = new Notification({
+        sender: data.sender,
+        message: data.message,
+        kind: 'message',
+        receiver: [data.recciver],
+        read_by: { readerId: data.recciver }
+      });
+      await notification.save();
       if (socketIdSender !== undefined) {
         const senderMessages = await Message.findOneAndUpdate(
           { owner: data.recciver, corresponder: data.sender },
@@ -113,11 +122,10 @@ app.use('/api/auth', require('./routes/api/auth'));
 app.use('/api/profile', require('./routes/api/profile'));
 app.use('/api/groups', require('./routes/api/groups'));
 app.use('/api/posts', require('./routes/api/posts'));
-
 app.use('/api/friends', require('./routes/api/friends'));
-
 app.use('/api/users/message', require('./routes/api/message'));
 app.use('/api/search', require('./routes/api/search'));
+app.use('/api/notification', require('./routes/api/notification'));
 
 // Serve static assets in production
 if (process.env.NODE_ENV === 'production') {

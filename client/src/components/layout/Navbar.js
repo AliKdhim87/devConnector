@@ -1,16 +1,15 @@
 import React, { Fragment, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
-import { Dropdown, Image, List } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { logout } from '../../actions/auth';
 import { fetchContacts } from '../../actions/message';
 import { connect } from 'react-redux';
 import io from 'socket.io-client';
+import Notification from '../notification/Notification';
 let socket;
 const Navbar = ({
   auth: { isAuthenticated, loading, user },
   logout,
-  message,
   fetchContacts
 }) => {
   const authLinks = (
@@ -19,38 +18,10 @@ const Navbar = ({
         <NavLink to="/profiles">Developers</NavLink>
       </li>
       <li>
-        <Dropdown icon="mail">
-          <Dropdown.Menu>
-            <List relaxed>
-              {message.users.length > 0 &&
-                message.users.map(
-                  (user) =>
-                    !user.hasNewMessage && (
-                      <List.Item key={user.corresponder._id}>
-                        <Image avatar src={user.corresponder.avatar} />
-                        <List.Content>
-                          <List.Header
-                            as="a"
-                            href={`/message/${user.corresponder._id}`}
-                          >
-                            {user.corresponder.name}
-                          </List.Header>
-
-                          <List.Description>
-                            You have a message
-                          </List.Description>
-                        </List.Content>
-                      </List.Item>
-                    )
-                )}
-            </List>
-          </Dropdown.Menu>
-        </Dropdown>
+        <Notification />
       </li>
-
       <li>
         <NavLink to="/posts">Posts</NavLink>
-
       </li>
       <li>
         {' '}
@@ -59,15 +30,12 @@ const Navbar = ({
           <span className="hide-sm"> Friends</span>
         </NavLink>
       </li>
-      <li>
-
-      </li>
+      <li></li>
       <li>
         <NavLink to="/groups">Groups</NavLink>
       </li>
       <li>
         {' '}
-
         <NavLink to="/dashboard">
           <i className="fas fa-user"></i>{' '}
           <span className="hide-sm">Dashboard </span>
@@ -107,6 +75,7 @@ const Navbar = ({
       fetchContacts();
     }
   }, [user, fetchContacts]);
+
   return (
     <nav className="navbar bg-dark">
       <h1>
@@ -128,4 +97,7 @@ const mapStateToProps = (state) => ({
   auth: state.auth,
   message: state.message
 });
-export default connect(mapStateToProps, { logout, fetchContacts })(Navbar);
+export default connect(mapStateToProps, {
+  logout,
+  fetchContacts
+})(Navbar);
