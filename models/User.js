@@ -26,6 +26,10 @@ const userSchema = new mongoose.Schema({
   avatar_id: {
     type: String
   },
+  notifications: {
+    type: Boolean,
+    default: true
+  },
   date: {
     type: Date,
     default: Date.now

@@ -18,22 +18,23 @@ const GroupSchema = new Schema({
   },
   events: [
     {
-      title: { 
-        type: String, 
-        required: true 
+      title: {
+        type: String,
+        required: true
       },
-      description: { 
-        type: String 
+      description: {
+        type: String
       },
-      start: { 
-        type: Date, required: true 
+      start: {
+        type: Date,
+        required: true
       },
-      end: { 
-        type: Date 
+      end: {
+        type: Date
       },
-      creator:{
+      creator: {
         type: Schema.Types.ObjectId,
-        ref:'user'
+        ref: 'user'
       }
     }
   ],
@@ -51,8 +52,8 @@ const GroupSchema = new Schema({
         type: String,
         required: true
       },
-      link:{
-        type:String
+      link: {
+        type: String
       },
       date: {
         type: Date,
@@ -69,8 +70,8 @@ const GroupSchema = new Schema({
           users: [
             {
               type: Schema.Types.ObjectId,
-              ref: 'users',
-            },
+              ref: 'users'
+            }
           ],
           amount: Number,
           emoji: {
@@ -81,9 +82,9 @@ const GroupSchema = new Schema({
             native: { type: String },
             short_names: [String],
             skin: { type: Number },
-            unified: { type: String },
-          },
-        },
+            unified: { type: String }
+          }
+        }
       ],
       comments: [
         {

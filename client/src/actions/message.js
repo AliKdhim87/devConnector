@@ -17,7 +17,6 @@ export const getMessages = (
   socketMsg = false
 ) => async (dispatch) => {
   if (socketMsg) {
-    console.log(formData);
     return dispatch({ type: GET_MESSAGES, payload: formData });
   }
   try {
