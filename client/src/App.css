@@ -466,7 +466,7 @@ button {
 
 /* chat page */
 .messages {
-  padding: 5% 0;
+  padding: 2.5% 0;
   overflow: auto;
 
   height: 50vh;
@@ -491,7 +491,7 @@ button {
 }
 .messageBox {
   background: #f3f3f3;
-  border-radius: 20px;
+  border-radius: 10px;
   padding: 5px 20px;
   color: white;
   display: inline-block;
@@ -515,7 +515,7 @@ button {
   display: flex;
   justify-content: flex-end;
   padding: 0 5%;
-  margin-top: 3px;
+  margin-bottom: 1rem;
 }
 
 .sentText {
@@ -555,10 +555,10 @@ button {
 }
 
 .backgroundLight {
-  background: #f3f3f3;
+  background-color: #a9acad;
 }
 
-.group-info-container{
+.group-info-container {
   background: rgb(53, 180, 204);
   background: linear-gradient(
     90deg,
@@ -566,8 +566,8 @@ button {
     rgba(0, 212, 255, 1) 100%
   );
 }
-.text-white{
-  color:white
+.text-white {
+  color: white;
 }
 
 .btn-delete-isSent,
@@ -577,8 +577,8 @@ button {
   color: var(--dark-color);
 }
 .btn-delete-isSent {
-  right: -1px;
-  top: -8px;
+  right: 0;
+  top: 0;
 }
 @media (max-width: 500px) {
   .user-chat-list {

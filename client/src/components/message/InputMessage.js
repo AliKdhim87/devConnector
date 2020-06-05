@@ -50,7 +50,7 @@ const InputMessage = ({ corresponderId, sendMessage, me }) => {
         value={message}
       />
 
-      <Form.Field control={Button}>Submit</Form.Field>
+      <Form.Field control={Button} style={{marginTop:"1rem"}}>Submit</Form.Field>
     </Form>
   );
 };

@@ -8,7 +8,7 @@ const UsersChatList = ({ corresponder, deleteAllMessages }) => {
   return (
     <Card>
       <List animated verticalAlign='middle'>
-        <List.Item>
+        <List.Item className="m-1">
           <Icon
             className='delete-user-list'
             name='delete'

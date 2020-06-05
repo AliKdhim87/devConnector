@@ -40,7 +40,7 @@ const ChatBox = ({ messages, me, deleteMesage }) => {
                   deleteMesage(messages.corresponder._id, message._id)
                 }
               />
-              <p className='sentText pl-10 '>
+              <p className='sentText pr-10 '>
                 {' '}
                 <Moment format='LT'>{message.date}</Moment>
               </p>
