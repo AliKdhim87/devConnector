@@ -558,6 +558,18 @@ button {
   background: #f3f3f3;
 }
 
+.group-info-container{
+  background: rgb(53, 180, 204);
+  background: linear-gradient(
+    90deg,
+    rgba(53, 180, 204, 0.9980978639969914) 0%,
+    rgba(0, 212, 255, 1) 100%
+  );
+}
+.text-white{
+  color:white
+}
+
 .btn-delete-isSent,
 .btn-delete {
   cursor: pointer;
@@ -629,13 +641,6 @@ button {
   align-items: flex-start;
   text-align: left !important;
   width: 50%;
-}
-.group-members {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  width: 30%;
 }
 .group-buttons {
   width: 20%;

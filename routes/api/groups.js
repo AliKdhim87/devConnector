@@ -479,6 +479,7 @@ router.put(
           title: req.body.title,
           creator: req.user.id,
           description: req.body.description,
+          place:req.body.place,
           start: req.body.start,
           end: req.body.end
         };

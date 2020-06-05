@@ -25,12 +25,16 @@ const GroupSchema = new Schema({
       description: {
         type: String
       },
+      place:{
+        type:String
+      },
       start: {
         type: Date,
         required: true
       },
       end: {
-        type: Date
+        type: Date,
+        required:true
       },
       creator: {
         type: Schema.Types.ObjectId,
