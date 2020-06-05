@@ -93,6 +93,7 @@ const GroupDetails = ({
       return true;
     } else return false;
   };
+  if(!group) return <h1 className="text-center text text-primary">GROUP NOT FOUND</h1>
   if (loading) return <Spinner />;
   return (
     <section className="container">
