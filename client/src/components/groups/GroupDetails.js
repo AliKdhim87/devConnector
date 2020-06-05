@@ -222,7 +222,7 @@ const GroupDetails = ({
             </h3>
             <div className="post-form">
               <div className="bg-primary p">
-                <h3 onClick={() => setDiscussionOpen(!discussionOpen)}>
+                <h3 onClick={() => setDiscussionOpen(!discussionOpen)} style={{cursor:"pointer"}}>
                   {' '}
                   <i className="fas fa-comments"></i>{' '}
                   {discussionOpen ? `Close` : `Click to start a discussion`}{' '}
