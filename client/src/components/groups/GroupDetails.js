@@ -53,10 +53,6 @@ const GroupDetails = ({
     } else return false;
   };
 
-  if (group && group.events) {
-    console.log(isFinished(group.events[4].end));
-  }
-
   const toggleSettings = () => {
     setSettingsOpen(!settingsOpen);
   };
