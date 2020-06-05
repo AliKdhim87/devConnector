@@ -115,6 +115,7 @@ app.use('/api/groups', require('./routes/api/groups'));
 app.use('/api/posts', require('./routes/api/posts'));
 
 app.use('/api/friends', require('./routes/api/friends'));
+app.use('/api/social', require('./routes/api/social'));
 
 app.use('/api/users/message', require('./routes/api/message'));
 app.use('/api/search', require('./routes/api/search'));
