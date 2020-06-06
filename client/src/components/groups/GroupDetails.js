@@ -114,10 +114,17 @@ const GroupDetails = ({
             {group && <Moment format="YYYY/MM/DD">{group.createdAt}</Moment>}
           </span>
           <span>
-            <strong>Creator:</strong>{' '}
-            <a href="!#" className="text-white">
-              {!loading && group && group.creator && group.creator.name}
-            </a>
+            {group && group.creator && (
+              <Fragment>
+                <strong>Creator:</strong>
+                <Link
+                  to={`/profile/${group.creator._id}`}
+                  className="text-white"
+                >
+                  {!loading && group && group.creator && group.creator.name}
+                </Link>
+              </Fragment>
+            )}
           </span>
         </div>
         <div className="group-buttons">
@@ -190,7 +197,7 @@ const GroupDetails = ({
           </div>
         )}
       <div id="member-list" className="text-center m-3">
-        <h3 className="text text-center m-3">Members:</h3>{' '}
+        <h3 className="text text-center text-primary m-3">Members:</h3>{' '}
         {group && group.members.length === 0 && <h4>No Members</h4>}
         {group &&
           group.members.map((member) => (
@@ -322,7 +329,7 @@ const GroupDetails = ({
             <div id="events">
               <button
                 className="btn btn-primary"
-                style={{ marginTop: '5rem' }}
+                style={{ marginTop: '5rem', width:"100%", marginBottom:"1rem" }}
                 onClick={() => setAddEventOpen(!addEventOpen)}
               >
                 {addEventOpen ? 'CLOSE' : 'ADD AN EVENT'}
