@@ -10,7 +10,7 @@ const redirectOptions = {
 
 const sendToken = (req, res) => {
   const token = req.user;
-  res.redirect('http://localhost:3000/register?token=' + token);
+  res.redirect('http://localhost:3000/login?token=' + token);
 };
 router.get(
   '/google',

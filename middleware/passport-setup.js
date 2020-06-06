@@ -8,17 +8,23 @@ const jwt = require('jsonwebtoken');
 
 const User = require('../models/User');
 
-const generateRandomPass = name => {
-  return `${name}123`;
+const randomPassword = (name) => {
+  return `${name}ascs432`;
 };
 
-const checkAndCreateUser = async (accessToken, refreshToken, profile, done, account) => {
+const findOrCreateUser = async (
+  accessToken,
+  refreshToken,
+  profile,
+  done,
+  account
+) => {
   const {
     id: socialId,
     displayName: name,
     username,
     emails: [{ value: email }],
-    photos: [{ value: avatar }],
+    photos: [{ value: avatar }]
   } = profile;
 
   try {
@@ -26,39 +32,38 @@ const checkAndCreateUser = async (accessToken, refreshToken, profile, done, acco
     let user = await User.findOne({ email });
     // if not proceed and save
     if (!user) {
-      const password = generateRandomPass(name + socialId);
-
+      const password = randomPassword(name + socialId);
+      const salt = await bcrypt.genSalt(10);
+      hashedPassword = await bcrypt.hash(password, salt);
       user = new User({
         name: name || username,
         email,
         avatar,
-        password,
+        password: hashedPassword,
         social: {
-          [account]: socialId,
-        },
+          [account]: socialId
+        }
       });
-
-      // Encrypt password
-      const salt = await bcrypt.genSalt(10);
-      user.password = await bcrypt.hash(user.password, salt);
     }
-
-    user.isConfirmed = true;
     user.social[account] = socialId;
     await user.save();
-
 
     // Return jsonwebtoken
     const payload = {
       user: {
-        id: user.id,
-      },
+        id: user.id
+      }
     };
 
-    jwt.sign(payload, config.get('jwtSecret'), { expiresIn: 360000 }, (err, token) => {
-      if (err) throw err;
-      done(null, token);
-    });
+    jwt.sign(
+      payload,
+      config.get('jwtSecret'),
+      { expiresIn: 360000 },
+      (err, token) => {
+        if (err) throw err;
+        done(null, token);
+      }
+    );
   } catch (err) {
     done(err, null);
   }
@@ -70,10 +75,10 @@ passport.use(
     {
       clientID: config.get('googleClientId'),
       clientSecret: config.get('googleSecret'),
-      callbackURL: 'http://localhost:5000/api/social/google/redirect',
+      callbackURL: 'http://localhost:5000/api/social/google/redirect'
     },
     (accessToken, refreshToken, profile, done) =>
-      checkAndCreateUser(accessToken, refreshToken, profile, done, 'google')
+      findOrCreateUser(accessToken, refreshToken, profile, done, 'google')
   )
 );
 
@@ -84,10 +89,10 @@ passport.use(
       clientID: config.get('facebookClientId'),
       clientSecret: config.get('facebookSecret'),
       callbackURL: 'http://localhost:5000/api/social/facebook/redirect',
-      profileFields: ['id', 'displayName', 'photos', 'email'],
+      profileFields: ['id', 'displayName', 'photos', 'email']
     },
     (accessToken, refreshToken, profile, done) =>
-      checkAndCreateUser(accessToken, refreshToken, profile, done, 'facebook')
+      findOrCreateUser(accessToken, refreshToken, profile, done, 'facebook')
   )
 );
 
@@ -98,9 +103,9 @@ passport.use(
       clientID: config.get('githubClientId'),
       clientSecret: config.get('githubSecret'),
       callbackURL: 'http://localhost:5000/api/social/github/redirect',
-      scope: 'user:email',
+      scope: 'user:email'
     },
     (accessToken, refreshToken, profile, done) =>
-      checkAndCreateUser(accessToken, refreshToken, profile, done, 'github')
+      findOrCreateUser(accessToken, refreshToken, profile, done, 'github')
   )
 );

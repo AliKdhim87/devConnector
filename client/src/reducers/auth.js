@@ -1,7 +1,7 @@
 import {
   REGISTER_FAIL,
   REGISTER_SUCCESS,
-  SOCIAL_REGISTER_SUCCESS,
+  SOCIAL_LOGIN_SUCCESS,
   USER_LOADED,
   AUTH_ERROR,
   LOGIN_SUCCESS,
@@ -37,7 +37,7 @@ export default (state = initialState, action) => {
         isAuthenticated: true,
         loading: false
       };
-    case SOCIAL_REGISTER_SUCCESS:
+    case SOCIAL_LOGIN_SUCCESS:
       localStorage.setItem('token', payload);
       return {
         ...state,
