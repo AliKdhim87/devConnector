@@ -52,7 +52,7 @@ const ProfileItem = ({
           } else {
             return (
               <Label variant="contained" color="secondary">
-                {name} send you friend request
+                {name} sent you a friend request
               </Label>
             );
           }

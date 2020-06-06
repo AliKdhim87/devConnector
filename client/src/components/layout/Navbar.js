@@ -26,7 +26,7 @@ const Navbar = ({
                 message.users.map(
                   (user) =>
                     !user.hasNewMessage && (
-                      <List.Item key={user.corresponder._id}>
+                      <List.Item key={user.corresponder._id} style={{padding:"1rem"}}>
                         <Image avatar src={user.corresponder.avatar} />
                         <List.Content>
                           <List.Header

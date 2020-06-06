@@ -557,7 +557,10 @@ button {
 .backgroundLight {
   background-color: #a9acad;
 }
-
+.all-groups {
+  width: 55%;
+  margin: auto;
+}
 .group-info-container {
   background: rgb(53, 180, 204);
   background: linear-gradient(
@@ -646,9 +649,13 @@ button {
   width: 20%;
 }
 .group-item {
-  width: 60%;
+  width: 80%;
   margin: 1rem auto;
   padding: 1rem;
+  background: darkcyan;
+  border: 1px solid white;
+  border-radius: 5px;
+  color: white;
 }
 .group-access {
   border: var(--dark-color);
@@ -915,6 +922,17 @@ button {
   .group-post-text-and-date {
     text-align: center;
   }
+  .mobile-hidden {
+    display: none;
+  }
+  .discussion-item {
+    min-width: 40rem;
+  }
+  .settings-button {
+    padding: 0;
+  }
+}
+@media (max-width: 600px) {
   .newsfeed {
     flex-direction: column;
   }
@@ -942,8 +960,5 @@ button {
   .ui.fluid.card {
     max-height: 53rem;
     padding: 1rem;
-  }
-  .discussion-item {
-    min-width: 40rem;
   }
 }

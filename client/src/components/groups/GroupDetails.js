@@ -92,7 +92,7 @@ const GroupDetails = ({
       return true;
     } else return false;
   };
-  if (!group)
+  if (!group && !loading)
     return <h1 className="text-center text text-primary">GROUP NOT FOUND</h1>;
   if (loading) return <Spinner />;
   return (
@@ -196,6 +196,7 @@ const GroupDetails = ({
             </button>
           </div>
         )}
+      <div className="ui divider"></div>
       <div id="member-list" className="text-center m-3">
         <h3 className="text text-center text-primary m-3">Members:</h3>{' '}
         {group && group.members.length === 0 && <h4>No Members</h4>}
@@ -219,7 +220,7 @@ const GroupDetails = ({
           ))}
       </div>
       {/* Group Posts(form and previous posts) */}
-
+      <div className="ui divider"></div>
       {group &&
         auth &&
         !auth.loading &&
@@ -229,7 +230,7 @@ const GroupDetails = ({
               Group Discussions
             </h3>
             <div className="post-form">
-              <div className="bg-primary p">
+              <div className="text-center bg-primary p">
                 <h3
                   onClick={() => setDiscussionOpen(!discussionOpen)}
                   style={{ cursor: 'pointer' }}
@@ -326,10 +327,16 @@ const GroupDetails = ({
                 )}
               </div>
             </div>
+            <div className="ui divider"></div>
+            {/* Events */}
             <div id="events">
               <button
                 className="btn btn-primary"
-                style={{ marginTop: '5rem', width:"100%", marginBottom:"1rem" }}
+                style={{
+                  marginTop: '1.5rem',
+                  width: '100%',
+                  marginBottom: '1rem'
+                }}
                 onClick={() => setAddEventOpen(!addEventOpen)}
               >
                 {addEventOpen ? 'CLOSE' : 'ADD AN EVENT'}

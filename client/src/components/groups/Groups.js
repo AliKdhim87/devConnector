@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import GroupItem from './GroupItem';
 import GroupsForm from './GroupsForm';
 import Spinner from '../layout/Spinner';
+import { Card } from 'semantic-ui-react';
 
 const Groups = ({ getGroups, group: { groups, loading } }) => {
   useEffect(() => {
@@ -18,6 +19,7 @@ const Groups = ({ getGroups, group: { groups, loading } }) => {
         {!createGroupOpen && (
           <button
             className="btn btn-dark"
+            style={{ margin: '0' }}
             onClick={() => {
               setCreateGroupOpen(true);
             }}
@@ -38,7 +40,7 @@ const Groups = ({ getGroups, group: { groups, loading } }) => {
         )}
       </div>
 
-      {groups.length === 0 && !loading? (
+      {groups.length === 0 && !loading ? (
         <h3 className="text-dark text-center">NO GROUPS</h3>
       ) : (
         <GroupItem groups={groups} />

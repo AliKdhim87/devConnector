@@ -27,7 +27,7 @@ const FriendsFeed = ({ friends, filteredFriendPosts, dateChecker }) => {
           {friends &&
             friends.map((friend) => (
               <Feed.Event key={uuid.v4()}>
-                <Feed.Label image="https://i7.pngguru.com/preview/362/94/461/pikachu-ash-ketchum-pokemon-art-academy-pokemon-go-pokedex-pikachu.jpg" />
+                <Feed.Label image={friend.avatar} />
                 <Feed.Content>
                   <Feed.Date content="1 day ago" />
                   <Feed.Summary>
