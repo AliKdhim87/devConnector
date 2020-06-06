@@ -2,26 +2,38 @@ import React, { useEffect, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Dropdown, List } from 'semantic-ui-react';
-import { getNotifications } from '../../actions/notification';
+import {
+  getNotifications,
+  deleteNotifications
+} from '../../actions/notification';
 import NotificationItem from './NotificationItem';
 const Notification = ({
   getNotifications,
-  notification: { notifications, loading }
+  notification: { notifications, loading },
+  deleteNotifications
 }) => {
   useEffect(() => {
     getNotifications();
   }, [getNotifications]);
+
   return (
     <Fragment>
-      <Dropdown icon="mail">
-        <Dropdown.Menu>
-          <List relaxed>
+      <span className="notifications_count">
+        {notifications &&
+          !loading &&
+          notifications.length > 0 &&
+          notifications.length}
+      </span>
+      <Dropdown icon="globe">
+        <Dropdown.Menu size="massive">
+          <List celled>
             {notifications &&
               !loading &&
               notifications.map((notification) => (
                 <NotificationItem
                   key={notification._id}
                   notification={notification}
+                  deleteNotifications={deleteNotifications}
                 />
               ))}
           </List>
@@ -32,9 +44,13 @@ const Notification = ({
 };
 
 Notification.propTypes = {
-  getNotifications: PropTypes.func.isRequired
+  getNotifications: PropTypes.func.isRequired,
+  deleteNotifications: PropTypes.func.isRequired
 };
 const mapStateToProps = (state) => ({
   notification: state.notification
 });
-export default connect(mapStateToProps, { getNotifications })(Notification);
+export default connect(mapStateToProps, {
+  getNotifications,
+  deleteNotifications
+})(Notification);

@@ -4,6 +4,7 @@ const { check, validationResult } = require('express-validator');
 const auth = require('../../middleware/auth');
 const User = require('../../models/User');
 const Group = require('../../models/Groups');
+const Notification = require('../../models/Notification');
 const {
   JoinedGroupNotification,
   leftGroupNotification,
@@ -122,20 +123,36 @@ router.delete('/:groupID', auth, async (req, res) => {
       );
       user.save();
     });
-    // Email notification
+
+    /*
+        Send email notifications
+        1-first remove the sender from the group members.
+        2-loop through The user schema to get the users info
+        2-check the notifications prop if true then send the email notifications.
+        */
+
     const ownerGroup = await User.findById(group.creator);
-    group.members.map(async (member) => {
-      const users = await User.findById(member.user);
-      console.log(users);
-      if (users.notifications) {
-        deleteGroupNotification(
-          users.name,
-          ownerGroup.name,
-          group.name,
-          users.email
-        );
-      }
-    });
+    group.members
+      .filter((member) => member.user.toString() !== req.user.id)
+      .forEach(async (user) => {
+        const users = await User.findById(user.user);
+        if (users.notifications) {
+          deleteGroupNotification(
+            users.name,
+            ownerGroup.name,
+            group.name,
+            users.email
+          );
+        }
+        const newNotification = new Notification({
+          sender: req.user.id,
+          receiver: [users._id],
+          message: `${ownerGroup.name} removed the ${group.name} group.`,
+          kind: 'removed group',
+          path: group._id
+        });
+        await newNotification.save();
+      });
 
     res.json({ msg: 'Group removed' });
   } catch (error) {
@@ -220,16 +237,35 @@ router.put('/join/:groupID', auth, async (req, res) => {
       await currentUser.save();
       group.members.push(newMember);
       await group.save();
-      // Notification email
-      const ownerGroup = await User.findById(group.creator);
-      if (ownerGroup.notifications) {
-        JoinedGroupNotification(
-          ownerGroup.name,
-          currentUser.name,
-          group.name,
-          ownerGroup.email
-        );
-      }
+      /*
+        Send email notifications
+        1-first remove the sender from the group members.
+        2-loop through The user schema to get the users info
+        2-check the notifications prop if true then send the email notifications.
+        */
+
+      const userJoined = await User.findById(req.user.id);
+      group.members
+        .filter((member) => member.user.toString() !== req.user.id)
+        .forEach(async (user) => {
+          const users = await User.findById(user.user);
+          if (users.notifications) {
+            JoinedGroupNotification(
+              users.name,
+              userJoined.name,
+              group.name,
+              users.email
+            );
+          }
+          const newNotification = new Notification({
+            sender: req.user.id,
+            receiver: [users._id],
+            message: `${userJoined.name} joined in ${group.name} group.`,
+            kind: 'join group',
+            path: group._id
+          });
+          await newNotification.save();
+        });
 
       res.send(group.members);
     }
@@ -268,17 +304,34 @@ router.put('/leave/:groupID', auth, async (req, res) => {
     );
     await user.save();
     await group.save();
-    // Notification email
-    const ownerGroup = await User.findById(group.creator);
-    if (ownerGroup.notifications) {
-      leftGroupNotification(
-        ownerGroup.name,
-        user.name,
-        group.name,
-        ownerGroup.email
-      );
-    }
-
+    /*
+        Send email notifications
+        1-first remove the sender from the group members.
+        2-loop through The user schema to get the users info
+        2-check the notifications prop if true then send the email notifications.
+        */
+    const userLeft = await User.findById(req.user.id);
+    group.members
+      .filter((member) => member.user.toString() !== req.user.id)
+      .forEach(async (user) => {
+        const users = await User.findById(user.user);
+        if (users.notifications) {
+          leftGroupNotification(
+            users.name,
+            userLeft.name,
+            group.name,
+            users.email
+          );
+        }
+        const newNotification = new Notification({
+          sender: req.user.id,
+          receiver: [users._id],
+          message: `${userLeft.name} left ${group.name} group.`,
+          kind: 'left group',
+          path: group._id
+        });
+        await newNotification.save();
+      });
     res.send(group.members);
   } catch (error) {
     console.error(error.message);
@@ -362,6 +415,7 @@ router.post(
         2-loop through The user schema to get the users info
         2-check the notifications prop if true then send the email notifications.
         */
+
         const personAddPost = user.name;
         group.members
           .filter((member) => member.user.toString() !== req.user.id)
@@ -375,6 +429,14 @@ router.post(
                 users.email
               );
             }
+            const newNotification = new Notification({
+              sender: req.user.id,
+              receiver: [users._id],
+              message: `${personAddPost} add post in ${group.name} group`,
+              kind: 'post in group',
+              path: group._id
+            });
+            await newNotification.save();
           });
         res.send(group.posts);
       }
@@ -507,6 +569,15 @@ router.put(
                 newEvent.title
               );
             }
+
+            const newNotification = new Notification({
+              sender: req.user.id,
+              receiver: [users._id],
+              message: `${personAddEvent} add an event in ${group.name} group`,
+              kind: 'add event',
+              path: group._id
+            });
+            await newNotification.save();
           });
         res.send(group.events);
       }
@@ -613,6 +684,15 @@ router.put(
               newComment.text
             );
           }
+
+          const newNotification = new Notification({
+            sender: req.user.id,
+            receiver: [users._id],
+            message: `${currentUser.name} add a comment on ${post.title} in ${group.name} group`,
+            kind: 'add comment post group',
+            path: `${group._id}/posts/${post._id}`
+          });
+          await newNotification.save();
         });
 
       res.send(post.comments);
@@ -740,8 +820,16 @@ router.put('/:groupID/posts/:postID/emoji', auth, async (req, res) => {
             users.email,
             post.title
           );
-          console.log();
         }
+
+        const newNotification = new Notification({
+          sender: req.user.id,
+          receiver: [users._id],
+          message: `${userAddEmoji.name} add a emoji to your ${post.title} post in ${group.name} group`,
+          kind: 'add comment post group',
+          path: `${group._id}/posts/${post._id}`
+        });
+        await newNotification.save();
       });
     res.json({
       emojis: emojis

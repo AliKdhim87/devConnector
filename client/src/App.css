@@ -341,6 +341,23 @@ button {
   margin-right: 0.6rem;
 }
 
+/* Notification */
+
+.delete-icon-notification {
+  position: absolute;
+  right: 0;
+  cursor: pointer;
+}
+.ui.dropdown .menu {
+  left: -198px;
+  width: 433px;
+}
+@media (max-width: 580px) {
+  .ui.dropdown .menu {
+    left: -61px;
+    width: 308px;
+  }
+}
 /* Landing Page */
 .landing {
   position: relative;

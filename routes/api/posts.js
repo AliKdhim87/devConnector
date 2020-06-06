@@ -4,8 +4,8 @@ const { check, validationResult } = require('express-validator');
 const auth = require('../../middleware/auth');
 const User = require('../../models/User');
 const Post = require('../../models/Posts');
-const Profile = require('../../models/Profile');
-const mongoose = require('mongoose');
+const Notification = require('../../models/Notification');
+
 const {
   likeNotification,
   emojiNotification,
@@ -133,7 +133,9 @@ router.put('/like/:id', auth, async (req, res) => {
     }
     post.likes.unshift({ user: req.user.id });
 
-    if (postOwner.notifications) {
+    /* Statrt Notification*/
+    // Emil notification
+    if (postOwner.notifications && post.user.toString() !== req.user.id) {
       likeNotification(
         postOwner.name,
         userLiked.name,
@@ -141,7 +143,18 @@ router.put('/like/:id', auth, async (req, res) => {
         postOwner.email
       );
     }
+    if (post.user.toString() !== req.user.id) {
+      const newNotification = new Notification({
+        sender: req.user.id,
+        receiver: [postOwner._id],
+        message: `${userLiked.name} liked your ${post.text} post.`,
+        kind: 'like post',
+        path: `/posts`
+      });
+      await newNotification.save();
+    }
 
+    /* END Notification*/
     await post.save();
     res.json(post.likes);
   } catch (error) {
@@ -207,8 +220,11 @@ router.put('/emoji/:id', auth, async (req, res) => {
     const userAddedEmoji = await User.findById(req.user.id);
 
     await post.save();
+
+    /* Start Notification system*/
+
     // sent notification email
-    if (postOwner.notifications) {
+    if (postOwner.notifications && post.user.toString() !== req.user.id) {
       emojiNotification(
         postOwner.name,
         userAddedEmoji.name,
@@ -216,7 +232,18 @@ router.put('/emoji/:id', auth, async (req, res) => {
         postOwner.email
       );
     }
+    if (post.user.toString() !== req.user.id) {
+      const newNotification = new Notification({
+        sender: req.user.id,
+        receiver: [postOwner._id],
+        message: `${userAddedEmoji.name} add emoji to your ${post.text} post.`,
+        kind: 'emoji post',
+        path: `/posts`
+      });
+      await newNotification.save();
+    }
 
+    /* End Notification system*/
     res.json({
       emojis: emojis
     });
@@ -329,14 +356,24 @@ router.post(
       const userAddedComment = await User.findById(req.user.id);
 
       // sent notification email
-      if (postOwner.notifications) {
+      if (postOwner.notifications && post.user.toString() !== req.user.id) {
         addCommentNotification(
           postOwner.name,
           userAddedComment.name,
           post.text,
           postOwner.email,
-          post.comments[0].text
+          req.body.text
         );
+      }
+      if (post.user.toString() !== req.user.id) {
+        const newNotification = new Notification({
+          sender: req.user.id,
+          receiver: [postOwner._id],
+          message: `${userAddedComment.name} commented this ${post.text} post.`,
+          kind: 'add comment',
+          path: `/posts/${post._id}`
+        });
+        await newNotification.save();
       }
 
       await post.save();
@@ -454,13 +491,26 @@ router.put('/comment/emoji/:id/:comment_id', auth, async (req, res) => {
     const userAddedEmoji = await User.findById(req.user.id);
 
     // sent notification email
-    if (commentOwner.notifications) {
+    if (
+      commentOwner.notifications &&
+      commentOwner._id.toString() !== req.user.id
+    ) {
       addCommentEmojiNotification(
         commentOwner.name,
         userAddedEmoji.name,
         comment.text,
         commentOwner.email
       );
+    }
+    if (commentOwner._id.toString() !== req.user.id) {
+      const newNotification = new Notification({
+        sender: req.user.id,
+        receiver: [comment.user],
+        message: `${userAddedEmoji.name} added emoji to your ${comment.text} comment.`,
+        kind: 'add comment',
+        path: `/posts/${post._id}`
+      });
+      await newNotification.save();
     }
 
     await post.save();

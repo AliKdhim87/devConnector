@@ -9,6 +9,7 @@ const NotificationSchema = new mongoose.Schema({
   receiver: [{ type: mongoose.Schema.Types.ObjectId, ref: 'user' }],
   message: String, // any description of the notification message
   kind: String,
+  path: String,
   read_by: [
     {
       readerId: {

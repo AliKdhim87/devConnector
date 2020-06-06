@@ -76,10 +76,9 @@ io.on('connection', function (socket) {
         .exec();
       const notification = new Notification({
         sender: data.sender,
-        message: data.message,
+        message: `Message: ${data.message}`,
         kind: 'message',
-        receiver: [data.recciver],
-        read_by: { readerId: data.recciver }
+        receiver: [data.recciver]
       });
       await notification.save();
       if (socketIdSender !== undefined) {
