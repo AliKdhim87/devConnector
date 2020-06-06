@@ -6,10 +6,13 @@ const server = http.createServer(app);
 const io = socketio(server);
 const connectDB = require('./config/db');
 const path = require('path');
+const passport =require('passport');
 const Message = require('./models/Message');
 
 connectDB();
 let users = [];
+app.use(passport.initialize());
+
 io.on('connection', function (socket) {
   console.log('A user connected');
 
