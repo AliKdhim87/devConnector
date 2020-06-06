@@ -46,7 +46,7 @@ const Dashboard = ({
     return difference;
   };
   let myGroupPosts = [];
-  if (user) {
+  if (user && user.myGroups) {
     user.myGroups.forEach((group) => {
       group._id.posts.forEach((post) => {
         const postDate = new Date(post.date).getTime();
@@ -167,7 +167,7 @@ const Dashboard = ({
                 </div>
                 <Link to={`/settings`}>
                   {' '}
-                  <button className="btn btn-light">
+                  <button className="btn btn-light settings-button">
                     <i className="fas fa-users-cog settings-icon"></i>SETTINGS
                   </button>
                 </Link>

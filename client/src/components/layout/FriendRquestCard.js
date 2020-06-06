@@ -22,9 +22,8 @@ const FriendRquestCard = ({
         <Image floated="right" size="mini" src={avatar} />
         <Card.Header>{name}</Card.Header>
         <Card.Header>{email}</Card.Header>
-        <Card.Meta>Friends of Elliot</Card.Meta>
         <Card.Description>
-          Steve wants to add you to the group <strong>best friends</strong>
+          {name} wants to add you as a friend.
         </Card.Description>
       </Card.Content>
       <Card.Content extra>

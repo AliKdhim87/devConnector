@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { Card } from 'semantic-ui-react';
 
 // each group item in all groups page
 const GroupItem = ({ groups }) => {
@@ -8,15 +9,18 @@ const GroupItem = ({ groups }) => {
       {groups.map((group) => {
         return (
           <div className="all-groups flex-c text-center" key={group._id}>
-            <Link to={`/groups/${group._id}`} className="group-link" >
-              <div className="group-item flex-c bg-primary">
-                <h2 className="text">{group.name}</h2>
-                <p>{group.description}</p>
-                <p className="group-access">
+            <Card fluid color="teal" style={{ marginBottom: '1rem' }}>
+              <Link to={`/groups/${group._id}`} className="group-link">
+                <div className="group-item flex-c">
+                  <h2 className="text">{group.name}</h2>
+                  <p>{group.description}</p>
+                </div>
+                <p className="group-access" style={{width:"15%"}}>
                   {group.isPublic ? 'Public' : 'Private'}
                 </p>
-              </div>
-            </Link>
+                <p>{group && group.members.length} member(s)</p>
+              </Link>
+            </Card>
           </div>
         );
       })}

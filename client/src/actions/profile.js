@@ -4,6 +4,7 @@ import {
   GET_PROFILE,
   PROFILE_ERROR,
   UPDATE_PROFILE,
+  SET_PRIVACYOPTIONS,
   CLEAR_PROFILE,
   ACCOUNT_DELETED,
   GET_PROFILES,
@@ -31,10 +32,15 @@ export const getCurrentProfile = () => async (dispatch) => {
 };
 
 // Get All Profiles
-export const getAllProfiles = () => async (dispatch) => {
+export const getAllProfiles = ( isAuth = false ) => async (dispatch) => {
   dispatch({ type: CLEAR_PROFILE });
   try {
-    const res = await axios.get('/api/profile');
+    let res;
+    if (isAuth) {
+      res = await axios.get('/api/profile/all');
+    } else {
+      res = await axios.get('/api/profile');
+    }
     dispatch({
       type: GET_PROFILES,
       payload: res.data
@@ -119,7 +125,7 @@ export const createProfile = (formData, history, edit = false) => async (
   dispatch
 ) => {
   const config = {
-    headres: {
+    headers: {
       'Content-Type': 'application/json'
     }
   };
@@ -273,6 +279,38 @@ export const deleteAccount = () => async (dispatch) => {
       type: PROFILE_ERROR,
       payload: {
         msg: error.response.statusText,
+        status: error.response.status
+      }
+    });
+  }
+};
+
+export const setPrivacyOptions = (messages, profileVisibility) => async (
+  dispatch
+) => {
+  const formData = {
+    messagesEveryone: messages,
+    profileVisibleEveryone: profileVisibility
+  };
+  const config = {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  };
+
+  try {
+    const res = await axios.put('/api/users/privacyoptions', formData, config);
+    dispatch({
+      type: SET_PRIVACYOPTIONS,
+      payload: res.data
+    });
+
+    dispatch(setAlert('Privacy Options Updated', 'success'));
+  } catch (error) {
+    dispatch({
+      type: PROFILE_ERROR,
+      payload: {
+        msg: error.response.msg,
         status: error.response.status
       }
     });

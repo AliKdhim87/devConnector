@@ -4,6 +4,10 @@ import Moment from 'react-moment';
 import { Link, useParams } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Microlink from '@microlink/react';
+import EventCalendar from './EventCalendar';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+
 import {
   getGroup,
   addEvent,
@@ -33,12 +37,21 @@ const GroupDetails = ({
     getGroup(match.params.groupID);
   }, [getGroup, match]);
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const [editOpen, setEditOpen] = useState(false);
-  const [addEventOpen, setAddEventOpen] = useState(false)
+  const [addEventOpen, setAddEventOpen] = useState(false);
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
+  const [discussionOpen, setDiscussionOpen] = useState(false);
 
-  const toggleEdit = () => {
-    setEditOpen(!editOpen);
+  const isFinished = (eventEndDate) => {
+    const d = new Date();
+    const ed = new Date(eventEndDate).getTime();
+    const nowValue = new Date(d).getTime();
+    const difference = ed - nowValue;
+    if (difference < 0) {
+      return true;
+    } else return false;
   };
+
   const toggleSettings = () => {
     setSettingsOpen(!settingsOpen);
   };
@@ -49,14 +62,16 @@ const GroupDetails = ({
     link: ''
   });
   const [eventData, setEventData] = useState({
-    title:'',
-    description:'',
-    start:{},
-    end:{}
-  })
-  const onChangeEvent = (e)=>{
-    setEventData({...eventData, [e.target.name]: e.target.value})
-  }
+    title: '',
+    description: '',
+    place: ''
+  });
+  const onChangeEvent = (e) => {
+    setEventData({
+      ...eventData,
+      [e.target.name]: e.target.value
+    });
+  };
   const { title, text, link } = formData;
   const onChangeInputHandler = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -77,16 +92,20 @@ const GroupDetails = ({
       return true;
     } else return false;
   };
+  if (!group && !loading)
+    return <h1 className="text-center text text-primary">GROUP NOT FOUND</h1>;
   if (loading) return <Spinner />;
   return (
     <section className="container">
       {/* Container including group info */}
       <div
-        className="post bg-white p-3 my-1 flex-r group-info-container"
+        className="p-3 my-1 flex-r group-info-container"
         style={{ justifyContent: 'space-between' }}
       >
         <div className="flex-c group-info">
-          <span className="text-primary large">{group && group.name}</span>
+          <span className="text-primary large text-white">
+            {group && group.name}
+          </span>
           <span>
             <strong>Description:</strong> {group && group.description}
           </span>
@@ -95,10 +114,17 @@ const GroupDetails = ({
             {group && <Moment format="YYYY/MM/DD">{group.createdAt}</Moment>}
           </span>
           <span>
-            <strong>Creator:</strong>{' '}
-            <a href="!#">
-              {!loading && group && group.creator && group.creator.name}
-            </a>
+            {group && group.creator && (
+              <Fragment>
+                <strong>Creator:</strong>
+                <Link
+                  to={`/profile/${group.creator._id}`}
+                  className="text-white"
+                >
+                  {!loading && group && group.creator && group.creator.name}
+                </Link>
+              </Fragment>
+            )}
           </span>
         </div>
         <div className="group-buttons">
@@ -122,7 +148,8 @@ const GroupDetails = ({
             </button>
           )}
           {/* Button that toggle between settings for the creator of the group */}
-          {group && group.creator &&
+          {group &&
+            group.creator &&
             auth &&
             !auth.loading &&
             auth.user._id === group.creator._id && (
@@ -139,9 +166,9 @@ const GroupDetails = ({
       <div className={settingsOpen ? `shown` : `hidden`}>
         {group && <GroupOwnerDashboard isPublic={group.isPublic} />}
       </div>
-      <p className="lead text-center">
+      <h1 className="lead text-center large">
         <i className="fas fa-user"></i> Welcome to {group && group.name}
-      </p>
+      </h1>
       {group &&
         !group.isPublic &&
         auth &&
@@ -153,19 +180,26 @@ const GroupDetails = ({
             </h2>
           </div>
         )}
-      <div>
-        <button className="btn btn-light">
-          <a href="#discussions">Discussions</a>
-        </button>
-        <button className="btn btn-light">
-          <a href="#member-list">Members</a>
-        </button>
-        <button className="btn btn-light">
-          <a href="#events">Events</a>
-        </button>
-      </div>
-      <div id="member-list text-center">
-        <strong>Members:</strong>{' '}
+      {group &&
+        auth &&
+        !auth.loading &&
+        (group.isPublic || isMember(group, auth.user._id)) && (
+          <div className="text-center m-2">
+            <button className="btn btn-light">
+              <a href="#discussions">Discussions</a>
+            </button>
+            <button className="btn btn-light">
+              <a href="#member-list">Members</a>
+            </button>
+            <button className="btn btn-light">
+              <a href="#events">Events</a>
+            </button>
+          </div>
+        )}
+      <div className="ui divider"></div>
+      <div id="member-list" className="text-center m-3">
+        <h3 className="text text-center text-primary m-3">Members:</h3>{' '}
+        {group && group.members.length === 0 && <h4>No Members</h4>}
         {group &&
           group.members.map((member) => (
             <div key={member.user._id}>
@@ -178,6 +212,7 @@ const GroupDetails = ({
                   src={member.user.avatar || member.avatar}
                   style={{ width: '10%' }}
                   className="round-img m-1"
+                  alt="avatar"
                 />
                 <p>{member.user.name || member.name} </p>
               </Link>
@@ -185,21 +220,28 @@ const GroupDetails = ({
           ))}
       </div>
       {/* Group Posts(form and previous posts) */}
-
+      <div className="ui divider"></div>
       {group &&
         auth &&
         !auth.loading &&
         (group.isPublic || isMember(group, auth.user._id)) && (
           <Fragment>
-            <h2 className="text-primary text-center m-2" id="discussions">
+            <h3 className="text-primary text-center m-2" id="discussions">
               Group Discussions
-            </h2>
+            </h3>
             <div className="post-form">
-              <div className="bg-primary p">
-                <h3>Start a discussion</h3>
+              <div className="text-center bg-primary p">
+                <h3
+                  onClick={() => setDiscussionOpen(!discussionOpen)}
+                  style={{ cursor: 'pointer' }}
+                >
+                  {' '}
+                  <i className="fas fa-comments"></i>{' '}
+                  {discussionOpen ? `Close` : `Click to start a discussion`}{' '}
+                </h3>
               </div>
               <form
-                className="form my-1"
+                className={discussionOpen ? `form my-1` : `hidden`}
                 onSubmit={(e) =>
                   onSubmitHandler(e, match.params.groupID, formData)
                 }
@@ -285,35 +327,100 @@ const GroupDetails = ({
                 )}
               </div>
             </div>
+            <div className="ui divider"></div>
+            {/* Events */}
             <div id="events">
-              <button className="btn btn-primary" onClick={()=>setAddEventOpen(!addEventOpen)}>{ addEventOpen ? 'CLOSE' : 'ADD AN EVENT'}</button>
+              <button
+                className="btn btn-primary"
+                style={{
+                  marginTop: '1.5rem',
+                  width: '100%',
+                  marginBottom: '1rem'
+                }}
+                onClick={() => setAddEventOpen(!addEventOpen)}
+              >
+                {addEventOpen ? 'CLOSE' : 'ADD AN EVENT'}
+              </button>
               <div className={addEventOpen ? `add-event` : `hidden`}>
-                <h3>Add an event</h3>
+                <h3 style={{ marginTop: '1rem' }}>Add an event</h3>
                 <form className="form">
-                <input onChange={onChangeEvent} type="text" name="title" placeholder="Title" value={eventData.title}></input>
-                <textarea onChange={onChangeEvent} type="text" name="description" placeholder="Please provide a description" value={eventData.description}></textarea>
-                <small className="form-text" value={eventData.start}>Start of the event</small>
-                <input onChange={onChangeEvent} type="date" name="start"/>
-                <small className="form-text">End of the event</small>
-                <input onChange={onChangeEvent} type="date" name="end" value={eventData.end}/>
-                <button onClick={()=>{addEvent(groupID, eventData)}} className="btn btn-dark">ADD</button>
+                  <input
+                    onChange={onChangeEvent}
+                    type="text"
+                    name="title"
+                    placeholder="Title"
+                    value={eventData.title}
+                  ></input>
+                  <textarea
+                    onChange={onChangeEvent}
+                    type="text"
+                    name="description"
+                    placeholder="Please provide a description"
+                    value={eventData.description}
+                  ></textarea>
+                  <input
+                    onChange={onChangeEvent}
+                    type="text"
+                    name="place"
+                    placeholder="Place"
+                    value={eventData.place}
+                  ></input>
+                  <small className="form-text">Start of the event</small>
+                  <DatePicker
+                    selected={startDate}
+                    onChange={(date) => {
+                      setStartDate(date);
+                    }}
+                    selectsStart
+                    startDate={startDate}
+                    endDate={endDate}
+                    dateFormatCalendar={'MMM yyyy'}
+                    showMonthDropdown
+                  />
+                  <small className="form-text">End of the event</small>
+                  <DatePicker
+                    selected={endDate}
+                    onChange={(date) => {
+                      setEndDate(date);
+                    }}
+                    selectsEnd
+                    startDate={startDate}
+                    endDate={endDate}
+                    minDate={startDate}
+                    showMonthDropdown
+                    dateFormatCalendar={'MMM yyyy'}
+                  />
+                  <div style={{ marginTop: '1rem' }}>
+                    <button
+                      onClick={() => {
+                        addEvent(groupID, {
+                          ...eventData,
+                          start: startDate,
+                          end: endDate
+                        });
+                      }}
+                      className="btn btn-dark"
+                    >
+                      ADD
+                    </button>
+                  </div>
                 </form>
-              
               </div>
               <div className="events-list">
-               {group && auth && !loading && group.events.map(event=>{
-                 return(
-                   <Fragment key={event._id}>
-                     <h4>{event.title}</h4>
-                     <p>{event.description}</p>
-                     <p>{event.start}</p>
-                     {event.creator === auth.user._id && <button className="btn btn-danger" onClick={()=>deleteEvent(groupID, event._id)}>DELETE EVENT</button>}
-                   </Fragment>
-                 )
-               })}
+                <h3 className="text text-primary text-center">Events</h3>
+                {group.events.length === 0 && (
+                  <h3 className="text text-dark text-center">NO EVENTS</h3>
+                )}
+                {group && auth && !loading && (
+                  <EventCalendar
+                    events={group.events}
+                    deleteEvent={deleteEvent}
+                    groupID={groupID}
+                    isFinished={isFinished}
+                  />
+                )}
               </div>
             </div>
-
           </Fragment>
         )}
     </section>

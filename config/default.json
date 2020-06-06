@@ -2,5 +2,11 @@
   "mongoURI": "",
   "jwtSecret": "",
   "githubToken": "",
-  "SEND_GRID_API_KEY": ""
+  "SEND_GRID_API_KEY": "",
+  "githubClientId": "",
+  "githubSecret": "",
+  "googleClientId": "",
+  "googleSecret":"",
+  "facebookClientId":"",
+  "facebookSecret":""
 }

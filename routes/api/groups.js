@@ -132,6 +132,7 @@ router.delete('/:groupID', auth, async (req, res) => {
         */
 
     const ownerGroup = await User.findById(group.creator);
+
     group.members
       .filter((member) => member.user.toString() !== req.user.id)
       .forEach(async (user) => {
@@ -153,7 +154,7 @@ router.delete('/:groupID', auth, async (req, res) => {
         });
         await newNotification.save();
       });
-
+    
     res.json({ msg: 'Group removed' });
   } catch (error) {
     console.error(error.message);
@@ -541,10 +542,10 @@ router.put(
           title: req.body.title,
           creator: req.user.id,
           description: req.body.description,
+          place:req.body.place,
           start: req.body.start,
           end: req.body.end
         };
-        console.log(newEvent);
         group.events.push(newEvent);
         await group.save();
         /*
@@ -601,7 +602,6 @@ router.put('/:groupID/events/:eventID', auth, async (req, res) => {
     const event = group.events.find(
       (event) => event._id.toString() === req.params.eventID
     );
-    console.log(group.events);
     //  Make sure post exists
     if (!event) {
       return res.status(404).json({ msg: 'Event does not exist' });

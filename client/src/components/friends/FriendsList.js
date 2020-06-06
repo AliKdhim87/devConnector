@@ -13,7 +13,6 @@ const FriendsList = ({
   useEffect(() => {
     getFriendsList();
   }, [getFriendsList]);
-  console.log(friends);
   return (
     <Fragment>
       {loading ? (

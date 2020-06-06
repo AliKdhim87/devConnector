@@ -11,7 +11,7 @@ const ProfileItem = ({
   sendFriendRequest,
   CancelFriendRequest,
   profile: {
-    user: { _id, name, avatar },
+    user: { _id, name, avatar, privacyOptions },
     status,
     company,
     location,
@@ -52,7 +52,7 @@ const ProfileItem = ({
           } else {
             return (
               <Label variant="contained" color="secondary">
-                {name} send you friend request
+                {name} sent you a friend request
               </Label>
             );
           }
@@ -84,12 +84,15 @@ const ProfileItem = ({
           View Profile
         </Link>
         <FriendButton className="btn btn-primary" />
-        {me.isAuthenticated && me.user._id !== _id && (
-          <Link to={`/message/${_id}`} className="btn btn-primary my">
-            Send Message
-          </Link>
-        )}
-
+        {me.isAuthenticated &&
+          me.user._id !== _id &&
+          privacyOptions &&
+          (privacyOptions.messagesEveryone ||
+            user.friends.filter((friend) => friend === _id).length > 0) && (
+            <Link to={`/message/${_id}`} className="btn btn-primary my">
+              Send Message
+            </Link>
+          )}
       </div>
       <ul>
         {skills.slice(0, 4).map((skill, index) => (

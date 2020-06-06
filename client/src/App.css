@@ -483,7 +483,7 @@ button {
 
 /* chat page */
 .messages {
-  padding: 5% 0;
+  padding: 2.5% 0;
   overflow: auto;
 
   height: 50vh;
@@ -508,7 +508,7 @@ button {
 }
 .messageBox {
   background: #f3f3f3;
-  border-radius: 20px;
+  border-radius: 10px;
   padding: 5px 20px;
   color: white;
   display: inline-block;
@@ -532,7 +532,7 @@ button {
   display: flex;
   justify-content: flex-end;
   padding: 0 5%;
-  margin-top: 3px;
+  margin-bottom: 1rem;
 }
 
 .sentText {
@@ -572,7 +572,22 @@ button {
 }
 
 .backgroundLight {
-  background: #f3f3f3;
+  background-color: #a9acad;
+}
+.all-groups {
+  width: 55%;
+  margin: auto;
+}
+.group-info-container {
+  background: rgb(53, 180, 204);
+  background: linear-gradient(
+    90deg,
+    rgba(53, 180, 204, 0.9980978639969914) 0%,
+    rgba(0, 212, 255, 1) 100%
+  );
+}
+.text-white {
+  color: white;
 }
 
 .btn-delete-isSent,
@@ -582,8 +597,8 @@ button {
   color: var(--dark-color);
 }
 .btn-delete-isSent {
-  right: -1px;
-  top: -8px;
+  right: 0;
+  top: 0;
 }
 @media (max-width: 500px) {
   .user-chat-list {
@@ -647,20 +662,17 @@ button {
   text-align: left !important;
   width: 50%;
 }
-.group-members {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  width: 30%;
-}
 .group-buttons {
   width: 20%;
 }
 .group-item {
-  width: 60%;
+  width: 80%;
   margin: 1rem auto;
   padding: 1rem;
+  background: darkcyan;
+  border: 1px solid white;
+  border-radius: 5px;
+  color: white;
 }
 .group-access {
   border: var(--dark-color);
@@ -927,6 +939,17 @@ button {
   .group-post-text-and-date {
     text-align: center;
   }
+  .mobile-hidden {
+    display: none;
+  }
+  .discussion-item {
+    min-width: 40rem;
+  }
+  .settings-button {
+    padding: 0;
+  }
+}
+@media (max-width: 600px) {
   .newsfeed {
     flex-direction: column;
   }
@@ -954,8 +977,5 @@ button {
   .ui.fluid.card {
     max-height: 53rem;
     padding: 1rem;
-  }
-  .discussion-item {
-    min-width: 40rem;
   }
 }

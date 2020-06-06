@@ -3,6 +3,7 @@ import {
   PROFILE_ERROR,
   CLEAR_PROFILE,
   UPDATE_PROFILE,
+  SET_PRIVACYOPTIONS,
   GET_PROFILES,
   GET_REPOS
 } from '../actions/types';
@@ -20,6 +21,7 @@ export default (state = initailState, action) => {
   switch (type) {
     case UPDATE_PROFILE:
     case GET_PROFILE:
+    case SET_PRIVACYOPTIONS:
       return {
         ...state,
         profile: payload,

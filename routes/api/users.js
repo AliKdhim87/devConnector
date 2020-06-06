@@ -5,6 +5,7 @@ const cloudinary = require('cloudinary');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../../models/User');
+const Profile = require('../../models/Profile')
 const Post = require('../../models/Posts');
 const auth = require('../../middleware/auth');
 const config = require('config');
@@ -105,7 +106,6 @@ router.patch(
 
         await post.save();
       }
-
       await user.save();
       res.json(user);
     } catch (error) {
@@ -116,5 +116,27 @@ router.patch(
     res.status(400).send({ msg: error.message });
   }
 );
+
+router.put('/privacyoptions', auth, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select('-password');
+    const profile = await Profile.findOne({ user: req.user.id });
+    if (!user) {
+      return res.status(404).json({ msg: 'User not found' });
+    }
+    if (!profile) {
+      return res.status(404).json({ msg: 'Profile not found' });
+    }
+    profile.visible = user.privacyOptions.profileVisibleEveryone = req.body.profileVisibleEveryone,
+    user.privacyOptions.messagesEveryone = req.body.messagesEveryone;
+    
+    await profile.save();
+    await user.save();
+    res.send(user);
+  } catch (error) {
+    console.error(error)
+    res.status(500).send('Server Error');
+  }
+});
 
 module.exports = router;

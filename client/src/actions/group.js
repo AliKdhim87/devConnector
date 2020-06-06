@@ -76,7 +76,7 @@ export const getGroup = (groupID) => async (dispatch) => {
     dispatch({
       type: POST_ERROR,
       payload: {
-        msg: error
+        msg: error.message
       }
     });
   }

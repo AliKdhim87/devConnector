@@ -6,15 +6,13 @@ import * as uuid from 'uuid';
 
 const FriendsFeed = ({ friends, filteredFriendPosts, dateChecker }) => {
   let latestFriendPosts = [];
-  filteredFriendPosts.map((post) => {
+  filteredFriendPosts.forEach((post) => {
     const postDate = new Date(post.date).getTime();
     const difference = dateChecker(postDate);
     if (difference < 172800000) {
       latestFriendPosts.push(post);
     }
   });
-
-  console.log(latestFriendPosts);
 
   return (
     <Card fluid>
@@ -29,11 +27,11 @@ const FriendsFeed = ({ friends, filteredFriendPosts, dateChecker }) => {
           {friends &&
             friends.map((friend) => (
               <Feed.Event key={uuid.v4()}>
-                <Feed.Label image="https://i7.pngguru.com/preview/362/94/461/pikachu-ash-ketchum-pokemon-art-academy-pokemon-go-pokedex-pikachu.jpg" />
+                <Feed.Label image={friend.avatar} />
                 <Feed.Content>
                   <Feed.Date content="1 day ago" />
                   <Feed.Summary>
-                    You and <a>{friend.name}</a> are friends now.
+                    You and <a href={`/profile/${friend._id}`}>{friend.name}</a> are friends now.
                   </Feed.Summary>
                 </Feed.Content>
               </Feed.Event>

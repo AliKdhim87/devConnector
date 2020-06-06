@@ -103,6 +103,9 @@ const GroupPosts = ({
                 url={post.link}
               />
             )}
+            <p className="post-date group-post-text-and-date">
+              {post && <Moment format="YYYY/MM/DD">{post.date}</Moment>}
+            </p>
             {hideEmojiPicker ? (
               <Button circular onClick={showHideEmojiPicker}>
                 <span
@@ -123,42 +126,41 @@ const GroupPosts = ({
               />
             )}
             {post.emojis.length > 0 && (
-              <ul style={{ display: 'flex' }}>
-                {post.emojis && post.emojis.map((emo, index) => (
-                  <li key={index}>
-                    <Button
-                      circular
-                      color={
-                        !!auth &&
-                        !!auth.user &&
-                        !!emo.users.find((user) => {
-                          return user === auth.user._id;
-                        })
-                          ? 'green'
-                          : undefined
-                      }
-                      onClick={() => {
-                        const isMine =
+              <ul style={{ display: 'flex', marginTop: '3rem' }}>
+                {post.emojis &&
+                  post.emojis.map((emo, index) => (
+                    <li key={index}>
+                      <Button
+                        circular
+                        color={
                           !!auth &&
                           !!auth.user &&
                           !!emo.users.find((user) => {
                             return user === auth.user._id;
-                          });
+                          })
+                            ? 'green'
+                            : undefined
+                        }
+                        onClick={() => {
+                          const isMine =
+                            !!auth &&
+                            !!auth.user &&
+                            !!emo.users.find((user) => {
+                              return user === auth.user._id;
+                            });
 
-                        if (isMine) removeGroupPostEmoji(groupID, postID, emo._id);
-                        else addGroupPostEmoji(groupID, postID, emo.emoji);
-                      }}
-                    >
-                      {emo.emoji.native}
-                      {emo.amount > 1 ? <small>{emo.amount}</small> : ''}
-                    </Button>
-                  </li>
-                ))}
+                          if (isMine)
+                            removeGroupPostEmoji(groupID, postID, emo._id);
+                          else addGroupPostEmoji(groupID, postID, emo.emoji);
+                        }}
+                      >
+                        {emo.emoji.native}
+                        {emo.amount > 1 ? <small>{emo.amount}</small> : ''}
+                      </Button>
+                    </li>
+                  ))}
               </ul>
             )}
-            <p className="post-date group-post-text-and-date">
-              {post && <Moment format="YYYY/MM/DD">{post.date}</Moment>}
-            </p>
           </div>
           <div className="flex-r group-post-owner-buttons">
             {!loading &&
