@@ -65,6 +65,7 @@ router.post(
     const profileFields = {};
     profileFields.user = req.user.id;
     profileFields.name = user.name;
+    visible = user.privacyOptions.profileVisibleEveryone;
     if (company) profileFields.company = company;
     if (website) profileFields.website = website;
     if (location) profileFields.location = location;
@@ -110,11 +111,45 @@ router.post(
 
 router.get('/', async (req, res) => {
   try {
-    const profiles = await Profile.find().populate('user', ['name', 'avatar']);
+    const profiles = await Profile.find({
+      visible: true
+    }).populate('user', ['name', 'avatar']);
     res.json(profiles);
   } catch (error) {
     console.error(error.message);
     res.status(500).send('Server error!');
+  }
+});
+
+router.get('/all', auth, async (req, res) => {
+  try {
+    const profiles = await Profile.find().populate('user', [
+      'name',
+      'avatar',
+      'friends',
+      'privacyOptions'
+    ]);
+    let publicProfiles = [];
+    profiles.forEach((profile) => {
+      if (
+        profile &&
+        profile.user.privacyOptions.profileVisibleEveryone === true
+      ) {
+        publicProfiles.push(profile);
+      }
+    });
+    let friendProfiles = [];
+    profiles.forEach((profile) => {
+      if (profile.user.friends.includes(req.user.id)) {
+        friendProfiles.push(profile);
+      }
+    });
+
+    const profileArray = publicProfiles.concat(friendProfiles);
+    res.json(profileArray);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send(error);
   }
 });
 
@@ -152,15 +187,21 @@ router.delete('/', auth, async (req, res) => {
     await User.findOneAndRemove({ _id: req.user.id });
     // remove group created by user
     const userGroups = await Group.find({ creator: req.user.id });
-    userGroups.forEach(group=>{
-      group.posts = group.posts.filter(post=>post.creator.toString()!== req.user.id);
-      group.members = group.members.filter(member=>member.user._id.toString()!== req.user.id)
-      group.posts.forEach(post=>{
-        post.comments = post.comments.filter(comment=> comment.creator.toString()!==req.user.id)
-      })
-      group.save()
-    })
-    
+    userGroups.forEach((group) => {
+      group.posts = group.posts.filter(
+        (post) => post.creator.toString() !== req.user.id
+      );
+      group.members = group.members.filter(
+        (member) => member.user._id.toString() !== req.user.id
+      );
+      group.posts.forEach((post) => {
+        post.comments = post.comments.filter(
+          (comment) => comment.creator.toString() !== req.user.id
+        );
+      });
+      group.save();
+    });
+
     res.json({ msg: 'User deleted' });
   } catch (error) {
     console.error(error.message);

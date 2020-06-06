@@ -1,15 +1,18 @@
 import React, { useState, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { updateUser } from '../../actions/profile';
+import { updateUser, setPrivacyOptions } from '../../actions/profile';
 import { useHistory } from 'react-router-dom';
 import { Form, Input, Image, Header, Icon, Radio } from 'semantic-ui-react';
-const EditUserInfo = ({ updateUser, auth }) => {
+const EditUserInfo = ({ updateUser, auth, setPrivacyOptions }) => {
   const history = useHistory();
   const [userInfo, setUserInfo] = useState({
     avatar: '',
     name: auth.user && auth.user.name
   });
+
+  const [messages, setMessages] = useState();
+  const [profileVisibility, setProfileVisibility] = useState();
 
   const [mediaPreview, setMediaPreview] = useState('');
   const { avatar, name } = userInfo;
@@ -58,7 +61,7 @@ const EditUserInfo = ({ updateUser, auth }) => {
           <Image src={mediaPreview} rounded centered size="medium" />
         )}
         <input
-          class="btn btn-primary my-1"
+          className="btn btn-primary my-1"
           color="teal"
           icon="pencil alternate"
           content="Submit"
@@ -81,14 +84,45 @@ const EditUserInfo = ({ updateUser, auth }) => {
           );
         }}
       />
+      {auth.user && (
+        <div className="flex-c" style={{width:"30%", marginTop:"1rem"}}>
+          <span>Choose who can send you messages</span>
+          <select
+            className="ui dropdown"
+            onChange={(e) => setMessages(e.target.value)}
+          >
+            <option value={false}>Friends Only</option>
+            <option value={true}>Everyone</option>
+          </select>
+          <span>Choose who can see your profile</span>
+          <select
+            className="ui dropdown"
+            onChange={(e) => setProfileVisibility(e.target.value)}
+          >
+            <option value={false}>Friends Only</option>
+            <option value={true}>Everyone</option>
+          </select>
+          <button
+            className="btn btn-primary"
+            onClick={() => {
+              setPrivacyOptions(messages, profileVisibility);
+            }}
+          >
+            SAVE
+          </button>
+        </div>
+      )}
     </Fragment>
   );
 };
 
 EditUserInfo.propTypes = {
-  updateUser: PropTypes.func.isRequired
+  updateUser: PropTypes.func.isRequired,
+  setPrivacyOptions: PropTypes.func.isRequired
 };
 const mapStateToProps = (state) => ({
   auth: state.auth
 });
-export default connect(mapStateToProps, { updateUser })(EditUserInfo);
+export default connect(mapStateToProps, { updateUser, setPrivacyOptions })(
+  EditUserInfo
+);

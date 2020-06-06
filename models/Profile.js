@@ -8,6 +8,10 @@ const ProfileSchema = new mongoose.Schema({
   name: {
     type: String
   },
+  visible:{
+    type:Boolean,
+    default:true
+  },
   company: {
     type: String
   },

@@ -11,7 +11,7 @@ const ProfileItem = ({
   sendFriendRequest,
   CancelFriendRequest,
   profile: {
-    user: { _id, name, avatar },
+    user: { _id, name, avatar, privacyOptions },
     status,
     company,
     location,
@@ -84,12 +84,14 @@ const ProfileItem = ({
           View Profile
         </Link>
         <FriendButton className="btn btn-primary" />
-        {me.isAuthenticated && me.user._id !== _id && (
-          <Link to={`/message/${_id}`} className="btn btn-primary my">
-            Send Message
-          </Link>
-        )}
-
+        {me.isAuthenticated &&
+          me.user._id !== _id &&
+          privacyOptions &&
+          privacyOptions.messagesEveryone && (
+            <Link to={`/message/${_id}`} className="btn btn-primary my">
+              Send Message
+            </Link>
+          )}
       </div>
       <ul>
         {skills.slice(0, 4).map((skill, index) => (

@@ -4,10 +4,10 @@ import { connect } from 'react-redux';
 import Spinner from '../layout/Spinner';
 import { getAllProfiles } from '../../actions/profile';
 import ProfileItem from './ProfileItem';
-const Profiles = ({ getAllProfiles, profile: { profiles, loading }, auth }) => {
+const Profiles = ({ getAllProfiles, profile: { profiles, loading }, auth, isAuthenticated }) => {
   useEffect(() => {
-    getAllProfiles();
-  }, [getAllProfiles]);
+    getAllProfiles(isAuthenticated);
+  }, [getAllProfiles, isAuthenticated]);
 
   return (
     <Fragment>
@@ -41,6 +41,7 @@ Profiles.propTypes = {
 };
 const mapStateToProps = (state) => ({
   profile: state.profile,
-  auth: state.auth
+  auth: state.auth,
+  isAuthenticated: state.auth.isAuthenticated
 });
 export default connect(mapStateToProps, { getAllProfiles })(Profiles);

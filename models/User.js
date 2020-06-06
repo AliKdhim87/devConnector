@@ -57,25 +57,13 @@ const userSchema = new mongoose.Schema({
     }
   ],
   privacyOptions: {
-    profileVisibility: {
-      friends: {
+    profileVisibleEveryone: {
         type: Boolean,
         default: true
-      },
-      everyOne: {
-        type: Boolean,
-        default: true
-      }
     },
-    messages: {
-      friends: {
+    messagesEveryone: {
         type: Boolean,
         default: true
-      },
-      everyOne: {
-        type: Boolean,
-        default: true
-      }
     }
   },
   social: {

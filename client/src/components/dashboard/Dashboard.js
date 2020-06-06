@@ -46,7 +46,7 @@ const Dashboard = ({
     return difference;
   };
   let myGroupPosts = [];
-  if (user) {
+  if (user && user.myGroups) {
     user.myGroups.forEach((group) => {
       group._id.posts.forEach((post) => {
         const postDate = new Date(post.date).getTime();

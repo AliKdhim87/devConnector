@@ -37,7 +37,6 @@ const GroupDetails = ({
     getGroup(match.params.groupID);
   }, [getGroup, match]);
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const [editOpen, setEditOpen] = useState(false);
   const [addEventOpen, setAddEventOpen] = useState(false);
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
@@ -93,7 +92,8 @@ const GroupDetails = ({
       return true;
     } else return false;
   };
-  if(!group) return <h1 className="text-center text text-primary">GROUP NOT FOUND</h1>
+  if (!group)
+    return <h1 className="text-center text text-primary">GROUP NOT FOUND</h1>;
   if (loading) return <Spinner />;
   return (
     <section className="container">
@@ -204,6 +204,7 @@ const GroupDetails = ({
                   src={member.user.avatar || member.avatar}
                   style={{ width: '10%' }}
                   className="round-img m-1"
+                  alt="avatar"
                 />
                 <p>{member.user.name || member.name} </p>
               </Link>
@@ -222,7 +223,10 @@ const GroupDetails = ({
             </h3>
             <div className="post-form">
               <div className="bg-primary p">
-                <h3 onClick={() => setDiscussionOpen(!discussionOpen)} style={{cursor:"pointer"}}>
+                <h3
+                  onClick={() => setDiscussionOpen(!discussionOpen)}
+                  style={{ cursor: 'pointer' }}
+                >
                   {' '}
                   <i className="fas fa-comments"></i>{' '}
                   {discussionOpen ? `Close` : `Click to start a discussion`}{' '}
@@ -352,7 +356,6 @@ const GroupDetails = ({
                     selected={startDate}
                     onChange={(date) => {
                       setStartDate(date);
-                      console.log(startDate);
                     }}
                     selectsStart
                     startDate={startDate}
@@ -365,7 +368,6 @@ const GroupDetails = ({
                     selected={endDate}
                     onChange={(date) => {
                       setEndDate(date);
-                      console.log(endDate);
                     }}
                     selectsEnd
                     startDate={startDate}

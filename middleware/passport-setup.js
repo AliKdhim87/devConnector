@@ -13,7 +13,6 @@ const generateRandomPass = name => {
 };
 
 const checkAndCreateUser = async (accessToken, refreshToken, profile, done, account) => {
-  console.log(profile);
   const {
     id: socialId,
     displayName: name,
@@ -48,7 +47,6 @@ const checkAndCreateUser = async (accessToken, refreshToken, profile, done, acco
     user.social[account] = socialId;
     await user.save();
 
-    console.log(user);
 
     // Return jsonwebtoken
     const payload = {

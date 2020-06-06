@@ -34,7 +34,7 @@ const GroupsFeed = ({ filteredGroups, myGroupPosts }) => (
         {myGroupPosts &&
           myGroupPosts.map((group) => {
             return (
-              <Feed.Event>
+              <Feed.Event key={uuid.v4()}>
                 <Feed.Content>
                 <Feed.Date content={<Moment fromNow>{group.date}</Moment>} />
                   <Feed.Summary>
