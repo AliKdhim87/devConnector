@@ -268,16 +268,16 @@ const JoinedGroupNotification = async (name, person, group, email) => {
   const mailOptions = {
     to: email,
     from: 'aboal7anan@gmail.com',
-    subject: 'Someone joined in your Group',
+    subject: 'Someone joined in Group',
     html: template(
       name,
-      `${person} joined in your Group ${group}`,
+      `${person} joined in ${group} Group`,
       `http://localhost:3000`,
       `If you do not want to receive e-mail notifications, you can disable it on <a href="http://localhost:3000/edit-userinfo">edit user info</a>`,
       `Go to App`
     ),
     text: `   Hello ${name}, 
-    ${person}  joined in your Group${group}
+    ${person} joined in ${group} Group
     If you do not want to receive e-mail notifications, you can disable it on <a href="http://localhost:3000/edit-userinfo">edit user info</a>\n`
   };
   try {
@@ -291,16 +291,16 @@ const leftGroupNotification = async (name, person, group, email) => {
   const mailOptions = {
     to: email,
     from: 'aboal7anan@gmail.com',
-    subject: 'Someone left your Group',
+    subject: 'Someone left the Group',
     html: template(
       name,
-      `${person} left your Group ${group}`,
+      `${person} left the ${group} Group`,
       `http://localhost:3000`,
       `If you do not want to receive e-mail notifications, you can disable it on <a href="http://localhost:3000/edit-userinfo">edit user info</a>`,
       `Go to App`
     ),
-    text: `   Hello ${name}, 
-    ${person}  left your Group${group}
+    text: ` Hello ${name}, 
+    ${person}  left the ${group} Group
     If you do not want to receive e-mail notifications, you can disable it on <a href="http://localhost:3000/edit-userinfo">edit user info</a>\n`
   };
   try {
@@ -340,13 +340,13 @@ const addPostGroupNotification = async (name, personAddPost, group, email) => {
     subject: `Someone add post on group ${group} `,
     html: template(
       name,
-      `${personAddPost} add post on group ${group}`,
+      `${personAddPost} add post on  ${group} group`,
       `http://localhost:3000`,
       `If you do not want to receive e-mail notifications, you can disable it on <a href="http://localhost:3000/edit-userinfo">edit user info</a>`,
       `Go to App`
     ),
     text: `   Hello ${name}, 
-    ${personAddPost} add post on group ${group}
+    ${personAddPost} add post on  ${group} group
     If you do not want to receive e-mail notifications, you can disable it on <a href="http://localhost:3000/edit-userinfo">edit user info</a>\n`
   };
   try {
@@ -368,10 +368,10 @@ const addEventGroupNotification = async (
   const mailOptions = {
     to: email,
     from: 'aboal7anan@gmail.com',
-    subject: `Someone add Event on group ${group} `,
+    subject: `Someone add Event in ${group} group`,
     html: template(
       name,
-      `${personAddEvent} add an event ${eventTitle} on group ${group}. It will start from ${startTime} to ${endTime}`,
+      `${personAddEvent} add an event ${eventTitle} in ${group} group. It will start from ${startTime} to ${endTime}`,
       `http://localhost:3000`,
       `If you do not want to receive e-mail notifications, you can disable it on <a href="http://localhost:3000/edit-userinfo">edit user info</a>`,
       `Go to App`
@@ -436,32 +436,8 @@ const addEmojiPostGroupNotification = async (
       `Go to App`
     ),
     text: `   Hello ${name}, 
-    ${person}  add $ emoji to your ${post} post in ${group} group
+    ${person}  add emoji to your ${post} post in ${group} group
     If you do not want to receive e-mail notifications, you can disable it on <a href="http://localhost:3000/edit-userinfo">edit user info</a>\n`
-  };
-  try {
-    await sgMail.send(mailOptions);
-  } catch (error) {
-    throw error.message;
-  }
-};
-
-const friendSharedPlace = async (friend, place, emails) => {
-  const mailOptions = {
-    to: emails,
-    from: 'bsilakaymak@gmail.com',
-    name: 'YourPlaces',
-    subject: 'Your friend shared a new place',
-    html: template(
-      `!`,
-      `Your friend ${friend} shared a new place : ${place}`,
-      `http://placesharer.herokuapp.com`,
-      `If you do not want to receive e-mail notifications, you can disable it on <a href="http://localhost:3000/edit-userinfo">edit user info</a>`,
-      `Go to App`
-    ),
-    text: `Hello! \n 
-       Your friend ${friend} shared a new place : ${place} \n\n 
-       If you do not want to receive e-mail notifications, you can disable it on <a href="http://localhost:3000/edit-userinfo">edit user info</a>\n`
   };
   try {
     await sgMail.send(mailOptions);
@@ -476,7 +452,6 @@ module.exports = {
   friendAddedNotification,
   friendAcceptedNotification,
   likeNotification,
-  friendSharedPlace,
   emojiNotification,
   addCommentNotification,
   addCommentEmojiNotification,

@@ -6,5 +6,14 @@ import post from './post';
 import friendsObject from './friends';
 import message from './message';
 import group from './group';
-export default combineReducers({ alert, auth, profile, post, group, message,friendsObject });
-
+import notification from './notification';
+export default combineReducers({
+  alert,
+  auth,
+  profile,
+  post,
+  group,
+  message,
+  friendsObject,
+  notification
+});

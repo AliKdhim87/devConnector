@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const router = express.Router();
 const auth = require('../../middleware/auth');
 const User = require('../../models/User');
+const Notification = require('../../models/Notification');
 const { ObjectId } = mongoose.Types;
 const {
   checkRequestById,
@@ -120,7 +121,14 @@ router.post('/:friendId', auth, async (req, res) => {
     if (friend.notifications) {
       friendAddedNotification(friend.name, user.name, friend.email);
     }
-
+    const newNotification = new Notification({
+      sender: req.user.id,
+      receiver: [friend._id],
+      message: `${user.name} send you friend request`,
+      kind: 'friend request',
+      path: `/profiles`
+    });
+    await newNotification.save();
     res.status(200).json(sentRequest);
   } catch (err) {
     console.error(err.mesaage);
@@ -180,14 +188,27 @@ router.put('/requests/:requestId', auth, async (req, res) => {
       const requesting = await User.findById(requestInfo.requestingUser.id);
       // Todo ask Mosleh about this code and also about the clientside
     }
+
+    /* Start Notification*/
     // Email notification
     if (requestInfo.acceptingUser.notifications) {
       friendAcceptedNotification(
-        requestInfo.acceptingUser.name,
         requestInfo.requestingUser.name,
-        requestInfo.acceptingUser.email
+        requestInfo.acceptingUser.name,
+        requestInfo.requestingUser.email
       );
     }
+    // Notification inside the app
+    const newNotification = new Notification({
+      sender: req.user.id,
+      receiver: [requestInfo.requestingUser._id],
+      message: `${requestInfo.acceptingUser.name} accepted you as friend`,
+      kind: 'accepted you firnd request',
+      path: `/profiles`
+    });
+    await newNotification.save();
+    /* End Notification*/
+
     res.status(200).json({
       message: 'Friend request has been approved successfully!',
       requestInfo
