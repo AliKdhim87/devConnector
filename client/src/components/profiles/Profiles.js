@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import Spinner from '../layout/Spinner';
 import { getAllProfiles } from '../../actions/profile';
 import ProfileItem from './ProfileItem';
+import * as uuid from 'uuid';
 const Profiles = ({ getAllProfiles, profile: { profiles, loading }, auth, isAuthenticated }) => {
   useEffect(() => {
     getAllProfiles(isAuthenticated);
@@ -23,7 +24,7 @@ const Profiles = ({ getAllProfiles, profile: { profiles, loading }, auth, isAuth
           <div className="profiles">
             {profiles.length > 0 ? (
               profiles.map((profile) => (
-                <ProfileItem key={profile._id} profile={profile} me={auth} />
+                <ProfileItem key={uuid.v4()} profile={profile} me={auth} />
               ))
             ) : (
               <h4 className="text-center"> No Profiles found...</h4>
