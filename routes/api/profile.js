@@ -7,6 +7,7 @@ const { check, validationResult } = require('express-validator');
 const Profile = require('../../models/Profile');
 const User = require('../../models/User');
 const Post = require('../../models/Posts');
+const Message = require('../../models/Message');
 
 // @route   GET api/profile/me
 // @desc    Get curent users profile
@@ -140,13 +141,14 @@ router.get('/all', auth, async (req, res) => {
     });
     let friendProfiles = [];
     profiles.forEach((profile) => {
-      if (profile.user.friends.includes(req.user.id)) {
+      if (profile.user.friends.includes(req.user.id) || profile.user._id.toString()===req.user.id) {
         friendProfiles.push(profile);
       }
     });
 
     const profileArray = publicProfiles.concat(friendProfiles);
-    res.json(profileArray);
+    const visibleProfiles = [...new Set(profileArray)]
+    res.json(visibleProfiles);
   } catch (error) {
     console.error(error.message);
     res.status(500).send(error);
@@ -183,6 +185,8 @@ router.delete('/', auth, async (req, res) => {
     await Post.deleteMany({ user: req.user.id });
     // Remove profile
     await Profile.findOneAndRemove({ user: req.user.id });
+    // Remove messages by user
+    await Message.findOneAndRemove({corresponder: req.user.id})
     //  Remove user
     await User.findOneAndRemove({ _id: req.user.id });
     // remove group created by user
