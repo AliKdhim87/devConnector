@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Moment from 'react-moment';
 import { Link, useParams } from 'react-router-dom';
 import { connect } from 'react-redux';
-import Microlink from '@microlink/react';
+import { ReactTinyLink } from 'react-tiny-link';
 import EventCalendar from './EventCalendar';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -94,7 +94,7 @@ const GroupDetails = ({
     } else return false;
   };
   if (loading || auth.loading) return <Spinner />;
-  if (!loading && group === null) return <ElementNotFound element="GROUP"/>
+  if (!loading && group === null) return <ElementNotFound element="GROUP" />;
   return (
     <section className="container">
       {/* Container including group info */}
@@ -199,7 +199,9 @@ const GroupDetails = ({
       <div className="ui divider"></div>
       <div id="member-list" className="text-center m-3">
         <h3 className="text text-center text-primary m-3">Members:</h3>{' '}
-        {group && group.members.length === 0 && <ElementNotFound element="MEMBERS"/>}
+        {group && group.members.length === 0 && (
+          <ElementNotFound element="MEMBERS" />
+        )}
         {group &&
           group.members.map((member) => (
             <div key={member.user._id}>
@@ -290,7 +292,7 @@ const GroupDetails = ({
             <div className="posts">
               <div className="post bg-white p-1 my-1 flex-c">
                 {group && group.posts.length === 0 ? (
-                  <ElementNotFound element="POSTS SHARED"/>
+                  <ElementNotFound element="POSTS SHARED" />
                 ) : (
                   <div>
                     {group &&
@@ -299,11 +301,11 @@ const GroupDetails = ({
                           <h3>{post.title}</h3>
                           <p>{post.text}</p>
                           {post.link && post.link !== '' && !loading && (
-                            <Microlink
-                              media={['video', 'audio', 'image', 'logo']}
-                              autoplay
-                              controls
-                              size="large"
+                            <ReactTinyLink
+                              cardSize="large"
+                              showGraphic={true}
+                              maxLine={2}
+                              minLine={1}
                               url={post.link}
                             />
                           )}{' '}
@@ -407,7 +409,7 @@ const GroupDetails = ({
               <div className="events-list">
                 <h3 className="text text-primary text-center">Events</h3>
                 {group.events.length === 0 && (
-                  <ElementNotFound element="EVENTS"/>
+                  <ElementNotFound element="EVENTS" />
                 )}
                 {group && auth && !loading && (
                   <EventCalendar
@@ -415,6 +417,7 @@ const GroupDetails = ({
                     deleteEvent={deleteEvent}
                     groupID={groupID}
                     isFinished={isFinished}
+                    auth={auth}
                   />
                 )}
               </div>

@@ -85,12 +85,14 @@ const EditUserInfo = ({ updateUser, auth, setPrivacyOptions }) => {
         }}
       />
       {auth.user && (
-        <div className="flex-c" style={{width:"30%", marginTop:"1rem"}}>
+        <div className="flex-c" style={{ width: '30%', marginTop: '1rem' }}>
           <span>Choose who can send you messages</span>
           <select
             className="ui dropdown"
             onChange={(e) => setMessages(e.target.value)}
           >
+            {' '}
+            <option value="null">Select</option>
             <option value={false}>Friends Only</option>
             <option value={true}>Everyone</option>
           </select>
@@ -99,6 +101,8 @@ const EditUserInfo = ({ updateUser, auth, setPrivacyOptions }) => {
             className="ui dropdown"
             onChange={(e) => setProfileVisibility(e.target.value)}
           >
+            {' '}
+            <option value="null">Select</option>
             <option value={false}>Friends Only</option>
             <option value={true}>Everyone</option>
           </select>

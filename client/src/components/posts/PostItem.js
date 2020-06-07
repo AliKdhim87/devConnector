@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { Button } from 'semantic-ui-react';
 import Moment from 'react-moment';
-import Microlink from '@microlink/react';
+import {ReactTinyLink} from 'react-tiny-link';
 import { connect } from 'react-redux';
 import {
   addLike,
@@ -56,13 +56,14 @@ const PostItem = ({
       <div>
         <p className="my-1">{text}</p>
         {link && link !== '' && !loading && (
-          <Microlink
-            media={['video', 'audio', 'image', 'logo']}
-            autoplay
-            controls
-            size="large"
-            url={link}
-          />
+          <ReactTinyLink
+          cardSize="large"
+          showGraphic={true}
+          autoPlay={true}
+          maxLine={2}
+          minLine={1}
+          url={link}
+        />
         )}
         <p className="post-date">
           Posted on <Moment format="YYYY/MM/DD">{date}</Moment>

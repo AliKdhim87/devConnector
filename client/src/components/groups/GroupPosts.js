@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Moment from 'react-moment';
 import { Link, useHistory, useParams } from 'react-router-dom';
 import { connect } from 'react-redux';
-import Microlink from '@microlink/react';
+import {ReactTinyLink} from 'react-tiny-link';
 import { Button } from 'semantic-ui-react';
 import EmojiPicker from '../post/EmojiPicker';
 import {
@@ -95,13 +95,14 @@ const GroupPosts = ({
               {!loading && post && post.text}
             </p>
             {post.link && post.link !== '' && !loading && (
-              <Microlink
-                media={['video', 'audio', 'image', 'logo']}
-                autoplay
-                controls
-                size="large"
-                url={post.link}
-              />
+              <ReactTinyLink
+              cardSize="small"
+              showGraphic={true}
+              autoPlay={true}
+              maxLine={2}
+              minLine={1}
+              url={post.link}
+            />
             )}
             <p className="post-date group-post-text-and-date">
               {post && <Moment format="YYYY/MM/DD">{post.date}</Moment>}

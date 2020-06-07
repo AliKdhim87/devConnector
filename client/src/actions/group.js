@@ -382,7 +382,6 @@ export const addGroupPostEmoji = (groupID, postID, emoji) => async (
       postID:postID,
       groupID:groupID
     });
-    dispatch(setAlert('Emoji Added', 'success'));
 
     // return res;
   } catch (error) {
@@ -411,7 +410,6 @@ export const removeGroupPostEmoji = (groupID, postID, emojiID) => async (
       emojis: res.data.emojis,
     });
 
-    dispatch(setAlert('Emoji Removed', 'success'));
   } catch (error) {
     console.log(error);
 
