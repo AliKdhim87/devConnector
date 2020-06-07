@@ -1,9 +1,13 @@
-import React, { useState, Fragment } from 'react';
+import React, { useState, Fragment, useEffect } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { login } from '../../actions/auth';
+import { login, socialLogin } from '../../actions/auth';
 import { Link, Redirect } from 'react-router-dom';
-const Login = ({ login, isAuthenticated }) => {
+const Login = ({ login, isAuthenticated, socialLogin }) => {
+  useEffect(() => {
+    const token = new URL(window.location).searchParams.get('token');
+    socialLogin(token);
+  }, [socialLogin]);
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -59,9 +63,10 @@ const Login = ({ login, isAuthenticated }) => {
 };
 Login.propTypes = {
   login: PropTypes.func.isRequired,
+  socialLogin: PropTypes.func.isRequired,
   isAuthenticated: PropTypes.bool,
 };
 const mapStateToProps = (state) => ({
   isAuthenticated: state.auth.isAuthenticated,
 });
-export default connect(mapStateToProps, { login })(Login);
+export default connect(mapStateToProps, { login, socialLogin })(Login);

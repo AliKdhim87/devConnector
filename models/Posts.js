@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 const PostSchema = new Schema({
   user: {
     type: Schema.Types.ObjectId,
-    ref: 'users',
+    ref: 'user',
   },
   text: {
     type: String,
@@ -23,7 +23,28 @@ const PostSchema = new Schema({
     {
       user: {
         type: Schema.Types.ObjectId,
-        ref: 'users',
+        ref: 'user',
+      },
+    },
+  ],
+  emojis: [
+    {
+      users: [
+        {
+          type: Schema.Types.ObjectId,
+          ref: 'users',
+        },
+      ],
+      amount: Number,
+      emoji: {
+        colons: { type: String },
+        emoticons: [String],
+        id: { type: String },
+        name: { type: String },
+        native: { type: String },
+        short_names: [String],
+        skin: { type: Number },
+        unified: { type: String },
       },
     },
   ],
@@ -31,7 +52,7 @@ const PostSchema = new Schema({
     {
       user: {
         type: Schema.Types.ObjectId,
-        ref: 'users',
+        ref: 'user',
       },
       text: {
         type: String,
@@ -45,12 +66,44 @@ const PostSchema = new Schema({
         type: Date,
         default: Date.now,
       },
+      likes: [
+        {
+          user: {
+            type: Schema.Types.ObjectId,
+            ref: 'users',
+          },
+        },
+      ],
+      emojis: [
+        {
+          users: [
+            {
+              type: Schema.Types.ObjectId,
+              ref: 'users',
+            },
+          ],
+          amount: Number,
+          emoji: {
+            colons: { type: String },
+            emoticons: [String],
+            id: { type: String },
+            name: { type: String },
+            native: { type: String },
+            short_names: [String],
+            skin: { type: Number },
+            unified: { type: String },
+          },
+        },
+      ],
     },
   ],
   date: {
     type: Date,
     default: Date.now,
   },
+  link:{
+    type: String,
+  }
 });
 
 module.exports = Post = mongoose.model('post', PostSchema);
