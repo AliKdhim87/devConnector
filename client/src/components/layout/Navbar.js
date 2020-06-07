@@ -42,7 +42,7 @@ const Navbar = ({
         </NavLink>
       </li>
       <li>
-        <a onClick={logout} href="#!">
+        <a onClick={logout} href="/">
           <i className="fas fa-sign-out-alt"></i>{' '}
           <span className="hide-sm hide-medium">Logout </span>
         </a>
@@ -70,7 +70,7 @@ const Navbar = ({
   useEffect(() => {
     if (user) {
       socket = io('http://localhost:5000');
-      // Send the email to the server
+      // Send the user id to the server
       socket.emit('user_connected', user._id);
       fetchContacts();
     }

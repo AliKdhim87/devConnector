@@ -7,11 +7,11 @@ const UsersChatList = ({ corresponder, deleteAllMessages }) => {
 
   return (
     <Card>
-      <List animated verticalAlign='middle'>
-        <List.Item className="m-1">
+      <List animated verticalAlign="middle">
+        <List.Item>
           <Icon
-            className='delete-user-list'
-            name='delete'
+            className="delete-user-list"
+            name="delete"
             onClick={() => deleteAllMessages(corresponder.corresponder._id)}
           />
           <Image avatar src={avatar} />
@@ -28,7 +28,7 @@ const UsersChatList = ({ corresponder, deleteAllMessages }) => {
 
 UsersChatList.propTypes = {
   corresponder: PropTypes.object.isRequired,
-  deleteAllMessages: PropTypes.func.isRequired,
+  deleteAllMessages: PropTypes.func.isRequired
 };
 
 export default UsersChatList;
