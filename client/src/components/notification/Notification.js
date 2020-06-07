@@ -1,4 +1,4 @@
-import React, { useEffect, Fragment } from 'react';
+import React, { useEffect, Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Dropdown, List } from 'semantic-ui-react';
@@ -15,7 +15,7 @@ const Notification = ({
   useEffect(() => {
     getNotifications();
   }, [getNotifications]);
-
+  const [menuOpen, setMenuOpen] = useState(false);
   return (
     <Fragment>
       <span className="notifications_count">
@@ -24,8 +24,8 @@ const Notification = ({
           notifications.length > 0 &&
           notifications.length}
       </span>
-      <Dropdown icon="globe">
-        <Dropdown.Menu size="massive">
+      <Dropdown icon="globe" open={notifications && notifications.length === 0 ? false : menuOpen} onClick={()=>{setMenuOpen(!menuOpen)}}>
+        <Dropdown.Menu size="massive" >
           <List celled>
             {notifications &&
               !loading &&
