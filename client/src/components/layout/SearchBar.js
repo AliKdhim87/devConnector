@@ -115,7 +115,7 @@ const SearchBar = () => {
           searchSubject !== '' &&
           userInput.query !== '' &&
           results.map((result) => (
-            <div className="text-center search-results">
+            <div key={result.id} className="text-center search-results">
               {searchSubject === 'profile' && (
                 <div>
                   <img

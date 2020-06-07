@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import Spinner from '../layout/Spinner';
 // import FriendRequestItem from './FriendRequestItem';
 import FriendRquestCard from '../layout/FriendRquestCard';
+import ElementNotFound from '../layout/ElementNotFound';
 
 const FriendsRequestslist = ({
   getFriendRequestsList,
@@ -19,13 +20,13 @@ const FriendsRequestslist = ({
         <Spinner />
       ) : (
         <Fragment>
-          <h1 className="large text-primary">Friends request List</h1>
+          <h1 className="text-center text-primary">Friends request List</h1>
           {friendsrquestlist.length > 0 ? (
             friendsrquestlist.map((friend) => (
               <FriendRquestCard key={friend._id} friend={friend} />
             ))
           ) : (
-            <h4>No friends found...</h4>
+            <ElementNotFound element="FRIEND REQUESTS"/>
           )}
         </Fragment>
       )}

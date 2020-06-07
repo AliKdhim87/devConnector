@@ -600,12 +600,18 @@ button {
   right: 0;
   top: 0;
 }
+
+
+/***************************/
 @media (max-width: 500px) {
   .user-chat-list {
     width: 35%;
   }
   .messages {
     width: 65%;
+  }
+  .group-access{
+    width: 40% !important;
   }
 }
 /* Posts Page */
@@ -681,6 +687,7 @@ button {
   margin: 1rem auto;
   transform: rotate(-1deg);
   color: white;
+  width: 20%;
 }
 .group-link:hover {
   opacity: 0.75;
@@ -819,6 +826,61 @@ button {
   justify-content: space-between;
 }
 
+.fade-in {
+  animation: fadeIn ease-in 3s;
+  -webkit-animation: fadeIn ease-in 3s;
+  -moz-animation: fadeIn ease-in 3s;
+  -o-animation: fadeIn ease-in 3s;
+  -ms-animation: fadeIn ease-in 3s;
+}
+
+
+@keyframes fadeIn{
+  0% {
+    opacity:0;
+  }
+  100% {
+    opacity:1;
+  }
+}
+
+@-moz-keyframes fadeIn {
+  0% {
+    opacity:0;
+  }
+  100% {
+    opacity:1;
+  }
+}
+
+@-webkit-keyframes fadeIn {
+  0% {
+    opacity:0;
+  }
+  100% {
+    opacity:1;
+  }
+}
+
+@-o-keyframes fadeIn {
+  0% {
+    opacity:0;
+  }
+  100% {
+    opacity:1;
+  }
+}
+
+@-ms-keyframes fadeIn {
+  0% {
+    opacity:0;
+  }
+  100% {
+    opacity:1;
+  }
+}
+
+
 /* Mobile Styles */
 @media (max-width: 700px) {
   .container {
@@ -936,6 +998,10 @@ button {
   .group-post-owner-buttons {
     margin: auto;
   }
+  .all-groups {
+    width:100%;
+    margin: auto;
+  }
   .group-post-text-and-date {
     text-align: center;
   }
@@ -977,5 +1043,11 @@ button {
   .ui.fluid.card {
     max-height: 53rem;
     padding: 1rem;
+  }
+}
+
+@media (min-width:701px) and (max-width:900px){
+  .hide-medium{
+    display: none;
   }
 }

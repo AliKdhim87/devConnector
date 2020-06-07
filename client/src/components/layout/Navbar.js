@@ -27,7 +27,7 @@ const Navbar = ({
         {' '}
         <NavLink to="/friends">
           <i className="fas fa-user-friends" />{' '}
-          <span className="hide-sm"> Friends</span>
+          <span className="hide-sm hide-medium"> Friends</span>
         </NavLink>
       </li>
       <li></li>
@@ -38,13 +38,13 @@ const Navbar = ({
         {' '}
         <NavLink to="/dashboard">
           <i className="fas fa-user"></i>{' '}
-          <span className="hide-sm">Dashboard </span>
+          <span className="hide-sm hide-medium">Dashboard </span>
         </NavLink>
       </li>
       <li>
         <a onClick={logout} href="#!">
           <i className="fas fa-sign-out-alt"></i>{' '}
-          <span className="hide-sm">Logout </span>
+          <span className="hide-sm hide-medium">Logout </span>
         </a>
       </li>
       <li>

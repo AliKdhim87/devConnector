@@ -5,6 +5,7 @@ import Spinner from '../layout/Spinner';
 import { getAllProfiles } from '../../actions/profile';
 import ProfileItem from './ProfileItem';
 import * as uuid from 'uuid';
+import ElementNotFound from '../layout/ElementNotFound';
 const Profiles = ({ getAllProfiles, profile: { profiles, loading }, auth, isAuthenticated }) => {
   useEffect(() => {
     getAllProfiles(isAuthenticated);
@@ -27,7 +28,7 @@ const Profiles = ({ getAllProfiles, profile: { profiles, loading }, auth, isAuth
                 <ProfileItem key={uuid.v4()} profile={profile} me={auth} />
               ))
             ) : (
-              <h4 className="text-center"> No Profiles found...</h4>
+              <ElementNotFound element="PROFILES FOUND"/>
             )}
           </div>
         </Fragment>

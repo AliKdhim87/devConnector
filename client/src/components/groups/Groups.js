@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import GroupItem from './GroupItem';
 import GroupsForm from './GroupsForm';
 import Spinner from '../layout/Spinner';
-import { Card } from 'semantic-ui-react';
+import ElementNotFound from '../layout/ElementNotFound';
 
 const Groups = ({ getGroups, group: { groups, loading } }) => {
   useEffect(() => {
@@ -40,8 +40,8 @@ const Groups = ({ getGroups, group: { groups, loading } }) => {
         )}
       </div>
 
-      {groups.length === 0 && !loading ? (
-        <h3 className="text-dark text-center">NO GROUPS</h3>
+      {!loading && groups && groups.length === 0 ? (
+        <ElementNotFound element="GROUPS"/>
       ) : (
         <GroupItem groups={groups} />
       )}
@@ -50,7 +50,7 @@ const Groups = ({ getGroups, group: { groups, loading } }) => {
 };
 Groups.propTypes = {
   getGroups: PropTypes.func.isRequired,
-  group: PropTypes.object.isRequired
+  group: PropTypes.object.isRequired,
 };
 const mapStateToProps = (state) => ({
   group: state.group

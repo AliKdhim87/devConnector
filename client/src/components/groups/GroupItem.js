@@ -4,7 +4,7 @@ import { Card } from 'semantic-ui-react';
 
 // each group item in all groups page
 const GroupItem = ({ groups }) => {
-  return (
+  if(groups.length > 0) return (
     <section className="container">
       {groups.map((group) => {
         return (
@@ -15,7 +15,7 @@ const GroupItem = ({ groups }) => {
                   <h2 className="text">{group.name}</h2>
                   <p>{group.description}</p>
                 </div>
-                <p className="group-access" style={{width:"15%"}}>
+                <p className="group-access">
                   {group.isPublic ? 'Public' : 'Private'}
                 </p>
                 <p>{group && group.members.length} member(s)</p>

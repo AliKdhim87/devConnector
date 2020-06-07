@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Spinner from '../layout/Spinner';
 import FriendItem from './FriendItem';
+import ElementNotFound from '../layout/ElementNotFound';
 
 const FriendsList = ({
   getFriendsList,
@@ -22,14 +23,14 @@ const FriendsList = ({
           <Link to="/requests" className="btn btn-light">
             See Friend Requests
           </Link>
-          <h1 className="large text-primary">Friends List</h1>
+          <h1 className="text-center text-primary">Friends List</h1>
           <div className="profiles">
             {friends.length > 0 ? (
               friends.map((friend) => (
                 <FriendItem key={friend.id} friend={friend} />
               ))
             ) : (
-              <h4>No friends found...</h4>
+              <ElementNotFound element="FRIENDS"/>
             )}
           </div>
         </Fragment>

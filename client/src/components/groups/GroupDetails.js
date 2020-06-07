@@ -18,6 +18,7 @@ import {
 } from '../../actions/group';
 import GroupOwnerDashboard from './GroupOwnerDashboard';
 import Spinner from '../layout/Spinner';
+import ElementNotFound from '../layout/ElementNotFound';
 
 // detailed view of single group
 
@@ -92,9 +93,8 @@ const GroupDetails = ({
       return true;
     } else return false;
   };
-  if (!group && !loading)
-    return <h1 className="text-center text text-primary">GROUP NOT FOUND</h1>;
-  if (loading) return <Spinner />;
+  if (loading || auth.loading) return <Spinner />;
+  if (!loading && group === null) return <ElementNotFound element="GROUP"/>
   return (
     <section className="container">
       {/* Container including group info */}
@@ -134,14 +134,14 @@ const GroupDetails = ({
           group.members &&
           isMember(group, auth.user._id) ? (
             <button
-              className="btn btn-primary m-1 mobile-button-m0"
+              className="btn btn-danger m-1 mobile-button-m0"
               onClick={() => removeMember(groupID)}
             >
               LEAVE
             </button>
           ) : (
             <button
-              className="btn btn-primary m-1 mobile-button-m0"
+              className="btn btn-success m-1 mobile-button-m0"
               onClick={() => addMember(groupID)}
             >
               JOIN
@@ -154,7 +154,7 @@ const GroupDetails = ({
             !auth.loading &&
             auth.user._id === group.creator._id && (
               <button
-                className="btn btn-success m-1 mobile-button-m0"
+                className="btn btn-dark m-1 mobile-button-m0"
                 onClick={() => toggleSettings()}
               >
                 {settingsOpen ? 'CLOSE' : 'SETTINGS'}
@@ -199,7 +199,7 @@ const GroupDetails = ({
       <div className="ui divider"></div>
       <div id="member-list" className="text-center m-3">
         <h3 className="text text-center text-primary m-3">Members:</h3>{' '}
-        {group && group.members.length === 0 && <h4>No Members</h4>}
+        {group && group.members.length === 0 && <ElementNotFound element="MEMBERS"/>}
         {group &&
           group.members.map((member) => (
             <div key={member.user._id}>
@@ -290,9 +290,7 @@ const GroupDetails = ({
             <div className="posts">
               <div className="post bg-white p-1 my-1 flex-c">
                 {group && group.posts.length === 0 ? (
-                  <div>
-                    <h3 className="text-dark">NO POSTS SHARED</h3>
-                  </div>
+                  <ElementNotFound element="POSTS SHARED"/>
                 ) : (
                   <div>
                     {group &&
@@ -409,7 +407,7 @@ const GroupDetails = ({
               <div className="events-list">
                 <h3 className="text text-primary text-center">Events</h3>
                 {group.events.length === 0 && (
-                  <h3 className="text text-dark text-center">NO EVENTS</h3>
+                  <ElementNotFound element="EVENTS"/>
                 )}
                 {group && auth && !loading && (
                   <EventCalendar
