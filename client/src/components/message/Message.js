@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-
 import ScrollToBotton from 'react-scroll-to-bottom';
 import {
   sendMessage,
