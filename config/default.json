@@ -6,7 +6,7 @@
   "githubClientId": "",
   "githubSecret": "",
   "googleClientId": "",
-  "googleSecret":"",
-  "facebookClientId":"",
-  "facebookSecret":""
+  "googleSecret": "",
+  "facebookClientId": "",
+  "facebookSecret": ""
 }
