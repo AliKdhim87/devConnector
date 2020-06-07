@@ -1,12 +1,14 @@
 {
-  "mongoURI": "",
-  "jwtSecret": "",
-  "githubToken": "",
-  "SEND_GRID_API_KEY": "",
-  "githubClientId": "",
-  "githubSecret": "",
-  "googleClientId": "",
-  "googleSecret": "",
-  "facebookClientId": "",
-  "facebookSecret": ""
+  "mongoURI": "mongodb+srv://sila:TIuZRvNWJl12WgHW@cluster0-8m0ks.mongodb.net/brandnew?retryWrites=true&w=majority",
+  "jwtSecret": "sila_sila",
+  "githubClientId": "846059c5fbf526e78b3d",
+  "githubSecret": "2b6d2870a22d65cd06ee96acbfb904bf16a79c69",
+  "googleClientId": "781474144507-efedav6ph9u4eo93qgeekten7lrsm4l2.apps.googleusercontent.com",
+  "googleSecret": "IWInIo0PNZdJFx5ihk5m8Nop",
+  "facebookClientId": "193733098484075",
+  "facebookSecret": "83d5cea0ca01926e4d8cb073f0f54194",
+  "SEND_GRID_API_KEY": "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",
+  "CLOUD_NAME":"dicrwfyvs",
+  "CLOUDINARY_API":"163494596653774",
+  "CLOUDINARY_SECRET":"vyveyQj6spLQckqCe3YhWv385bU"
 }
