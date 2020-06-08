@@ -26,17 +26,17 @@ const Landing = ({ isAuthenticated }) => {
             </Link>
           </div>
           <div className="m-2 social-buttons">
-            <a href="http://localhost:5000/api/social/facebook">
+            <a href="https://dev-connector-hyf.herokuapp.com/api/social/facebook">
               <button className="btn btn-light" style={{color:"#0D8AF0",}}>
                 <i className="fab fa-facebook-square"></i>
               </button>
             </a>
-            <a href="http://localhost:5000/api/social/google">
+            <a href="https://dev-connector-hyf.herokuapp.com/api/social/google">
               <button className="btn btn-light" style={{background:"#D5453A", color:"white"}}>
                 <i className="fab fa-google-plus-square"></i>
               </button>
             </a>
-            <a href="http://localhost:5000/api/social/github">
+            <a href="https://dev-connector-hyf.herokuapp.com/api/social/github">
               <button className="btn btn-light">
                 <i className="fab fa-github-square"></i>
               </button>

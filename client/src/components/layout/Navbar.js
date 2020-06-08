@@ -69,8 +69,8 @@ const Navbar = ({
   );
   useEffect(() => {
     if (user) {
-      socket = io('http://localhost:5000');
-      // Send the user id to the server
+      socket = io('https://dev-connector-hyf.herokuapp.com/');
+      // Send the email to the server
       socket.emit('user_connected', user._id);
       fetchContacts();
     }
