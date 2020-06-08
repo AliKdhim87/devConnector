@@ -14,6 +14,8 @@ import Profiles from '../profiles/Profiles';
 import Profile from '../profile/Profile';
 import Posts from '../posts/Posts';
 import Post from '../post/Post';
+import ForgotPassword from '../auth/ForgotPassword';
+import ResetPassword from '../auth/ResetPassword';
 import Message from '../message/Message';
 import NotFound from '../layout/NotFound';
 import PraivateRoute from '../routing/PraivateRoute';
@@ -37,6 +39,8 @@ const Routes = () => {
       <Switch>
         <Route exact path="/register" component={Register} />
         <Route exact path="/login" component={Login} />
+        <Route exact path="/forgotpassword" component={ForgotPassword} />
+        <Route exact path="/resetpassword" component={ResetPassword} />
         <Route exact path="/profiles" component={Profiles} />
         <Route exact path="/profile/:id" component={Profile} />
         <PraivateRoute exact path="/groups" component={Groups} />

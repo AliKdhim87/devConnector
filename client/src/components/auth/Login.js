@@ -55,6 +55,9 @@ const Login = ({ login, isAuthenticated, socialLogin }) => {
           <input type='submit' className='btn btn-primary' value='Login' />
         </form>
         <p className='my-1'>
+          <Link to='/forgotpassword'>Forgot Password</Link>
+        </p>
+        <p className='my-1'>
           Don't have an account? <Link to='/register'>Sign Up</Link>
         </p>
       </section>

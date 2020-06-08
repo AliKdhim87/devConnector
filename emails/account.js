@@ -87,7 +87,7 @@ const forgetPasswordEmail = async (name, email, link) => {
   const mailOptions = {
     to: email,
     from: 'bsilakaymak@gmail.com',
-    name: 'YourPlaces',
+    name: 'DevConnector',
     subject: 'Password change request',
     html: template(
       name,
@@ -115,7 +115,7 @@ const resetPasswordEmail = async (name, email) => {
     html: template(
       name,
       `This is a confirmation that the password for your account ${email} has just been changed.`,
-      `http://placesharer.herokuapp.com`,
+      `https://dev-connector-hyf.herokuapp.com/`,
       ` `,
       `Go to App`
     ),
