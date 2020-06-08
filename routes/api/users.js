@@ -5,12 +5,13 @@ const cloudinary = require('cloudinary');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../../models/User');
-const Profile = require('../../models/Profile')
+const Profile = require('../../models/Profile');
 const Post = require('../../models/Posts');
 const auth = require('../../middleware/auth');
 const config = require('config');
 const scret = config.get('jwtSecret');
 const fileUpload = require('../../middleware/file-upload');
+const { accountVerifyEmail } = require('../../emails/account');
 // @route   POST api/users
 // @desc    Register user
 // @access  Public
@@ -46,6 +47,12 @@ router.post(
           '//www.gravatar.com/avatar/4f3488d24174fc7d950cfe39a72827c0?s=200&r=pg&d=mm',
         password
       });
+
+      user.generateAccountVerify();
+      // send email
+      let link = req.headers.origin + 'confirm/' + user.verifyAccountToken;
+      accountVerifyEmail(user.name, user.email, link);
+
       const salt = await bcrypt.genSalt(10);
       user.password = await bcrypt.hash(password, salt);
       await user.save();
@@ -56,6 +63,12 @@ router.post(
       };
       jwt.sign(payload, scret, { expiresIn: 36000 }, (error, token) => {
         if (error) throw error;
+        if (!user.active) {
+          return res
+            .status(401)
+            .json({ errors: [{ msg: 'Verify your account' }] });
+        }
+
         res.json({ token });
       });
     } catch (error) {
@@ -127,14 +140,15 @@ router.put('/privacyoptions', auth, async (req, res) => {
     if (!profile) {
       return res.status(404).json({ msg: 'Profile not found' });
     }
-    profile.visible = user.privacyOptions.profileVisibleEveryone = req.body.profileVisibleEveryone,
-    user.privacyOptions.messagesEveryone = req.body.messagesEveryone;
-    
+    (profile.visible = user.privacyOptions.profileVisibleEveryone =
+      req.body.profileVisibleEveryone),
+      (user.privacyOptions.messagesEveryone = req.body.messagesEveryone);
+
     await profile.save();
     await user.save();
     res.send(user);
   } catch (error) {
-    console.error(error)
+    console.error(error);
     res.status(500).send('Server Error');
   }
 });

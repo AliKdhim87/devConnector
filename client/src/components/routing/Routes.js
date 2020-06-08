@@ -27,6 +27,8 @@ import GroupDetails from '../groups/GroupDetails';
 import GroupsForm from '../groups/GroupsForm';
 import Groups from '../groups/Groups';
 import SearchBar from '../layout/SearchBar';
+import ConfirmationEmail from '../confirmationEmail/ConfirmationEmail';
+import ConfirmationMessage from '../confirmationEmail/ConfirmationMessage';
 
 import Settings from '../dashboard/Settings';
 
@@ -39,11 +41,17 @@ const Routes = () => {
         <Route exact path="/login" component={Login} />
         <Route exact path="/profiles" component={Profiles} />
         <Route exact path="/profile/:id" component={Profile} />
+        <Route exact path="/confirm/:token" component={ConfirmationEmail} />
+        <Route
+          exact
+          path="/confirmation/message"
+          component={ConfirmationMessage}
+        />
         <PraivateRoute exact path="/groups" component={Groups} />
         <PraivateRoute exact path="/groups/details" component={GroupDetails} />
         <PraivateRoute exact path="/groups/posts" component={GroupPosts} />
         <PraivateRoute exact path="/search" component={SearchBar} />
-        <PraivateRoute exact path="/settings" component={Settings}/>
+        <PraivateRoute exact path="/settings" component={Settings} />
 
         <PraivateRoute exact path="/creategroup" component={GroupsForm} />
         <PraivateRoute exact path="/groups/:groupID" component={GroupDetails} />
@@ -52,7 +60,7 @@ const Routes = () => {
           path="/groups/:groupID/posts/:postID"
           component={GroupPosts}
         />
-        <PraivateRoute exact path='/message/:id' component={Message} />
+        <PraivateRoute exact path="/message/:id" component={Message} />
         <PraivateRoute exact path="/dashboard" component={Dashboard} />
         <PraivateRoute exact path="/create-profile" component={CreateProfile} />
         <PraivateRoute exact path="/edit-userinfo" component={EditUserInfo} />
