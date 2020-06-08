@@ -49,7 +49,7 @@ const PostForm = ({ addPost }) => {
       <form
         className="form my-1"
         onSubmit={(e) => {
-          if (!isValidLink(link)) {
+          if (link!=="" && !isValidLink(link)) {
             return;
           }
           e.preventDefault();
