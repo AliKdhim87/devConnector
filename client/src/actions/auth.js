@@ -121,7 +121,7 @@ export const forgotPassword = (email) => async (dispatch) => {
     }
   };
 
-  const formData = {email:email}
+  const formData = { email: email };
 
   try {
     const res = await axios.post('/api/auth/forgetpassword', formData, config);
@@ -135,6 +135,7 @@ export const forgotPassword = (email) => async (dispatch) => {
     if (errors) {
       errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
     }
+    dispatch(setAlert('An error occured', 'danger'));
   }
 };
 
@@ -146,10 +147,10 @@ export const resetPassword = (password, confirmPassword, token) => async (
       'Content-Type': 'application/json'
     }
   };
-  const formData ={
+  const formData = {
     password: password,
     confirmPassword: confirmPassword
-  }
+  };
   try {
     const res = await axios.post(
       `/api/auth/resetpassword/${token}`,
