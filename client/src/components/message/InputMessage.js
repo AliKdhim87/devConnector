@@ -9,7 +9,7 @@ const InputMessage = ({ corresponderId, sendMessage, me }) => {
 
   useEffect(() => {
     if (me !== null) {
-      socket = io('http://localhost:5000');
+      socket = io('https://dev-connector-hyf.herokuapp.com/');
       // Send the email to the server
       socket.emit('user_connected', me._id);
 
