@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const { ObjectId } = mongoose.Schema.Types;
-
-const Schema = mongoose.Schema;
+const crypto = require('crypto');
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -58,19 +57,26 @@ const userSchema = new mongoose.Schema({
   ],
   privacyOptions: {
     profileVisibleEveryone: {
-        type: Boolean,
-        default: true
+      type: Boolean,
+      default: true
     },
     messagesEveryone: {
-        type: Boolean,
-        default: true
+      type: Boolean,
+      default: true
     }
   },
   social: {
     google: { type: String, default: null },
     github: { type: String, default: null },
     facebook: { type: String, default: null }
-  }
+  },
+  resetPasswordExpires: Date,
+  resetPasswordToken: String,
 });
+
+userSchema.methods.generatePasswordReset = function () {
+  this.resetPasswordToken = crypto.randomBytes(20).toString('hex');
+  this.resetPasswordExpires = Date.now() + 3600000; //expires in an hour
+};
 
 module.exports = User = mongoose.model('user', userSchema);

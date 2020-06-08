@@ -42,10 +42,11 @@ const findOrCreateUser = async (
         password: hashedPassword,
         social: {
           [account]: socialId
-        }
+        },
       });
     }
     user.social[account] = socialId;
+    user.active = true;
     await user.save();
 
     // Return jsonwebtoken

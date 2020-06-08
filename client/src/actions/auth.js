@@ -6,11 +6,13 @@ import {
   SOCIAL_LOGIN_SUCCESS,
   REGISTER_FAIL,
   USER_LOADED,
+  FORGET_PASSWORD,
+  RESET_PASSWORD,
   AUTH_ERROR,
   LOGIN_FAIL,
   LOGIN_SUCCESS,
   LOGOUT,
-  CLEAR_PROFILE,
+  CLEAR_PROFILE
 } from './types';
 
 // Laod user
@@ -23,11 +25,11 @@ export const loadUser = () => async (dispatch) => {
     const res = await axios.get('/api/auth');
     dispatch({
       type: USER_LOADED,
-      payload: res.data,
+      payload: res.data
     });
   } catch (error) {
     dispatch({
-      type: AUTH_ERROR,
+      type: AUTH_ERROR
     });
   }
 };
@@ -35,15 +37,15 @@ export const loadUser = () => async (dispatch) => {
 export const register = ({ name, email, password }) => async (dispatch) => {
   const config = {
     headers: {
-      'Content-Type': 'application/json',
-    },
+      'Content-Type': 'application/json'
+    }
   };
   const body = JSON.stringify({ name, email, password });
   try {
     const res = await axios.post('/api/users', body, config);
     dispatch({
       type: REGISTER_SUCCESS,
-      payload: res.data,
+      payload: res.data
     });
     dispatch(loadUser());
   } catch (err) {
@@ -52,7 +54,7 @@ export const register = ({ name, email, password }) => async (dispatch) => {
       errors.forEach((err) => dispatch(setAlert(err.msg, 'danger')));
     }
     dispatch({
-      type: REGISTER_FAIL,
+      type: REGISTER_FAIL
     });
   }
 };
@@ -61,8 +63,8 @@ export const register = ({ name, email, password }) => async (dispatch) => {
 export const login = (email, password) => async (dispatch) => {
   const config = {
     headers: {
-      'Content-Type': 'application/json',
-    },
+      'Content-Type': 'application/json'
+    }
   };
 
   const body = JSON.stringify({ email, password });
@@ -72,7 +74,7 @@ export const login = (email, password) => async (dispatch) => {
 
     dispatch({
       type: LOGIN_SUCCESS,
-      payload: res.data,
+      payload: res.data
     });
 
     dispatch(loadUser());
@@ -84,18 +86,18 @@ export const login = (email, password) => async (dispatch) => {
     }
 
     dispatch({
-      type: LOGIN_FAIL,
+      type: LOGIN_FAIL
     });
   }
 };
 
 // Register User by Social Account
-export const socialLogin = token => dispatch => {
+export const socialLogin = (token) => (dispatch) => {
   try {
     if (token) {
       dispatch({
         type: SOCIAL_LOGIN_SUCCESS,
-        payload: token,
+        payload: token
       });
       dispatch(loadUser());
     }
@@ -103,12 +105,67 @@ export const socialLogin = token => dispatch => {
     const errors = err.response.data.errors;
 
     if (errors) {
-      errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
+      errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
     }
 
     dispatch({
-      type: REGISTER_FAIL,
+      type: REGISTER_FAIL
     });
+  }
+};
+
+export const forgotPassword = (email) => async (dispatch) => {
+  const config = {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  };
+
+  const formData = {email:email}
+
+  try {
+    const res = await axios.post('/api/auth/forgetpassword', formData, config);
+
+    dispatch({
+      type: FORGET_PASSWORD,
+      payload: res.data
+    });
+  } catch (err) {
+    const errors = err.response.data.errors;
+    if (errors) {
+      errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
+    }
+  }
+};
+
+export const resetPassword = (password, confirmPassword, token) => async (
+  dispatch
+) => {
+  const config = {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  };
+  const formData ={
+    password: password,
+    confirmPassword: confirmPassword
+  }
+  try {
+    const res = await axios.post(
+      `/api/auth/resetpassword/${token}`,
+      formData,
+      config
+    );
+
+    dispatch({
+      type: RESET_PASSWORD,
+      payload: res.data
+    });
+  } catch (err) {
+    const errors = err.response.data.errors;
+    if (errors) {
+      errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
+    }
   }
 };
 

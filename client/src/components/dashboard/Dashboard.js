@@ -100,8 +100,11 @@ const Dashboard = ({
   let filteredFriendPosts = [];
   if (posts && user) {
     posts.forEach((post) => {
-      if (user.friends.includes(post.user._id)) {
-        filteredFriendPosts.push(post);
+      if (user && post && post.user) {
+        if (user.friends.includes(post.user._id)) {
+          filteredFriendPosts.push(post);
+        }
+        return
       }
       return;
     });

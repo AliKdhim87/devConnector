@@ -11,14 +11,15 @@ const PostForm = ({ addPost }) => {
     link: '',
   });
   const [addLink, setAddLink] = useState(false);
-  const [textWithEmoji, setTextWithEmoji] = useState('');
 
   const inputHandler = (e) =>
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
-  const { link } = formData;
+
+  const { link, text } = formData;
+
 
   const [hideEmojiPicker, setHideEmojiPicker] = useState(true);
 
@@ -28,7 +29,10 @@ const PostForm = ({ addPost }) => {
 
   const insertEmoji = (emojiObj) => {
     const emoji = emojiObj.native;
-    setTextWithEmoji((prevText) => prevText + emoji);
+    setFormData({
+      ...formData,
+      text: text + emoji,
+    });
   };
 
   return (
@@ -49,12 +53,11 @@ const PostForm = ({ addPost }) => {
           cols='30'
           rows='5'
           placeholder='Create a post'
-          value={textWithEmoji}
+          value={text}
           onChange={(e) => {
-            setTextWithEmoji(e.target.value);
             setFormData({
               ...formData,
-              [e.target.name]: textWithEmoji,
+              text: e.target.value,
             });
           }}
           required
@@ -77,7 +80,7 @@ const PostForm = ({ addPost }) => {
             onChange={inputHandler}
           />
         </div>
-        {/* <input type='submit' className='btn btn-dark my-1' value='Submit' /> */}
+
         {hideEmojiPicker ? (
           <Button circular onClick={showHideEmojiPicker}>
             <span
