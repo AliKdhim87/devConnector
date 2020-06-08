@@ -191,7 +191,7 @@ const friendAddedNotification = async (name, person, email) => {
     html: template(
       name,
       `${person} wants to be your friend <a href="https://dev-connector-hyf.herokuapp.com/requests">click here to approve or decline</a>`,
-      `https://dev-connector-hyf.herokuapp.com/`,
+      `https://dev-connector-hyf.herokuapp.com`,
       `If you do not want to receive e-mail notifications, you can disable it on <a href="https://dev-connector-hyf.herokuapp.com/edit-userinfo">edit user info</a>`,
       `Go to App`
     )
@@ -233,16 +233,13 @@ const likeNotification = async (name, person, post, email) => {
     html: template(
       name,
       `${person} liked your post ${post}`,
-      `https://dev-connector-hyf.herokuapp.com
-https://dev-connector-hyf.herokuapp.com`,
-      `If you do not want to receive e-mail notifications, you can disable it on <a href="https://dev-connector-hyf.herokuapp.com
-https://dev-connector-hyf.herokuapp.com/edit-userinfo">edit user info</a>`,
+      `https://dev-connector-hyf.herokuapp.com`,
+      `If you do not want to receive e-mail notifications, you can disable it on <a href="https://dev-connector-hyf.herokuapp.com/edit-userinfo">edit user info</a>`,
       `Go to App`
     ),
     text: `   Hello ${name}, 
     ${person} liked your post ${post}
-    If you do not want to receive e-mail notifications, you can disable it on <a href="https://dev-connector-hyf.herokuapp.com
-https://dev-connector-hyf.herokuapp.com/edit-userinfo">edit user info</a>\n`
+    If you do not want to receive e-mail notifications, you can disable it on <a href="https://dev-connector-hyf.herokuapp.com/edit-userinfo">edit user info</a>\n`
   };
   try {
     await sgMail.send(mailOptions);
@@ -267,8 +264,7 @@ https://dev-connector-hyf.herokuapp.com/edit-userinfo">edit user info</a>`,
     ),
     text: `   Hello ${name}, 
     ${person}  add emoji to your post ${post}
-    If you do not want to receive e-mail notifications, you can disable it on <a href="https://dev-connector-hyf.herokuapp.com
-https://dev-connector-hyf.herokuapp.com/edit-userinfo">edit user info</a>\n`
+    If you do not want to receive e-mail notifications, you can disable it on <a href="https://dev-connector-hyf.herokuapp.com/edit-userinfo">edit user info</a>\n`
   };
   try {
     await sgMail.send(mailOptions);
@@ -285,16 +281,13 @@ const addCommentNotification = async (name, person, post, email, comment) => {
     html: template(
       name,
       `${person} add <strong>${comment}</strong> comment to your post ${post}`,
-      `https://dev-connector-hyf.herokuapp.com
-https://dev-connector-hyf.herokuapp.com`,
-      `If you do not want to receive e-mail notifications, you can disable it on <a href="https://dev-connector-hyf.herokuapp.com
-https://dev-connector-hyf.herokuapp.com/edit-userinfo">edit user info</a>`,
+      `https://dev-connector-hyf.herokuapp.com`,
+      `If you do not want to receive e-mail notifications, you can disable it on <a href="https://dev-connector-hyf.herokuapp.com/edit-userinfo">edit user info</a>`,
       `Go to App`
     ),
     text: `   Hello ${name}, 
     ${person}  add comment to your post ${post}
-    If you do not want to receive e-mail notifications, you can disable it on <a href="https://dev-connector-hyf.herokuapp.com
-https://dev-connector-hyf.herokuapp.com/edit-userinfo">edit user info</a>\n`
+    If you do not want to receive e-mail notifications, you can disable it on <a href="https://dev-connector-hyf.herokuapp.com/edit-userinfo">edit user info</a>\n`
   };
   try {
     await sgMail.send(mailOptions);
@@ -310,16 +303,13 @@ const addCommentEmojiNotification = async (name, person, comment, email) => {
     html: template(
       name,
       `${person} add emoji to your comment ${comment}`,
-      `https://dev-connector-hyf.herokuapp.com
-https://dev-connector-hyf.herokuapp.com`,
-      `If you do not want to receive e-mail notifications, you can disable it on <a href="https://dev-connector-hyf.herokuapp.com
-https://dev-connector-hyf.herokuapp.com/edit-userinfo">edit user info</a>`,
+      `https://dev-connector-hyf.herokuapp.com`,
+      `If you do not want to receive e-mail notifications, you can disable it on <a href="https://dev-connector-hyf.herokuapp.com/edit-userinfo">edit user info</a>`,
       `Go to App`
     ),
     text: `   Hello ${name}, 
     ${person}  add emoji to your comment ${comment}
-    If you do not want to receive e-mail notifications, you can disable it on <a href="https://dev-connector-hyf.herokuapp.com
-https://dev-connector-hyf.herokuapp.com/edit-userinfo">edit user info</a>\n`
+    If you do not want to receive e-mail notifications, you can disable it on <a href="https://dev-connector-hyf.herokuapp.com/edit-userinfo">edit user info</a>\n`
   };
   try {
     await sgMail.send(mailOptions);
@@ -336,16 +326,13 @@ const JoinedGroupNotification = async (name, person, group, email) => {
     html: template(
       name,
       `${person} joined in ${group} Group`,
-      `https://dev-connector-hyf.herokuapp.com
-https://dev-connector-hyf.herokuapp.com`,
-      `If you do not want to receive e-mail notifications, you can disable it on <a href="https://dev-connector-hyf.herokuapp.com
-https://dev-connector-hyf.herokuapp.com/edit-userinfo">edit user info</a>`,
+      `https://dev-connector-hyf.herokuapp.com`,
+      `If you do not want to receive e-mail notifications, you can disable it on <a href="https://dev-connector-hyf.herokuapp.com/edit-userinfo">edit user info</a>`,
       `Go to App`
     ),
     text: `   Hello ${name}, 
     ${person} joined in ${group} Group
-    If you do not want to receive e-mail notifications, you can disable it on <a href="https://dev-connector-hyf.herokuapp.com
-https://dev-connector-hyf.herokuapp.com/edit-userinfo">edit user info</a>\n`
+    If you do not want to receive e-mail notifications, you can disable it on <a href="https://dev-connector-hyf.herokuapp.com/edit-userinfo">edit user info</a>\n`
   };
   try {
     await sgMail.send(mailOptions);
@@ -362,16 +349,13 @@ const leftGroupNotification = async (name, person, group, email) => {
     html: template(
       name,
       `${person} left the ${group} Group`,
-      `https://dev-connector-hyf.herokuapp.com
-https://dev-connector-hyf.herokuapp.com`,
-      `If you do not want to receive e-mail notifications, you can disable it on <a href="https://dev-connector-hyf.herokuapp.com
-https://dev-connector-hyf.herokuapp.com/edit-userinfo">edit user info</a>`,
+      `https://dev-connector-hyf.herokuapp.com`,
+      `If you do not want to receive e-mail notifications, you can disable it on <a href="https://dev-connector-hyf.herokuapp.com/edit-userinfo">edit user info</a>`,
       `Go to App`
     ),
     text: ` Hello ${name}, 
     ${person}  left the ${group} Group
-    If you do not want to receive e-mail notifications, you can disable it on <a href="https://dev-connector-hyf.herokuapp.com
-https://dev-connector-hyf.herokuapp.com/edit-userinfo">edit user info</a>\n`
+    If you do not want to receive e-mail notifications, you can disable it on <a href="https://dev-connector-hyf.herokuapp.com/edit-userinfo">edit user info</a>\n`
   };
   try {
     await sgMail.send(mailOptions);
@@ -388,10 +372,8 @@ const deleteGroupNotification = async (name, owner, group, email) => {
     html: template(
       name,
       `${owner} deleted Group ${group}`,
-      `https://dev-connector-hyf.herokuapp.com
-https://dev-connector-hyf.herokuapp.com`,
-      `If you do not want to receive e-mail notifications, you can disable it on <a href="https://dev-connector-hyf.herokuapp.com
-https://dev-connector-hyf.herokuapp.com/edit-userinfo">edit user info</a>`,
+      `https://dev-connector-hyf.herokuapp.com`,
+      `If you do not want to receive e-mail notifications, you can disable it on <a href="https://dev-connector-hyf.herokuapp.com/edit-userinfo">edit user info</a>`,
       `Go to App`
     ),
     text: `   Hello ${name}, 
@@ -414,16 +396,13 @@ const addPostGroupNotification = async (name, personAddPost, group, email) => {
     html: template(
       name,
       `${personAddPost} add post on  ${group} group`,
-      `https://dev-connector-hyf.herokuapp.com
-https://dev-connector-hyf.herokuapp.com`,
-      `If you do not want to receive e-mail notifications, you can disable it on <a href="https://dev-connector-hyf.herokuapp.com
-https://dev-connector-hyf.herokuapp.com/edit-userinfo">edit user info</a>`,
+      `https://dev-connector-hyf.herokuapp.com`,
+      `If you do not want to receive e-mail notifications, you can disable it on <a href="https://dev-connector-hyf.herokuapp.com/edit-userinfo">edit user info</a>`,
       `Go to App`
     ),
     text: `   Hello ${name}, 
     ${personAddPost} add post on  ${group} group
-    If you do not want to receive e-mail notifications, you can disable it on <a href="https://dev-connector-hyf.herokuapp.com
-https://dev-connector-hyf.herokuapp.com/edit-userinfo">edit user info</a>\n`
+    If you do not want to receive e-mail notifications, you can disable it on <a href="https://dev-connector-hyf.herokuapp.com/edit-userinfo">edit user info</a>\n`
   };
   try {
     await sgMail.send(mailOptions);

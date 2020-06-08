@@ -5,12 +5,13 @@ import {
   SOCIAL_LOGIN_SUCCESS,
   REGISTER_FAIL,
   USER_LOADED,
+  FORGET_PASSWORD,
+  RESET_PASSWORD,
   AUTH_ERROR,
   LOGIN_FAIL,
   LOGIN_SUCCESS,
   LOGOUT,
-  CLEAR_PROFILE,
-  REGISTER_SUCCESS
+  CLEAR_PROFILE
 } from './types';
 
 // Laod user
@@ -43,6 +44,12 @@ export const register = ({ name, email, password }, history) => async (
   const body = JSON.stringify({ name, email, password });
   try {
     await axios.post('/api/users', body, config);
+    const res = await axios.post('/api/users', body, config);
+    dispatch({
+      type: REGISTER_SUCCESS,
+      payload: res.data
+    });
+    dispatch(loadUser());
   } catch (err) {
     const errors = err.response.data.errors;
     if (errors) {
@@ -110,6 +117,62 @@ export const socialLogin = (token) => (dispatch) => {
     dispatch({
       type: REGISTER_FAIL
     });
+  }
+};
+
+export const forgotPassword = (email) => async (dispatch) => {
+  const config = {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  };
+
+  const formData = { email: email };
+
+  try {
+    const res = await axios.post('/api/auth/forgetpassword', formData, config);
+
+    dispatch({
+      type: FORGET_PASSWORD,
+      payload: res.data
+    });
+  } catch (err) {
+    const errors = err.response.data.errors;
+    if (errors) {
+      errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
+    }
+    dispatch(setAlert('An error occured', 'danger'));
+  }
+};
+
+export const resetPassword = (password, confirmPassword, token) => async (
+  dispatch
+) => {
+  const config = {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  };
+  const formData = {
+    password: password,
+    confirmPassword: confirmPassword
+  };
+  try {
+    const res = await axios.post(
+      `/api/auth/resetpassword/${token}`,
+      formData,
+      config
+    );
+
+    dispatch({
+      type: RESET_PASSWORD,
+      payload: res.data
+    });
+  } catch (err) {
+    const errors = err.response.data.errors;
+    if (errors) {
+      errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
+    }
   }
 };
 

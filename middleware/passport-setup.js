@@ -42,10 +42,11 @@ const findOrCreateUser = async (
         password: hashedPassword,
         social: {
           [account]: socialId
-        }
+        },
       });
     }
     user.social[account] = socialId;
+    user.active = true;
     await user.save();
 
     // Return jsonwebtoken
@@ -75,7 +76,7 @@ passport.use(
     {
       clientID: config.get('googleClientId'),
       clientSecret: config.get('googleSecret'),
-      callbackURL: 'http://localhost:5000/api/social/google/redirect'
+      callbackURL: 'https://dev-connector-hyf.herokuapp.com/api/social/google/redirect'
     },
     (accessToken, refreshToken, profile, done) =>
       findOrCreateUser(accessToken, refreshToken, profile, done, 'google')
@@ -88,7 +89,7 @@ passport.use(
     {
       clientID: config.get('facebookClientId'),
       clientSecret: config.get('facebookSecret'),
-      callbackURL: 'http://localhost:5000/api/social/facebook/redirect',
+      callbackURL: 'https://dev-connector-hyf.herokuapp.com/api/social/facebook/redirect',
       profileFields: ['id', 'displayName', 'photos', 'email']
     },
     (accessToken, refreshToken, profile, done) =>
@@ -102,7 +103,7 @@ passport.use(
     {
       clientID: config.get('githubClientId'),
       clientSecret: config.get('githubSecret'),
-      callbackURL: 'http://localhost:5000/api/social/github/redirect',
+      callbackURL: 'https://dev-connector-hyf.herokuapp.com/api/social/github/redirect',
       scope: 'user:email'
     },
     (accessToken, refreshToken, profile, done) =>

@@ -4,13 +4,13 @@ const router = express.Router();
 const passportSetup = require('../../middleware/passport-setup')
 
 const redirectOptions = {
-  failureRedirect: 'http://localhost:3000/',
+  failureRedirect: 'https://dev-connector-hyf.herokuapp.com/',
   session: false,
 };
 
 const sendToken = (req, res) => {
   const token = req.user;
-  res.redirect('http://localhost:3000/login?token=' + token);
+  res.redirect('https://dev-connector-hyf.herokuapp.com/login?token=' + token);
 };
 router.get(
   '/google',

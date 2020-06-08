@@ -100,8 +100,11 @@ const Dashboard = ({
   let filteredFriendPosts = [];
   if (posts && user) {
     posts.forEach((post) => {
-      if (user.friends.includes(post.user._id)) {
-        filteredFriendPosts.push(post);
+      if (user && post && post.user) {
+        if (user.friends.includes(post.user._id)) {
+          filteredFriendPosts.push(post);
+        }
+        return;
       }
       return;
     });
@@ -169,6 +172,11 @@ const Dashboard = ({
                   {' '}
                   <button className="btn btn-light settings-button">
                     <i className="fas fa-users-cog settings-icon"></i>SETTINGS
+                  </button>
+                </Link>
+                <Link to={`/message/all`}>
+                  <button className="btn btn-light settings-button">
+                    <i className="fa fa-envelope" aria-hidden="true"></i>MY MESSAGES
                   </button>
                 </Link>
               </Card>

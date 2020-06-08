@@ -185,30 +185,39 @@ export const getGroupPost = (groupID, postID) => async (dispatch) => {
 
 //Add Group post
 export const addGroupPost = (groupID, formData) => async (dispatch) => {
+  const isValidLink = (string) => {
+    if (/(http(s?)):\/\//i.test(string)) {
+      return true;
+    } else return false;
+  };
   const config = {
     headers: {
       'Content-Type': 'application/json'
     }
   };
-  try {
-    const res = await axios.post(
-      `/api/groups/${groupID}/posts`,
-      formData,
-      config
-    );
-    dispatch({
-      type: ADD_GROUPPOST,
-      payload: res.data
-    });
-    dispatch(setAlert('Post Added', 'success'));
-  } catch (error) {
-    const errors = error.response.data.errors;
-    if (errors) {
-      errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
+  if (formData.link !== '' && !isValidLink(formData.link)) {
+    dispatch(setAlert('Please add a valid link', 'danger', 3000));
+  } else {
+    try {
+      const res = await axios.post(
+        `/api/groups/${groupID}/posts`,
+        formData,
+        config
+      );
+      dispatch({
+        type: ADD_GROUPPOST,
+        payload: res.data
+      });
+      dispatch(setAlert('Post Added', 'success'));
+    } catch (error) {
+      const errors = error.response.data.errors;
+      if (errors) {
+        errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
+      }
+      dispatch({
+        type: POST_ERROR
+      });
     }
-    dispatch({
-      type: POST_ERROR
-    });
   }
 };
 
@@ -262,7 +271,7 @@ export const deleteGroupPost = (groupID, postID) => async (dispatch) => {
     });
   }
 };
-//Add Event 
+//Add Event
 export const addEvent = (groupID, formData) => async (dispatch) => {
   const config = {
     headers: {
@@ -290,7 +299,6 @@ export const addEvent = (groupID, formData) => async (dispatch) => {
     });
   }
 };
-
 
 // Delete an event
 export const deleteEvent = (groupID, eventID) => async (dispatch) => {
@@ -365,24 +373,26 @@ export const deletePostComment = (groupID, postID, commentID) => async (
   }
 };
 
-
 export const addGroupPostEmoji = (groupID, postID, emoji) => async (
-  dispatch,
+  dispatch
 ) => {
   const config = {
     headers: {
-      'Content-Type': 'application/json',
-    },
+      'Content-Type': 'application/json'
+    }
   };
   try {
-    const res = await axios.put(`/api/groups/${groupID}/posts/${postID}/emoji`, emoji, config);
+    const res = await axios.put(
+      `/api/groups/${groupID}/posts/${postID}/emoji`,
+      emoji,
+      config
+    );
     dispatch({
       type: ADD_GROUPPOSTEMOJI,
       payload: res.data.emojis,
-      postID:postID,
-      groupID:groupID
+      postID: postID,
+      groupID: groupID
     });
-    dispatch(setAlert('Emoji Added', 'success'));
 
     // return res;
   } catch (error) {
@@ -392,28 +402,27 @@ export const addGroupPostEmoji = (groupID, postID, emoji) => async (
       errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
     }
     dispatch({
-      type: POST_ERROR,
+      type: POST_ERROR
     });
   }
 };
 
 // Remove emoji from post
 export const removeGroupPostEmoji = (groupID, postID, emojiID) => async (
-  dispatch,
+  dispatch
 ) => {
   try {
-    const res = await axios.put(`/api/groups/${groupID}/posts/${postID}/${emojiID}`);
+    const res = await axios.put(
+      `/api/groups/${groupID}/posts/${postID}/${emojiID}`
+    );
 
     dispatch({
       type: REMOVE_GROUPPOSTEMOJI,
       payload: res.data.emojis,
       postId: postID,
-      emojis: res.data.emojis,
+      emojis: res.data.emojis
     });
-
-    dispatch(setAlert('Emoji Removed', 'success'));
   } catch (error) {
     console.log(error);
-
   }
 };

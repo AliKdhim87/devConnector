@@ -2,16 +2,22 @@ import React from 'react';
 import './EventCalendar.css';
 import Moment from 'react-moment';
 
-const EventCalendar = ({ events, deleteEvent, groupID, isFinished }) => {
+const EventCalendar = ({ events, deleteEvent, groupID, isFinished, auth }) => {
   return (
     <div className="event-container">
       {events &&
         events.map((event) => {
           return (
             <div className="event-item" key={event._id}>
-              <div className={event.end && isFinished(event.end) ? `event-finished` : `hidden`}>
-              <span> &#10004;</span>
-            </div>
+              <div
+                className={
+                  event.end && isFinished(event.end)
+                    ? `event-finished`
+                    : `hidden`
+                }
+              >
+                <span> &#10004;</span>
+              </div>
               <div className="p-1">
                 <i
                   className="fas fa-thumbtack"
@@ -34,12 +40,14 @@ const EventCalendar = ({ events, deleteEvent, groupID, isFinished }) => {
                     <Moment format="DD/MM/YY">{event.end}</Moment>
                   </p>
                 </div>
-                <div
-                  className="delete-button"
-                  onClick={() => deleteEvent(groupID, event._id)}
-                >
-                  &#215;
-                </div>
+                {event.creator === auth.user._id && (
+                  <div
+                    className="delete-button"
+                    onClick={() => deleteEvent(groupID, event._id)}
+                  >
+                    &#215;
+                  </div>
+                )}
               </div>
             </div>
           );

@@ -18,7 +18,7 @@ const GroupItem = ({ groups }) => {
                 <p className="group-access">
                   {group.isPublic ? 'Public' : 'Private'}
                 </p>
-                <p>{group && group.members.length} member(s)</p>
+                <p>{group && group.members.length} { group.members.length === 1 ? `member` : `members`}</p>
               </Link>
             </Card>
           </div>

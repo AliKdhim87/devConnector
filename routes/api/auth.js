@@ -5,6 +5,10 @@ const scret = config.get('jwtSecret');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const { check, validationResult } = require('express-validator');
+const {
+  forgetPasswordEmail,
+  resetPasswordEmail
+} = require('../../emails/account');
 const auth = require('../../middleware/auth');
 const User = require('../../models/User');
 const { accountActivatedEmail } = require('../../emails/account');
@@ -81,6 +85,7 @@ router.patch('/confirmation/:token', async (req, res) => {
     verifyAccountExpires: { $gt: Date.now() }
   });
 
+<<<<<<< HEAD
   try {
     if (!user) {
       return res.status(401).json({
@@ -111,4 +116,73 @@ router.patch('/confirmation/:token', async (req, res) => {
   }
   res.status(201).json();
 });
+=======
+router.post(
+  '/forgetpassword',
+  check('email', 'Please include a valid email.').isEmail(),
+  async (req, res) => {
+    const email = req.body.email;
+
+    const user = await User.findOne({ email });
+    try {
+      if (!user) {
+        res.status(401).json({
+          message: `The email address ${req.body.email} is not associated with any account. Double-check your email address and try again.`
+        });
+      }
+      //Generate and set password reset token
+      user.generatePasswordReset();
+      // Save the updated user object
+      user.save();
+      // send email
+      let link =
+        'https://dev-connector-hyf.herokuapp.com/' +
+        'resetpassword/?token=' +
+        user.resetPasswordToken;
+
+      forgetPasswordEmail(user.name, user.email, link);
+      res.status(200).json({
+        message: 'A reset e-mail has been sent to ' + user.email + '.'
+      });
+    } catch (error) {
+      res.status(500).send('ServerError');
+    }
+  }
+);
+
+router.post(
+  '/resetpassword/:token',
+  check('password').isLength({ min: 6 }),
+  async (req, res) => {
+    const user = await User.findOne({
+      resetPasswordToken: req.params.token,
+      resetPasswordExpires: { $gt: Date.now() }
+    });
+    try {
+      if (!user) {
+        res.status(404).send('User not found!');
+      }
+      if (req.body.password !== req.body.confirmPassword) {
+        res
+          .status(400)
+          .send('The password and confirmation password do not match.');
+      }
+      //Set the new password
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(req.body.password, salt);
+      user.password = hashedPassword;
+      user.active = true;
+      user.resetPasswordToken = undefined;
+      user.resetPasswordExpires = undefined;
+      // Save
+      user.save();
+      // send email
+      resetPasswordEmail(user.name, user.email);
+      res.status(200).json({ message: 'Your password has been updated.' });
+    } catch (error) {
+      res.status(500).send('ServerError');
+    }
+  }
+);
+>>>>>>> master
 module.exports = router;

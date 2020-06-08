@@ -376,7 +376,10 @@ button {
   justify-content: center;
   text-align: center;
 }
-
+.social-buttons a i{
+  font-size: 2.2rem;
+  margin:0.25rem
+}
 /* Profiles Page */
 .profile {
   display: grid;

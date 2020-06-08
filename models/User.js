@@ -1,7 +1,10 @@
 const mongoose = require('mongoose');
 const { ObjectId } = mongoose.Schema.Types;
 const crypto = require('crypto');
+<<<<<<< HEAD
 const Schema = mongoose.Schema;
+=======
+>>>>>>> master
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -28,7 +31,7 @@ const userSchema = new mongoose.Schema({
   },
   notifications: {
     type: Boolean,
-    default: true
+    default: false
   },
   date: {
     type: Date,
@@ -76,10 +79,19 @@ const userSchema = new mongoose.Schema({
     default: false
   },
   verifyAccountToken: String,
-  verifyAccountExpires: Date
+  verifyAccountExpires: Date,
+  resetPasswordExpires: Date,
+  resetPasswordToken: String,
 });
+
 userSchema.methods.generateAccountVerify = function () {
   this.verifyAccountToken = crypto.randomBytes(20).toString('hex');
   this.verifyAccountExpires = Date.now() + 3600000;
 };
+
+userSchema.methods.generatePasswordReset = function () {
+  this.resetPasswordToken = crypto.randomBytes(20).toString('hex');
+  this.resetPasswordExpires = Date.now() + 3600000; //expires in an hour
+};
+
 module.exports = User = mongoose.model('user', userSchema);
