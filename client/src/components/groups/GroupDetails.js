@@ -185,13 +185,13 @@ const GroupDetails = ({
         !auth.loading &&
         (group.isPublic || isMember(group, auth.user._id)) && (
           <div className="text-center m-2">
-            <button className="btn btn-light">
+            <button className="btn btn-light my">
               <a href="#discussions">Discussions</a>
             </button>
-            <button className="btn btn-light">
+            <button className="btn btn-light my">
               <a href="#member-list">Members</a>
             </button>
-            <button className="btn btn-light">
+            <button className="btn btn-light my">
               <a href="#events">Events</a>
             </button>
           </div>
