@@ -21,12 +21,6 @@ const PostForm = ({ addPost }) => {
 
   const { link, text } = formData;
 
-  const isValidLink = (string) => {
-    if (/(http(s?)):\/\//i.test(string)) {
-      return true;
-    } else return false;
-  };
-
   const [hideEmojiPicker, setHideEmojiPicker] = useState(true);
 
   const showHideEmojiPicker = () => {
@@ -49,12 +43,10 @@ const PostForm = ({ addPost }) => {
       <form
         className="form my-1"
         onSubmit={(e) => {
-          if (link!=="" && !isValidLink(link)) {
-            return;
-          }
-          e.preventDefault();
-          addPost(formData);
-          setFormData({ text: '', link: '' });
+            e.preventDefault();
+            addPost(formData);
+            setFormData({ text: '', link: '' });
+          
         }}
       >
         <textarea
