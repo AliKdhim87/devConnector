@@ -85,7 +85,6 @@ router.patch('/confirmation/:token', async (req, res) => {
     verifyAccountExpires: { $gt: Date.now() }
   });
 
-<<<<<<< HEAD
   try {
     if (!user) {
       return res.status(401).json({
@@ -116,7 +115,6 @@ router.patch('/confirmation/:token', async (req, res) => {
   }
   res.status(201).json();
 });
-=======
 router.post(
   '/forgetpassword',
   check('email', 'Please include a valid email.').isEmail(),
@@ -184,5 +182,4 @@ router.post(
     }
   }
 );
->>>>>>> master
 module.exports = router;

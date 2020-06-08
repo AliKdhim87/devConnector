@@ -1,10 +1,6 @@
 const mongoose = require('mongoose');
 const { ObjectId } = mongoose.Schema.Types;
 const crypto = require('crypto');
-<<<<<<< HEAD
-const Schema = mongoose.Schema;
-=======
->>>>>>> master
 
 const userSchema = new mongoose.Schema({
   name: {

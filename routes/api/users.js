@@ -50,7 +50,7 @@ router.post(
 
       user.generateAccountVerify();
       // send email
-      let link = req.headers.origin + 'confirm/' + user.verifyAccountToken;
+      let link = 'https://dev-connector-hyf.herokuapp.com/' + 'confirm/' + user.verifyAccountToken;
       accountVerifyEmail(user.name, user.email, link);
 
       const salt = await bcrypt.genSalt(10);
