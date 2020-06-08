@@ -5,7 +5,10 @@ const scret = config.get('jwtSecret');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const { check, validationResult } = require('express-validator');
-const { forgetPasswordEmail, resetPasswordEmail } = require('../../emails/account');
+const {
+  forgetPasswordEmail,
+  resetPasswordEmail
+} = require('../../emails/account');
 const auth = require('../../middleware/auth');
 const User = require('../../models/User');
 // @route   GET api/auth
@@ -79,11 +82,9 @@ router.post(
     const user = await User.findOne({ email });
     try {
       if (!user) {
-        res
-          .status(401)
-          .send(
-            `The email address ${req.body.email} is not associated with any account. Double-check your email address and try again.`
-          );
+        res.status(401).json({
+          message: `The email address ${req.body.email} is not associated with any account. Double-check your email address and try again.`
+        });
       }
       //Generate and set password reset token
       user.generatePasswordReset();
@@ -91,7 +92,9 @@ router.post(
       user.save();
       // send email
       let link =
-        'https://dev-connector-hyf.herokuapp.com/' + 'resetpassword/?token=' + user.resetPasswordToken;
+        'https://dev-connector-hyf.herokuapp.com/' +
+        'resetpassword/?token=' +
+        user.resetPasswordToken;
 
       forgetPasswordEmail(user.name, user.email, link);
       res.status(200).json({
@@ -122,7 +125,7 @@ router.post(
       }
       //Set the new password
       const salt = await bcrypt.genSalt(10);
-      const hashedPassword = await bcrypt.hash(req.body.password, salt)
+      const hashedPassword = await bcrypt.hash(req.body.password, salt);
       user.password = hashedPassword;
       user.active = true;
       user.resetPasswordToken = undefined;
