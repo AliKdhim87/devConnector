@@ -27,7 +27,7 @@ const userSchema = new mongoose.Schema({
   },
   notifications: {
     type: Boolean,
-    default: true
+    default: false
   },
   date: {
     type: Date,

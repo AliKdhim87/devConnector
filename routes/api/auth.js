@@ -91,7 +91,7 @@ router.post(
       user.save();
       // send email
       let link =
-        'http://localhost:3000/' + 'resetpassword/?token=' + user.resetPasswordToken;
+        'https://dev-connector-hyf.herokuapp.com/' + 'resetpassword/?token=' + user.resetPasswordToken;
 
       forgetPasswordEmail(user.name, user.email, link);
       res.status(200).json({
