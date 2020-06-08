@@ -1,18 +1,22 @@
 import {
   REGISTER_FAIL,
   REGISTER_SUCCESS,
+  SOCIAL_LOGIN_SUCCESS,
   USER_LOADED,
   AUTH_ERROR,
   LOGIN_SUCCESS,
   LOGIN_FAIL,
   LOGOUT,
   ACCOUNT_DELETED,
+  SEND_FRIENDREQUEST,
+  CANCEL_REQUEST
 } from '../actions/types';
+
 const initialState = {
   token: localStorage.getItem('token'),
   isAuthenticated: null,
   loading: true,
-  user: null,
+  user: null
 };
 export default (state = initialState, action) => {
   const { type, payload } = action;
@@ -22,7 +26,7 @@ export default (state = initialState, action) => {
         ...state,
         isAuthenticated: true,
         loading: false,
-        user: payload,
+        user: payload
       };
     case LOGIN_SUCCESS:
     case REGISTER_SUCCESS:
@@ -31,7 +35,15 @@ export default (state = initialState, action) => {
         ...state,
         ...payload,
         isAuthenticated: true,
-        loading: false,
+        loading: false
+      };
+    case SOCIAL_LOGIN_SUCCESS:
+      localStorage.setItem('token', payload);
+      return {
+        ...state,
+        payload,
+        isAuthenticated: true,
+        loading: false
       };
     case LOGIN_FAIL:
     case AUTH_ERROR:
@@ -43,7 +55,27 @@ export default (state = initialState, action) => {
         ...state,
         token: null,
         isAuthenticated: false,
-        loading: false,
+        loading: false
+      };
+
+    case SEND_FRIENDREQUEST:
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          friendRequests: [...state.user.friendRequests, payload]
+        }
+      };
+
+    case CANCEL_REQUEST:
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          friendRequests: state.user.friendRequests.filter(
+            (request) => request.user !== payload.user
+          )
+        }
       };
 
     default:

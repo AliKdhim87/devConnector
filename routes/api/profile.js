@@ -7,6 +7,7 @@ const { check, validationResult } = require('express-validator');
 const Profile = require('../../models/Profile');
 const User = require('../../models/User');
 const Post = require('../../models/Posts');
+const Message = require('../../models/Message');
 
 // @route   GET api/profile/me
 // @desc    Get curent users profile
@@ -14,7 +15,7 @@ const Post = require('../../models/Posts');
 router.get('/me', auth, async (req, res) => {
   try {
     const profile = await Profile.findOne({
-      user: req.user.id,
+      user: req.user.id
     }).populate('user', ['name', 'avatar']);
     if (!profile) {
       return res
@@ -38,12 +39,13 @@ router.post(
     auth,
     [
       check('status', 'Status is required.').not().isEmpty(),
-      check('skills', 'Skills is required.').not().isEmpty(),
-    ],
+      check('skills', 'Skills is required.').not().isEmpty()
+    ]
   ],
   async (req, res) => {
-    const erros = validationResult(req);
-    if (!erros.isEmpty()) {
+    const errors = validationResult(req);
+    const user = await User.findById(req.user.id);
+    if (!errors.isEmpty()) {
       return res.status(400).json({ errors: erros.array() });
     }
     const {
@@ -58,11 +60,13 @@ router.post(
       twitter,
       instagram,
       linkedin,
-      facebook,
+      facebook
     } = req.body;
     // Build Profile Object
     const profileFields = {};
     profileFields.user = req.user.id;
+    profileFields.name = user.name;
+    visible = user.privacyOptions.profileVisibleEveryone;
     if (company) profileFields.company = company;
     if (website) profileFields.website = website;
     if (location) profileFields.location = location;
@@ -108,11 +112,46 @@ router.post(
 
 router.get('/', async (req, res) => {
   try {
-    const profiles = await Profile.find().populate('user', ['name', 'avatar']);
+    const profiles = await Profile.find({
+      visible: true
+    }).populate('user', ['name', 'avatar']);
     res.json(profiles);
   } catch (error) {
     console.error(error.message);
     res.status(500).send('Server error!');
+  }
+});
+
+router.get('/all', auth, async (req, res) => {
+  try {
+    const profiles = await Profile.find().populate('user', [
+      'name',
+      'avatar',
+      'friends',
+      'privacyOptions'
+    ]);
+    let publicProfiles = [];
+    profiles.forEach((profile) => {
+      if (
+        profile &&
+        profile.user.privacyOptions.profileVisibleEveryone === true
+      ) {
+        publicProfiles.push(profile);
+      }
+    });
+    let friendProfiles = [];
+    profiles.forEach((profile) => {
+      if (profile.user.friends.includes(req.user.id) || profile.user._id.toString()===req.user.id) {
+        friendProfiles.push(profile);
+      }
+    });
+
+    const profileArray = publicProfiles.concat(friendProfiles);
+    const visibleProfiles = [...new Set(profileArray)]
+    res.json(visibleProfiles);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send(error);
   }
 });
 
@@ -123,7 +162,7 @@ router.get('/', async (req, res) => {
 router.get('/user/:user_id', async (req, res) => {
   try {
     const profile = await Profile.findOne({
-      user: req.params.user_id,
+      user: req.params.user_id
     }).populate('user', ['name', 'avatar']);
     if (!profile) return res.status(400).json({ msg: 'Profile not found.' });
     res.json(profile);
@@ -146,8 +185,27 @@ router.delete('/', auth, async (req, res) => {
     await Post.deleteMany({ user: req.user.id });
     // Remove profile
     await Profile.findOneAndRemove({ user: req.user.id });
+    // Remove messages by user
+    await Message.findOneAndRemove({corresponder: req.user.id})
     //  Remove user
     await User.findOneAndRemove({ _id: req.user.id });
+    // remove group created by user
+    const userGroups = await Group.find({ creator: req.user.id });
+    userGroups.forEach((group) => {
+      group.posts = group.posts.filter(
+        (post) => post.creator.toString() !== req.user.id
+      );
+      group.members = group.members.filter(
+        (member) => member.user._id.toString() !== req.user.id
+      );
+      group.posts.forEach((post) => {
+        post.comments = post.comments.filter(
+          (comment) => comment.creator.toString() !== req.user.id
+        );
+      });
+      group.save();
+    });
+
     res.json({ msg: 'User deleted' });
   } catch (error) {
     console.error(error.message);
@@ -164,7 +222,7 @@ router.put(
     auth,
     [check('title', 'Title is required.').not().isEmpty()],
     check('company', 'Company is required.').not().isEmpty(),
-    check('from', 'From date is required.').not().isEmpty(),
+    check('from', 'From date is required.').not().isEmpty()
   ],
   async (req, res) => {
     const errors = validationResult(req);
@@ -178,7 +236,7 @@ router.put(
       location,
       to,
       current,
-      description,
+      description
     } = req.body;
 
     const newExp = {
@@ -188,7 +246,7 @@ router.put(
       from,
       to,
       current,
-      description,
+      description
     };
     try {
       const profile = await Profile.findOne({ user: req.user.id });
@@ -234,7 +292,7 @@ router.put(
     [check('school', 'School is required.').not().isEmpty()],
     check('degree', 'Degree is required.').not().isEmpty(),
     check('fieldofstudy', 'Field of study is required.').not().isEmpty(),
-    check('from', 'From date is required.').not().isEmpty(),
+    check('from', 'From date is required.').not().isEmpty()
   ],
   async (req, res) => {
     const errors = validationResult(req);
@@ -249,7 +307,7 @@ router.put(
       location,
       to,
       current,
-      description,
+      description
     } = req.body;
 
     const newEdu = {
@@ -260,7 +318,7 @@ router.put(
       location,
       to,
       current,
-      description,
+      description
     };
     try {
       const profile = await Profile.findOne({ user: req.user.id });
@@ -307,7 +365,7 @@ router.get('/github/:username', async (req, res) => {
     );
     const headers = {
       'user-agent': 'node.js',
-      Authorization: `token ${config.get('githubToken')}`,
+      Authorization: `token ${config.get('githubToken')}`
     };
 
     const gitHubResponse = await axios.get(uri, { headers });

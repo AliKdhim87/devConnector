@@ -215,7 +215,6 @@ export const addEmoji = (postId, emoji, commentId = undefined) => async (
       payload: res.data.emojis,
       commentId,
     });
-    dispatch(setAlert('Emoji Added', 'success'));
 
     // return res;
   } catch (error) {
@@ -252,7 +251,6 @@ export const removeEmoji = (postId, emojiId, commentId = undefined) => async (
       commentId,
     });
 
-    dispatch(setAlert('Emoji Removed', 'success'));
   } catch (error) {
     console.log(error);
     const errors = error.response.data.errors;

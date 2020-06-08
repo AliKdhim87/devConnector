@@ -17,7 +17,9 @@ const PostForm = ({ addPost }) => {
       ...formData,
       [e.target.name]: e.target.value,
     });
+
   const { link, text } = formData;
+
 
   const [hideEmojiPicker, setHideEmojiPicker] = useState(true);
 

@@ -3,6 +3,7 @@ import { setAlert } from './alert';
 import setAuthToken from '../utils/setAuthToken';
 import {
   REGISTER_SUCCESS,
+  SOCIAL_LOGIN_SUCCESS,
   REGISTER_FAIL,
   USER_LOADED,
   AUTH_ERROR,
@@ -84,6 +85,29 @@ export const login = (email, password) => async (dispatch) => {
 
     dispatch({
       type: LOGIN_FAIL,
+    });
+  }
+};
+
+// Register User by Social Account
+export const socialLogin = token => dispatch => {
+  try {
+    if (token) {
+      dispatch({
+        type: SOCIAL_LOGIN_SUCCESS,
+        payload: token,
+      });
+      dispatch(loadUser());
+    }
+  } catch (err) {
+    const errors = err.response.data.errors;
+
+    if (errors) {
+      errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
+    }
+
+    dispatch({
+      type: REGISTER_FAIL,
     });
   }
 };

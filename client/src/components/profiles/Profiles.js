@@ -4,10 +4,12 @@ import { connect } from 'react-redux';
 import Spinner from '../layout/Spinner';
 import { getAllProfiles } from '../../actions/profile';
 import ProfileItem from './ProfileItem';
-const Profiles = ({ getAllProfiles, profile: { profiles, loading } }) => {
+import * as uuid from 'uuid';
+import ElementNotFound from '../layout/ElementNotFound';
+const Profiles = ({ getAllProfiles, profile: { profiles, loading }, auth, isAuthenticated }) => {
   useEffect(() => {
-    getAllProfiles();
-  }, [getAllProfiles]);
+    getAllProfiles(isAuthenticated);
+  }, [getAllProfiles, isAuthenticated]);
 
   return (
     <Fragment>
@@ -15,18 +17,18 @@ const Profiles = ({ getAllProfiles, profile: { profiles, loading } }) => {
         <Spinner />
       ) : (
         <Fragment>
-          <h1 className='large text-primary'>Developers</h1>
-          <p className='lead'>
-            <i className='fab fa-connectdevelop'></i> Browse and connect with
+          <h1 className="large text-primary">Developers</h1>
+          <p className="lead">
+            <i className="fab fa-connectdevelop"></i> Browse and connect with
             developers
           </p>
-          <div className='profiles'>
+          <div className="profiles">
             {profiles.length > 0 ? (
               profiles.map((profile) => (
-                <ProfileItem key={profile._id} profile={profile} />
+                <ProfileItem key={uuid.v4()} profile={profile} me={auth} />
               ))
             ) : (
-              <h4> No Profiles found...</h4>
+              <ElementNotFound element="PROFILES FOUND"/>
             )}
           </div>
         </Fragment>
@@ -37,9 +39,11 @@ const Profiles = ({ getAllProfiles, profile: { profiles, loading } }) => {
 
 Profiles.propTypes = {
   getAllProfiles: PropTypes.func.isRequired,
-  profile: PropTypes.object.isRequired,
+  profile: PropTypes.object.isRequired
 };
 const mapStateToProps = (state) => ({
   profile: state.profile,
+  auth: state.auth,
+  isAuthenticated: state.auth.isAuthenticated
 });
 export default connect(mapStateToProps, { getAllProfiles })(Profiles);

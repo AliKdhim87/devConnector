@@ -4,9 +4,14 @@ const { check, validationResult } = require('express-validator');
 const auth = require('../../middleware/auth');
 const User = require('../../models/User');
 const Post = require('../../models/Posts');
-const Profile = require('../../models/Profile');
-const mongoose = require('mongoose');
+const Notification = require('../../models/Notification');
 
+const {
+  likeNotification,
+  emojiNotification,
+  addCommentNotification,
+  addCommentEmojiNotification
+} = require('../../emails/account');
 // @route   POST api/posts
 // @desc    Create a post
 // @access  Private
@@ -27,6 +32,7 @@ router.post(
         name: user.name,
         avatar: user.avatar,
         user: req.user.id,
+        link: req.body.link || ''
       });
       const post = await newPost.save();
       res.json(post);
@@ -34,7 +40,7 @@ router.post(
       console.error(error.message);
       res.status(500).send('Server error');
     }
-  },
+  }
 );
 
 // @route   GET api/posts
@@ -42,7 +48,9 @@ router.post(
 // @access  Private
 router.get('/', auth, async (req, res) => {
   try {
-    const posts = await Post.find().sort({ date: -1 });
+    const posts = await Post.find()
+      .populate('user', 'name avatar')
+      .sort({ date: -1 });
     res.json(posts);
   } catch (error) {
     console.error(error.message);
@@ -68,7 +76,20 @@ router.get('/:id', auth, async (req, res) => {
   }
 });
 
-// @route   DELETE api/posts/:id
+// @route   GET api/post
+// @desc    Get all posts
+// @access  Private
+router.get('/', auth, async (req, res) => {
+  try {
+    const posts = await Post.find().sort({ date: -1 });
+    res.json(posts);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send('Server error');
+  }
+});
+
+// @route   DELETE api/post/:id
 // @desc    delete a post
 // @access  Private
 router.delete('/:id', auth, async (req, res) => {
@@ -100,6 +121,9 @@ router.delete('/:id', auth, async (req, res) => {
 router.put('/like/:id', auth, async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
+    const postOwner = await User.findById(post.user);
+    const userLiked = await User.findById(req.user.id);
+
     // Check if the post has already been liked
     if (
       post.likes.filter((like) => like.user.toString() === req.user.id).length >
@@ -108,6 +132,29 @@ router.put('/like/:id', auth, async (req, res) => {
       return res.status(400).json({ msg: 'Post already liked' });
     }
     post.likes.unshift({ user: req.user.id });
+
+    /* Statrt Notification*/
+    // Emil notification
+    if (postOwner.notifications && post.user.toString() !== req.user.id) {
+      likeNotification(
+        postOwner.name,
+        userLiked.name,
+        post.text,
+        postOwner.email
+      );
+    }
+    if (post.user.toString() !== req.user.id) {
+      const newNotification = new Notification({
+        sender: req.user.id,
+        receiver: [postOwner._id],
+        message: `${userLiked.name} liked your ${post.text} post.`,
+        kind: 'like post',
+        path: `/posts`
+      });
+      await newNotification.save();
+    }
+
+    /* END Notification*/
     await post.save();
     res.json(post.likes);
   } catch (error) {
@@ -130,7 +177,7 @@ router.put('/emoji/:id', auth, async (req, res) => {
       native,
       skin,
       short_names,
-      unified,
+      unified
     } = req.body;
 
     const emoji = {
@@ -141,14 +188,14 @@ router.put('/emoji/:id', auth, async (req, res) => {
       native,
       skin,
       short_names,
-      unified,
+      unified
     };
 
     const post = await Post.findById(req.params.id);
     // Check if the emoji has already been chosen
     const { emojis } = post;
     const existingEmoji = emojis.find(
-      (emoji) => emoji.emoji.unified === unified,
+      (emoji) => emoji.emoji.unified === unified
     );
 
     const isEmojiAddedByUser =
@@ -168,11 +215,37 @@ router.put('/emoji/:id', auth, async (req, res) => {
     }
 
     emojis.forEach((emoji) => (emoji.amount = emoji.users.length));
+    // get the post owner and the user that add emoji
+    const postOwner = await User.findById(post.user);
+    const userAddedEmoji = await User.findById(req.user.id);
 
     await post.save();
 
+    /* Start Notification system*/
+
+    // sent notification email
+    if (postOwner.notifications && post.user.toString() !== req.user.id) {
+      emojiNotification(
+        postOwner.name,
+        userAddedEmoji.name,
+        post.text,
+        postOwner.email
+      );
+    }
+    if (post.user.toString() !== req.user.id) {
+      const newNotification = new Notification({
+        sender: req.user.id,
+        receiver: [postOwner._id],
+        message: `${userAddedEmoji.name} add emoji to your ${post.text} post.`,
+        kind: 'emoji post',
+        path: `/posts`
+      });
+      await newNotification.save();
+    }
+
+    /* End Notification system*/
     res.json({
-      emojis: emojis,
+      emojis: emojis
     });
   } catch (error) {
     console.error(error);
@@ -218,7 +291,7 @@ router.delete('/emoji/:id/:emoji_id', auth, async (req, res) => {
     // Check if the emoji has already been chosen
     const emojiAddedByUser = post.emojis.find(
       (emoji) =>
-        emoji.id.toString() === emojiId && emoji.users.includes(req.user.id),
+        emoji.id.toString() === emojiId && emoji.users.includes(req.user.id)
     );
 
     if (!emojiAddedByUser) {
@@ -227,7 +300,7 @@ router.delete('/emoji/:id/:emoji_id', auth, async (req, res) => {
     // Get remove index
 
     const updatedEmojiUsers = emojiAddedByUser.users.filter(
-      (user) => user.toString() !== req.user.id,
+      (user) => user.toString() !== req.user.id
     );
 
     emojiAddedByUser.users = updatedEmojiUsers;
@@ -235,7 +308,7 @@ router.delete('/emoji/:id/:emoji_id', auth, async (req, res) => {
 
     if (emojiAddedByUser.users.length === 0) {
       const updatedEmojiArray = post.emojis.filter(
-        (emoji) => emoji.id.toString() !== emojiId,
+        (emoji) => emoji.id.toString() !== emojiId
       );
 
       post.emojis = updatedEmojiArray;
@@ -243,7 +316,7 @@ router.delete('/emoji/:id/:emoji_id', auth, async (req, res) => {
 
     await post.save();
     res.json({
-      emojis: post.emojis,
+      emojis: post.emojis
     });
   } catch (error) {
     console.error(error.message);
@@ -273,11 +346,38 @@ router.post(
         text: req.body.text,
         name: user.name,
         avatar: user.avatar,
-        user: req.user.id,
+        user: req.user.id
       };
 
       post.comments.unshift(newComment);
+
+      // get the post owner and the user that add comment
+      const postOwner = await User.findById(post.user);
+      const userAddedComment = await User.findById(req.user.id);
+
+      // sent notification email
+      if (postOwner.notifications && post.user.toString() !== req.user.id) {
+        addCommentNotification(
+          postOwner.name,
+          userAddedComment.name,
+          post.text,
+          postOwner.email,
+          req.body.text
+        );
+      }
+      if (post.user.toString() !== req.user.id) {
+        const newNotification = new Notification({
+          sender: req.user.id,
+          receiver: [postOwner._id],
+          message: `${userAddedComment.name} commented this ${post.text} post.`,
+          kind: 'add comment',
+          path: `/posts/${post._id}`
+        });
+        await newNotification.save();
+      }
+
       await post.save();
+
       res.json(post.comments);
     } catch (error) {
       console.error(error.message);
@@ -287,10 +387,10 @@ router.post(
       }
       res.status(500).send('Server error');
     }
-  },
+  }
 );
 
-// @route   DELETE api/posts/comment/:id/:comment_id
+// @route   DELETE api/post/comment/:id/:comment_id
 // @desc    Delete a comment from a post
 // @access  Private
 
@@ -299,7 +399,7 @@ router.delete('/comment/:id/:comment_id', auth, async (req, res) => {
     const post = await Post.findById(req.params.id);
     // Pull out comment
     const comment = post.comments.find(
-      (comment) => comment.id === req.params.comment_id,
+      (comment) => comment.id === req.params.comment_id
     );
     //  Make sure comment exists
     if (!comment) {
@@ -340,7 +440,7 @@ router.put('/comment/emoji/:id/:comment_id', auth, async (req, res) => {
       native,
       skin,
       short_names,
-      unified,
+      unified
     } = req.body;
 
     const emoji = {
@@ -351,20 +451,21 @@ router.put('/comment/emoji/:id/:comment_id', auth, async (req, res) => {
       native,
       skin,
       short_names,
-      unified,
+      unified
     };
 
     const post = await Post.findById(req.params.id);
     // Check if the emoji has already been chosen
     const { comments } = post;
     const comment = comments.find(
-      (comment) => comment.id === req.params.comment_id,
+      (comment) => comment.id === req.params.comment_id
     );
     const { emojis } = comment;
+
     // .emojis.find((emoji) => emoji.emoji.unified === unified);
 
     const existingEmoji = emojis.find(
-      (emoji) => emoji.emoji.unified === unified,
+      (emoji) => emoji.emoji.unified === unified
     );
 
     const isEmojiAddedByUser =
@@ -384,6 +485,34 @@ router.put('/comment/emoji/:id/:comment_id', auth, async (req, res) => {
     }
 
     emojis.forEach((emoji) => (emoji.amount = emoji.users.length));
+
+    // get the comment owner and the user that add emoji
+    const commentOwner = await User.findById(comment.user);
+    const userAddedEmoji = await User.findById(req.user.id);
+
+    // sent notification email
+    if (
+      commentOwner.notifications &&
+      commentOwner._id.toString() !== req.user.id
+    ) {
+      addCommentEmojiNotification(
+        commentOwner.name,
+        userAddedEmoji.name,
+        comment.text,
+        commentOwner.email
+      );
+    }
+    if (commentOwner._id.toString() !== req.user.id) {
+      const newNotification = new Notification({
+        sender: req.user.id,
+        receiver: [comment.user],
+        message: `${userAddedEmoji.name} added emoji to your ${comment.text} comment.`,
+        kind: 'add comment',
+        path: `/posts/${post._id}`
+      });
+      await newNotification.save();
+    }
+
     await post.save();
 
     res.json({ emojis });
@@ -405,12 +534,12 @@ router.delete(
       const post = await Post.findById(req.params.id);
       const emojiId = req.params.emoji_id;
       const comment = post.comments.find(
-        (comment) => comment.id === req.params.comment_id,
+        (comment) => comment.id === req.params.comment_id
       );
       const emojiAddedByUser = comment.emojis.find(
         (emoji) =>
           emoji.id === emojiId &&
-          emoji.users.map((user) => user.toString()).includes(req.user.id),
+          emoji.users.map((user) => user.toString()).includes(req.user.id)
       );
 
       // Check if the emoji exists
@@ -420,7 +549,7 @@ router.delete(
 
       // Get remove index
       const updatedEmojiUsers = emojiAddedByUser.users.filter(
-        (user) => user.toString() !== req.user.id,
+        (user) => user.toString() !== req.user.id
       );
 
       emojiAddedByUser.users = updatedEmojiUsers;
@@ -428,7 +557,7 @@ router.delete(
 
       if (emojiAddedByUser.users.length === 0) {
         const updatedEmojiArray = post.emojis.filter(
-          (emoji) => emoji.id.toString() !== emojiId,
+          (emoji) => emoji.id.toString() !== emojiId
         );
         post.emojis = updatedEmojiArray;
       }
@@ -442,7 +571,7 @@ router.delete(
       }
       res.status(500).send('Server error');
     }
-  },
+  }
 );
 
 module.exports = router;
