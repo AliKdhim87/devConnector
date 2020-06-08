@@ -6,7 +6,18 @@ import { addPost } from '../../actions/post';
 import EmojiPicker from '../post/EmojiPicker';
 
 const PostForm = ({ addPost }) => {
-  const [text, setText] = useState('');
+  const [formData, setFormData] = useState({
+    text: '',
+    link: '',
+  });
+  const [addLink, setAddLink] = useState(false);
+
+  const inputHandler = (e) =>
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  const { link, text } = formData;
 
   const [hideEmojiPicker, setHideEmojiPicker] = useState(true);
 
@@ -16,7 +27,10 @@ const PostForm = ({ addPost }) => {
 
   const insertEmoji = (emojiObj) => {
     const emoji = emojiObj.native;
-    setText((prevText) => prevText + emoji);
+    setFormData({
+      ...formData,
+      text: text + emoji,
+    });
   };
 
   return (
@@ -28,8 +42,8 @@ const PostForm = ({ addPost }) => {
         className='form my-1'
         onSubmit={(e) => {
           e.preventDefault();
-          addPost({ text });
-          setText('');
+          addPost(formData);
+          setFormData({ text: '', link: '' });
         }}
       >
         <textarea
@@ -38,9 +52,33 @@ const PostForm = ({ addPost }) => {
           rows='5'
           placeholder='Create a post'
           value={text}
-          onChange={(e) => setText(e.target.value)}
+          onChange={(e) => {
+            setFormData({
+              ...formData,
+              text: e.target.value,
+            });
+          }}
           required
         ></textarea>
+
+        <span
+          className=' text-primary m-1 link-button'
+          onClick={() => {
+            setAddLink(!addLink);
+          }}
+        >
+          <i className='fas fa-paperclip'></i>
+        </span>
+        <div className={addLink ? `shown` : `hidden`}>
+          <input
+            type='text'
+            name='link'
+            value={link}
+            placeholder='Add a link'
+            onChange={inputHandler}
+          />
+        </div>
+
         {hideEmojiPicker ? (
           <Button circular onClick={showHideEmojiPicker}>
             <span
