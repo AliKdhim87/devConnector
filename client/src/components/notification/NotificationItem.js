@@ -45,7 +45,7 @@ const NotificationItem = ({ notification, deleteNotifications }) => {
           {notification.sender.name}
         </List.Header>
 
-        <List.Description>
+        <List.Description className="desc-mobile">
           {`${message.length >= 45 ? `${message}...` : message}`}
           <Icon
             name="delete"
