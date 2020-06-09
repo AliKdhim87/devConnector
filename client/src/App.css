@@ -357,6 +357,10 @@ button {
     left: -61px;
     width: 308px;
   }
+  .desc-mobile {
+    width: 250px;
+    overflow: hidden;
+  }
 }
 /* Landing Page */
 .landing {
@@ -376,9 +380,9 @@ button {
   justify-content: center;
   text-align: center;
 }
-.social-buttons a i{
+.social-buttons a i {
   font-size: 2.2rem;
-  margin:0.25rem
+  margin: 0.25rem;
 }
 /* Profiles Page */
 .profile {
@@ -604,7 +608,6 @@ button {
   top: 0;
 }
 
-
 /***************************/
 @media (max-width: 500px) {
   .user-chat-list {
@@ -613,7 +616,7 @@ button {
   .messages {
     width: 65%;
   }
-  .group-access{
+  .group-access {
     width: 40% !important;
   }
 }
@@ -837,52 +840,50 @@ button {
   -ms-animation: fadeIn ease-in 3s;
 }
 
-
-@keyframes fadeIn{
+@keyframes fadeIn {
   0% {
-    opacity:0;
+    opacity: 0;
   }
   100% {
-    opacity:1;
+    opacity: 1;
   }
 }
 
 @-moz-keyframes fadeIn {
   0% {
-    opacity:0;
+    opacity: 0;
   }
   100% {
-    opacity:1;
+    opacity: 1;
   }
 }
 
 @-webkit-keyframes fadeIn {
   0% {
-    opacity:0;
+    opacity: 0;
   }
   100% {
-    opacity:1;
+    opacity: 1;
   }
 }
 
 @-o-keyframes fadeIn {
   0% {
-    opacity:0;
+    opacity: 0;
   }
   100% {
-    opacity:1;
+    opacity: 1;
   }
 }
 
 @-ms-keyframes fadeIn {
   0% {
-    opacity:0;
+    opacity: 0;
   }
   100% {
-    opacity:1;
+    opacity: 1;
   }
 }
-
 
 /* Mobile Styles */
 @media (max-width: 700px) {
@@ -1002,7 +1003,7 @@ button {
     margin: auto;
   }
   .all-groups {
-    width:100%;
+    width: 100%;
     margin: auto;
   }
   .group-post-text-and-date {
@@ -1049,8 +1050,8 @@ button {
   }
 }
 
-@media (min-width:701px) and (max-width:900px){
-  .hide-medium{
+@media (min-width: 701px) and (max-width: 900px) {
+  .hide-medium {
     display: none;
   }
 }

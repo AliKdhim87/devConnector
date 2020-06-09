@@ -24,8 +24,14 @@ const Notification = ({
           notifications.length > 0 &&
           notifications.length}
       </span>
-      <Dropdown icon="globe" open={notifications && notifications.length === 0 ? false : menuOpen} onClick={()=>{setMenuOpen(!menuOpen)}}>
-        <Dropdown.Menu size="massive" >
+      <Dropdown
+        icon="globe"
+        open={notifications && notifications.length === 0 ? false : menuOpen}
+        onClick={() => {
+          setMenuOpen(!menuOpen);
+        }}
+      >
+        <Dropdown.Menu size="massive">
           <List celled>
             {notifications &&
               !loading &&

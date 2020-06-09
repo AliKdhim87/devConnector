@@ -13,8 +13,9 @@ router.get('/', auth, async (req, res) => {
   try {
     const notification = await Notification.find({
       receiver: { $in: mongoose.Types.ObjectId(readerId) }
-    }).populate('sender', ['name', 'avatar']);
-
+    })
+      .populate('sender', ['name', 'avatar'])
+      .sort('-created_at');
     res.json(notification);
   } catch (error) {
     console.error(error.message);
