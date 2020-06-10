@@ -11,7 +11,8 @@ import {
   SEND_FRIENDREQUEST,
   CANCEL_REQUEST,
   FORGET_PASSWORD,
-  RESET_PASSWORD
+  RESET_PASSWORD,
+  ACCEPT_FRIENDREQUEST
 } from '../actions/types';
 
 const initialState = {
@@ -19,8 +20,7 @@ const initialState = {
   isAuthenticated: null,
   loading: true,
   user: null,
-  msg: null,
-  
+  msg: null
 };
 export default (state = initialState, action) => {
   const { type, payload } = action;
@@ -34,12 +34,12 @@ export default (state = initialState, action) => {
       };
     case FORGET_PASSWORD:
     case RESET_PASSWORD:
-      return{
+      return {
         ...state,
         msg: payload,
         isAuthenticated: false,
-        loading: false,
-      }
+        loading: false
+      };
     case LOGIN_SUCCESS:
     case REGISTER_SUCCESS:
       localStorage.setItem('token', payload.token);
@@ -69,26 +69,6 @@ export default (state = initialState, action) => {
         token: null,
         isAuthenticated: false,
         loading: false
-      };
-
-    case SEND_FRIENDREQUEST:
-      return {
-        ...state,
-        user: {
-          ...state.user,
-          friendRequests: [...state.user.friendRequests, payload]
-        }
-      };
-
-    case CANCEL_REQUEST:
-      return {
-        ...state,
-        user: {
-          ...state.user,
-          friendRequests: state.user.friendRequests.filter(
-            (request) => request.user !== payload.user
-          )
-        }
       };
 
     default:

@@ -8,7 +8,8 @@ import {
   REJECT_FRIENDREQUEST,
   UNFRIEND,
   CANCEL_REQUEST,
-  FRIENDS_ERROR
+  FRIENDS_ERROR,
+  CURRENT_USER
 } from './types';
 
 // Get friends list
@@ -35,7 +36,6 @@ export const getFriendRequestsList = () => async (dispatch) => {
       type: GET_FRIENDREQUESTSLIST,
       payload: res.data.friendRequests
     });
-    // console.log('from action friendrequests',res.data.friendRequests)
   } catch (err) {
     dispatch({
       type: FRIENDS_ERROR,
@@ -68,7 +68,6 @@ export const AcceptFriendRequest = (requestId) => async (dispatch) => {
       type: ACCEPT_FRIENDREQUEST,
       payload: res.data
     });
-    // console.log('from action friendrequests',res.data)
   } catch (err) {
     dispatch({
       type: FRIENDS_ERROR,
@@ -86,7 +85,6 @@ export const RejectFriendRequest = (requestId) => async (dispatch) => {
       type: REJECT_FRIENDREQUEST,
       payload: res.data
     });
-    // console.log('from action friendrequests', res.data);
   } catch (err) {
     dispatch({
       type: FRIENDS_ERROR,
@@ -103,7 +101,6 @@ export const Unfriend = (friendId) => async (dispatch) => {
       type: UNFRIEND,
       payload: res.data
     });
-    console.log('from action friendrequests', res.data);
   } catch (err) {
     dispatch({
       type: FRIENDS_ERROR,
@@ -119,6 +116,22 @@ export const CancelFriendRequest = (requestId) => async (dispatch) => {
 
     dispatch({
       type: CANCEL_REQUEST,
+      payload: res.data
+    });
+  } catch (err) {
+    dispatch({
+      type: FRIENDS_ERROR,
+      payload: { msg: err.response.statusText, status: err.response.status }
+    });
+  }
+};
+
+// getCurrent user to invoke it with getAllProfiles using useEffect hook then we can update the friend button from user data
+export const getCurrentUser = () => async (dispatch) => {
+  try {
+    const res = await axios.get('api/friends/currentuser');
+    dispatch({
+      type: CURRENT_USER,
       payload: res.data
     });
   } catch (err) {

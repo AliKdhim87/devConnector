@@ -8,6 +8,7 @@ import { CancelFriendRequest } from '../../actions/friends';
 
 const ProfileItem = ({
   auth: { user, isAuthenticated },
+  friendsObject: { friends, friendsrquestlist },
   sendFriendRequest,
   CancelFriendRequest,
   profile: {
@@ -23,15 +24,13 @@ const ProfileItem = ({
     if (isAuthenticated) {
       const loggedUser = user._id === _id;
       if (!loggedUser) {
-        const isFriend = user.friends.filter((friend) => friend === _id);
-
-        const hasRequest = user.friendRequests.filter(
-          (req) => req.user === _id
-        );
+        const isFriend = friends.filter((friend) => friend === _id);
+        const hasRequest = friendsrquestlist.filter((req) => req.user === _id);
         const UserIdOfRequest = hasRequest.map((req) => req.user);
+
         if (isFriend.length > 0) {
           return (
-            <Label style={{marginRight:"0.5rem"}}>
+            <Label style={{ marginRight: '0.5rem' }}>
               {' '}
               <Icon name="check circle" color="green" /> Friend
             </Label>
@@ -83,7 +82,7 @@ const ProfileItem = ({
         <Link to={`/profile/${_id}`} className="btn btn-primary">
           View Profile
         </Link>
-        <FriendButton className="btn btn-primary"/>
+        <FriendButton className="btn btn-primary" />
         {me.isAuthenticated &&
           me.user._id !== _id &&
           privacyOptions &&
@@ -106,12 +105,14 @@ const ProfileItem = ({
 };
 ProfileItem.propTypes = {
   profile: PropTypes.object.isRequired,
+  friendsObject: PropTypes.object.isRequired,
   sendFriendRequest: PropTypes.func.isRequired,
   CancelFriendRequest: PropTypes.func.isRequired,
   isAuthenticated: PropTypes.bool
 };
 const mapStateToProps = (state) => ({
-  auth: state.auth
+  auth: state.auth,
+  friendsObject: state.friendsObject
 });
 export default connect(mapStateToProps, {
   sendFriendRequest,
