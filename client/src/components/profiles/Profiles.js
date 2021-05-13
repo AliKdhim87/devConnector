@@ -3,12 +3,20 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Spinner from '../layout/Spinner';
 import { getAllProfiles } from '../../actions/profile';
+import { getCurrentUser } from '../../actions/friends';
 import ProfileItem from './ProfileItem';
 import * as uuid from 'uuid';
 import ElementNotFound from '../layout/ElementNotFound';
-const Profiles = ({ getAllProfiles, profile: { profiles, loading }, auth, isAuthenticated }) => {
+const Profiles = ({
+  getAllProfiles,
+  getCurrentUser,
+  profile: { profiles, loading },
+  auth,
+  isAuthenticated
+}) => {
   useEffect(() => {
     getAllProfiles(isAuthenticated);
+    getCurrentUser();
   }, [getAllProfiles, isAuthenticated]);
 
   return (
@@ -28,7 +36,7 @@ const Profiles = ({ getAllProfiles, profile: { profiles, loading }, auth, isAuth
                 <ProfileItem key={uuid.v4()} profile={profile} me={auth} />
               ))
             ) : (
-              <ElementNotFound element="PROFILES FOUND"/>
+              <ElementNotFound element="PROFILES FOUND" />
             )}
           </div>
         </Fragment>
@@ -39,6 +47,7 @@ const Profiles = ({ getAllProfiles, profile: { profiles, loading }, auth, isAuth
 
 Profiles.propTypes = {
   getAllProfiles: PropTypes.func.isRequired,
+  getCurrentUser: PropTypes.func.isRequired,
   profile: PropTypes.object.isRequired
 };
 const mapStateToProps = (state) => ({
@@ -46,4 +55,6 @@ const mapStateToProps = (state) => ({
   auth: state.auth,
   isAuthenticated: state.auth.isAuthenticated
 });
-export default connect(mapStateToProps, { getAllProfiles })(Profiles);
+export default connect(mapStateToProps, { getAllProfiles, getCurrentUser })(
+  Profiles
+);

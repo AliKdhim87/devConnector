@@ -4,7 +4,10 @@ import {
   ACCEPT_FRIENDREQUEST,
   REJECT_FRIENDREQUEST,
   FRIENDS_ERROR,
-  UNFRIEND
+  UNFRIEND,
+  CURRENT_USER,
+  SEND_FRIENDREQUEST,
+  CANCEL_REQUEST
 } from '../actions/types';
 
 const initialState = {
@@ -39,12 +42,11 @@ export default function (state = initialState, action) {
         friendsrquestlist: state.friendsrquestlist.filter(
           (item) => item._id !== payload.requestInfo.friendRequest._id
         ),
-        friends: { ...state.friends, payload },
+        friends: [...state.friends, payload],
         loading: false
       };
 
     case REJECT_FRIENDREQUEST:
-      // case CANCEL_REQUEST:
       return {
         ...state,
         friendsrquestlist: state.friendsrquestlist.filter(
@@ -58,6 +60,27 @@ export default function (state = initialState, action) {
         friends: state.friends.filter(
           (item) => item.id !== payload.friendInfo.deletedFriend._id
         ),
+        loading: false
+      };
+    case SEND_FRIENDREQUEST:
+      return {
+        ...state,
+
+        friendsrquestlist: [...state.friendsrquestlist, payload]
+      };
+
+    case CANCEL_REQUEST:
+      return {
+        ...state,
+        friendsrquestlist: state.friendsrquestlist.filter(
+          (request) => request.user !== payload.user
+        )
+      };
+    case CURRENT_USER:
+      return {
+        ...state,
+        friends: payload.friends,
+        friendsrquestlist: payload.friendRequests,
         loading: false
       };
     case FRIENDS_ERROR:

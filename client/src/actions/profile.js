@@ -32,7 +32,7 @@ export const getCurrentProfile = () => async (dispatch) => {
 };
 
 // Get All Profiles
-export const getAllProfiles = ( isAuth = false ) => async (dispatch) => {
+export const getAllProfiles = (isAuth = false) => async (dispatch) => {
   dispatch({ type: CLEAR_PROFILE });
   try {
     let res;

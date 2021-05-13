@@ -300,4 +300,18 @@ router.delete('/cancel/:UserIdOfRequest', auth, async (req, res) => {
   }
 });
 
+// @route   GET api/auth
+// @desc    Get current user
+// @access  Private
+router.get('/currentuser', auth, async (req, res) => {
+  console.log('user from friends api');
+  try {
+    const user = await User.findById(req.user.id).select('-password');
+    res.json(user);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send('Server error');
+  }
+});
+
 module.exports = router;
